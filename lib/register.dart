@@ -2,9 +2,6 @@ import 'package:InstiComplaints/modals.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-// TODO: Controllers for Text Fields
-// TODO: Verification that none is empty
-
 class BackgroundMaker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -79,7 +76,6 @@ class RegisterPage extends StatelessWidget {
   }
 }
 
-
 class RegisterForm extends StatefulWidget {
   @override
   _RegisterFormState createState() => _RegisterFormState();
@@ -92,12 +88,14 @@ class _RegisterFormState extends State<RegisterForm> {
   final _roomNoController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-
   void formProcessor() {
-    UserModal _currentDetails = UserModal(_nameController.text, int.parse(_rollNoController.text), hostelname, int.parse(_roomNoController.text));
+    UserModal _currentDetails = UserModal(
+        _nameController.text,
+        int.parse(_rollNoController.text),
+        hostelname,
+        int.parse(_roomNoController.text));
     // TODO: Send to backend server
   }
-
 
   void _showDialog(BuildContext context) {
     AlertDialog alert = AlertDialog(
@@ -152,12 +150,14 @@ class _RegisterFormState extends State<RegisterForm> {
               TextFormField(
                 validator: (value) {
                   if (value == "") {
-                    return 'Roll Number cannot be left Emply';
+                    return 'Roll Number cannot be left Empty';
                   }
                   final n = num.tryParse(value);
                   if (n == null) {
                     return '"$value" is not a valid number';
                   }
+                  if (value.length != 8)
+                    return 'Roll Number must contain 8 digits';
                   return null;
                 },
                 controller: _rollNoController,
@@ -265,11 +265,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 height: 45,
                 child: RaisedButton(
                   onPressed: () {
-                    // Validate returns true if the form is valid, otherwise false.
                     if (_formKey.currentState.validate()) {
-                      // If the form is valid, display a snackbar. In the real world,
-                      // you'd often call a server or save the information in a database.
-
                       Scaffold.of(context).showSnackBar(
                           SnackBar(content: Text('Processing Data')));
                       _showDialog(context);
@@ -307,5 +303,4 @@ class _RegisterFormState extends State<RegisterForm> {
       ),
     );
   }
-
 }

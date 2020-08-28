@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+final _emailController = TextEditingController();
 
 class ModifyModerators extends StatefulWidget {
   @override
@@ -8,6 +9,7 @@ class ModifyModerators extends StatefulWidget {
 }
 
 class _ModifyModeratorsState extends State<ModifyModerators> {
+  //TODO: Add a function to fetch the list from backend
   List<String> list = [
     'Mahatma Gandhi',
     "Jeff Bezos",
@@ -19,26 +21,23 @@ class _ModifyModeratorsState extends State<ModifyModerators> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        // return object of type Dialog
         return AlertDialog(
           title: new Text("Add Moderator"),
           content: new SingleChildScrollView(
               child: Column(
             children: [
               Text(
-                "Note: The student must be already registered on the app",
+                "Note: The student must be already registered on the App",
                 style: Theme.of(context).textTheme.caption,
               ),
-              AddModeratorForm()
+              AddModeratorForm(),
             ],
           )),
           actions: <Widget>[
-            // usually buttons at the bottom of the dialog
             new FlatButton(
               child: new Text("Add"),
               onPressed: () {
-                //TODO: Edit function for backend
-
+                //TODO: Edit function for backend POST request
                 if (_formKey.currentState.validate()) {
                   Navigator.of(context).pop();
                 }
@@ -57,7 +56,6 @@ class _ModifyModeratorsState extends State<ModifyModerators> {
   }
 
   List<Widget> prepareModeratorList(context) {
-    // TODO: Modify for backend
     return list.map((String value) {
       return Container(
         margin: EdgeInsets.symmetric(vertical: 8),
@@ -86,6 +84,7 @@ class _ModifyModeratorsState extends State<ModifyModerators> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
+                        //TODO: Change the number of passes for the moderator based on fetched data
                         '3',
                         style: TextStyle(color: Colors.green, fontSize: 17),
                       ),
@@ -103,6 +102,7 @@ class _ModifyModeratorsState extends State<ModifyModerators> {
                         borderRadius: new BorderRadius.circular(30.0)),
                     onPressed: () {
                       setState(() {
+                        //TODO: Remove entry from the backend too
                         list.remove(value);
                       });
                     },
@@ -114,7 +114,7 @@ class _ModifyModeratorsState extends State<ModifyModerators> {
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       );
@@ -192,7 +192,7 @@ class AddModeratorForm extends StatelessWidget {
                   return null;
               },
               keyboardType: TextInputType.emailAddress,
-              controller: TextEditingController(),
+              controller: _emailController,
               decoration: InputDecoration(
                 labelStyle: TextStyle(
                   color: Colors.black,
