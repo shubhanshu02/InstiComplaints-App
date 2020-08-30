@@ -24,6 +24,8 @@ dependencies:
   flutter:
     sdk: flutter
 
+  curved_navigation_bar: ^0.3.3
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -47,9 +49,12 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+     - assets/login_finalff.jpg
+     - assets/app_logo_final0.png
+     - assets/login_finalfinal.jpg
+     - assets/pages1.jpg
+     - assets/app_logo_final_jpg_ws.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -62,13 +67,13 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
+  fonts:
+     - family: JosefinSans
+       fonts:
+         - asset: fonts/JosefinSans-Regular.ttf
+     - family: Amaranth
+       fonts:
+         - asset: fonts/Amaranth-Regular.otf
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
