@@ -4,6 +4,8 @@ import 'package:flutter/painting.dart';
 import 'dart:math';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
+// TODO: Generating list of notifications for the complaints taken from the backend
+
 Random random = Random();
 // complaints to be taken from backend
 List complaints = [
@@ -39,6 +41,7 @@ class _NotificationsState extends State<Notifications> {
     });
   }
 
+  // TODO: Deciding the location of compose button(as a floating button or in the bottom bar)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,7 +77,7 @@ class _NotificationsState extends State<Notifications> {
             color: Colors.white,
           ),
         ],
-
+        // TODO: creating onTap functionality to take user to the desired complaints on clicking their notifs
         onTap: onItemTapped,
       ),
       body: Stack(

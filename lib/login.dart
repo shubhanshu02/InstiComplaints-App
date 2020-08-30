@@ -140,5 +140,5 @@ class _MyLoginPageState extends State<MyLoginPage> {
     );
   }
 }
-// TODO: LogIn and SignUp through Google using Django Backend
+// TODO: LogIn and SignUp through Google Authentication using Django Backend
 //.only(topLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0)) -- differently shaped button
