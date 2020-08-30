@@ -63,10 +63,10 @@ flutter:
   fonts:
      - family: JosefinSans
        fonts:
-         - asset: fonts/JosefinSans-Regular.ttf
+         - asset: assets/fonts/JosefinSans-Regular.ttf
      - family: Amaranth
        fonts:
-         - asset: fonts/Amaranth-Regular.otf
+         - asset: assets/fonts/Amaranth-Regular.otf
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
