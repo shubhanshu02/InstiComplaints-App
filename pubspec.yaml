@@ -25,6 +25,8 @@ dependencies:
     sdk: flutter
 
   curved_navigation_bar: ^0.3.3
+  
+  image_picker: ^0.6.7+7
 
 
   # The following adds the Cupertino Icons font to your application.
