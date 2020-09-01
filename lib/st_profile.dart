@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'camera.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -7,6 +8,8 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  String category = "Student", roomNo = "C-304", hostel = "Ramanujan Hostel";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,30 +49,7 @@ class _ProfileState extends State<Profile> {
                       fontSize: 30.0,
                     )),
                 SizedBox(height: 50.0),
-                /*CircularProfileAvatar(
-                  'https://i.pinimg.com/564x/04/bb/21/04bb2164bbfa3684118a442c17d086bf.jpg'
-                  radius: 70.0,
-                  elevation: 5.0,
-                  borderWidth: 7.0,
-                  borderColor: Colors.white,
-                ),*/
-                Container(
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        'https://i.pinimg.com/564x/04/bb/21/04bb2164bbfa3684118a442c17d086bf.jpg'),
-                    radius: 70.0,
-                  ),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                        color: Colors.grey[400],
-                        spreadRadius: 5.0,
-                        blurRadius: 10.0,
-                      )
-                    ],
-                  ),
-                ),
+                Camera(),
                 SizedBox(height: 10.0),
                 Center(
                   child: Text('John Leutis',
@@ -270,17 +250,7 @@ class _ProfileState extends State<Profile> {
             color: Colors.white,
           ),
           Icon(
-            Icons.add,
-            size: 30,
-            color: Colors.white,
-          ),
-          Icon(
             Icons.person,
-            size: 30,
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.search,
             size: 30,
             color: Colors.white,
           ),

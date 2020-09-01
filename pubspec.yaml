@@ -26,7 +26,7 @@ dependencies:
 
   curved_navigation_bar: ^0.3.3
   
-  image_picker: ^0.6.7+7
+  image_picker: ^0.6.7
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -51,6 +51,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   
   assets:
+    - assets/gallery.png
     - assets/
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
