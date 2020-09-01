@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:image_cropper/image_cropper.dart';
 
 class Camera extends StatefulWidget {
   @override
@@ -9,12 +10,38 @@ class Camera extends StatefulWidget {
 
 class _CameraState extends State<Camera> {
   File imageFile;
+  bool inProcess = false;
+  getImage() async {
+    setState(() {
+      inProcess = true;
+    });
+    File cropped = await ImageCropper.cropImage(
+        sourcePath: imageFile.path,
+        aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+        compressQuality: 100,
+        maxWidth: 700,
+        maxHeight: 700,
+        compressFormat: ImageCompressFormat.jpg,
+        androidUiSettings: AndroidUiSettings(
+          toolbarColor: Colors.deepOrange,
+          toolbarTitle: "RPS Cropper",
+          statusBarColor: Colors.deepOrange.shade900,
+          backgroundColor: Colors.white,
+        ));
+
+    this.setState(() {
+      imageFile = cropped;
+      inProcess = false;
+    });
+  }
+
   final picker = ImagePicker();
   _openGallary(BuildContext context) async {
     final picture = await picker.getImage(source: ImageSource.gallery);
     this.setState(() {
       imageFile = File(picture.path);
     });
+    getImage();
     Navigator.of(context).pop();
   }
 
@@ -23,6 +50,7 @@ class _CameraState extends State<Camera> {
     this.setState(() {
       imageFile = File(picture.path);
     });
+    getImage();
     Navigator.of(context).pop();
   }
 

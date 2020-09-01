@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'st_profile.dart';
+import 'camera1.dart';
 
 class InstiComplaints extends StatelessWidget {
   @override

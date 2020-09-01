@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'camera.dart';
+import 'card.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -8,8 +9,6 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  String category = "Student", roomNo = "C-304", hostel = "Ramanujan Hostel";
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -133,16 +132,13 @@ class _ProfileState extends State<Profile> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.fromLTRB(0.0, 0.0, 263.0, 0.0),
-                            child: Text('Category',
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontFamily: 'Roboto',
-                                )),
-                          ),
+                          Text('Category',
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontFamily: 'Roboto',
+                              )),
                           SizedBox(height: 5.0),
                           Row(
                             children: [
@@ -158,71 +154,7 @@ class _ProfileState extends State<Profile> {
                         ],
                       ),
                     )),
-                Card(
-                    elevation: 5.0,
-                    margin:
-                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.fromLTRB(0.0, 0.0, 263.0, 0.0),
-                            child: Text('Room no.',
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontFamily: 'Roboto',
-                                )),
-                          ),
-                          SizedBox(height: 5.0),
-                          Row(
-                            children: [
-                              Icon(Icons.person_pin),
-                              SizedBox(width: 5.0),
-                              Text('C-304',
-                                  style: TextStyle(
-                                    color: Colors.black87,
-                                    fontFamily: 'Roboto',
-                                  )),
-                            ],
-                          )
-                        ],
-                      ),
-                    )),
-                SizedBox(height: 5.0),
-                Card(
-                    elevation: 5.0,
-                    margin:
-                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.fromLTRB(0.0, 0.0, 237.0, 0.0),
-                            child: Text('Hostel Name',
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontFamily: 'Roboto',
-                                )),
-                          ),
-                          SizedBox(height: 5.0),
-                          Row(
-                            children: [
-                              Icon(Icons.location_on),
-                              SizedBox(width: 5.0),
-                              Text('Ramanujan Hostel',
-                                  style: TextStyle(
-                                    color: Colors.black87,
-                                    fontFamily: 'Roboto',
-                                  )),
-                            ],
-                          )
-                        ],
-                      ),
-                    )),
+                CardCategory(),
               ],
             )),
       ),
@@ -262,29 +194,4 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
-}
-
-Widget cardTempelate() {
-  return Card(
-      margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-      child: Column(
-        children: [
-          Text('Address',
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontFamily: 'Roboto',
-              )),
-          Row(
-            children: [
-              Icon(Icons.location_city),
-              SizedBox(width: 5.0),
-              Text('Ramanujan Hostel',
-                  style: TextStyle(
-                    color: Colors.black87,
-                    fontFamily: 'Roboto',
-                  )),
-            ],
-          )
-        ],
-      ));
 }
