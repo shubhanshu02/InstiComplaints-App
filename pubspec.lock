@@ -116,6 +116,16 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.12"
+<<<<<<< HEAD
+=======
+  image_cropper:
+    dependency: "direct main"
+    description:
+      name: image_cropper
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.3.1"
+>>>>>>> a415c1054639013a9c3301d17760c0131f2d459b
   image_picker:
     dependency: "direct main"
     description:
@@ -150,7 +160,11 @@ packages:
       name: path
       url: "https://pub.dartlang.org"
     source: hosted
+<<<<<<< HEAD
     version: "1.6.4"
+=======
+    version: "1.7.0"
+>>>>>>> a415c1054639013a9c3301d17760c0131f2d459b
   pedantic:
     dependency: transitive
     description:
@@ -172,6 +186,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
+<<<<<<< HEAD
   quiver:
     dependency: transitive
     description:
@@ -179,6 +194,8 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.3"
+=======
+>>>>>>> a415c1054639013a9c3301d17760c0131f2d459b
   sky_engine:
     dependency: transitive
     description: flutter
@@ -255,5 +272,9 @@ packages:
     source: hosted
     version: "2.2.1"
 sdks:
+<<<<<<< HEAD
   dart: ">=2.7.0 <3.0.0"
+=======
+  dart: ">=2.9.0-14.0.dev <3.0.0"
+>>>>>>> a415c1054639013a9c3301d17760c0131f2d459b
   flutter: ">=1.12.13 <2.0.0"
