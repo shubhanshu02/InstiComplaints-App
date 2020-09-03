@@ -11,14 +11,14 @@ class BackgroundMaker extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
+        height: (4.3*MediaQuery.of(context).size.width)/8,
         child: Stack(
           fit: StackFit.expand,
           children: <Widget>[
             Container(
               constraints: BoxConstraints.expand(),
               color: Colors.white,
-              child: Compose(),
+              //child: Compose(),
             ),
             ClipPath(
                 clipper: CurveClipper(),
@@ -26,16 +26,36 @@ class BackgroundMaker extends StatelessWidget {
                   constraints: BoxConstraints.expand(),
                   color: Color(0xFF181D3D),
                   child: Column(children: [
-                    SizedBox(height: MediaQuery.of(context).size.height / 8),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(15.0, 25.0, 0.0, 0.0),
+                      child: Row(children: <Widget>[
+                        SizedBox(height: 30.0),
+                        CircleAvatar(
+                          backgroundImage: AssetImage('assets/app_logo_final_jpg_ws.jpg'),
+                          radius: 27.0,
+                        ),
+                        SizedBox(width: 10.0,),
+                        Text(
+                          'InstiComplaints',
+                          style: TextStyle(
+                            fontFamily: 'Amaranth',
+                            color: Colors.white,
+                            fontSize: 22.0
+                          ),
+                        )
+                      ],),
+                    ),
+                    SizedBox(height: MediaQuery.of(context).size.height / 24),
                     Text(
                       'File a Complaint',
                       style: Theme.of(context)
                           .textTheme
                           .headline5
-                          .apply(color: Color.fromRGBO(244, 159, 28,1),),
+                          .apply(color: Colors.white,),
                     )
                   ]),
-                )),
+                )
+              ),
           ],
         ));
   }
@@ -46,20 +66,20 @@ class CurveClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     Path path = Path()
       // set the "current point"
-      ..lineTo(0, size.width / 4)
+      ..lineTo(0, size.width / 8)
       ..addArc(
-          Rect.fromLTWH(0, size.width / 512, size.width / 2, size.width / 2),
+          Rect.fromLTWH(0, size.width / 512 - size.width/8, size.width / 2, size.width / 2),
           pi,
           -pi / 2)
-      ..lineTo(4 * size.width / 4, size.width / 2)
+      ..lineTo(4 * size.width / 4, size.width / 2-size.width/8)
       ..addArc(
-          Rect.fromLTWH(2 * size.width / 4, size.width / 2, size.width / 2,
+          Rect.fromLTWH(2 * size.width / 4, size.width / 2-size.width/8, size.width / 2,
               size.width / 2),
           3.14 + 1.57,
           1.57)
       ..lineTo(size.width, 0)
       ..lineTo(0, 0)
-      ..lineTo(0, size.width / 4);
+      ..lineTo(0, size.width / 8);
     return path;
   }
   @override
@@ -153,10 +173,10 @@ class _ComposeState extends State<Compose> {
       body: SafeArea(
         child: ListView(
           children: <Widget>[
-            SizedBox(height: (0.31*MediaQuery.of(context).size.height)),
+            BackgroundMaker(),
             Card(
-              shadowColor: Color.fromRGBO(24, 29, 61,1),
-              margin: EdgeInsets.all(10.0),
+              //shadowColor: Color.fromRGBO(24, 29, 61,1),
+              margin: EdgeInsets.symmetric(horizontal:15.0),
               elevation: 10.0,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -278,10 +298,10 @@ class _ComposeState extends State<Compose> {
                   'Submit',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Color.fromRGBO(24, 29, 61,1),
+                    color: Colors.white,
                   ),
                 ),
-                color: Color.fromRGBO(244, 159, 28,1),
+                color: Color(0xFF181D3D),
               ),
             ),
             SizedBox(height: 20.0,),
