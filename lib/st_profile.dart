@@ -14,41 +14,56 @@ class _ProfileState extends State<Profile> {
     return Scaffold(
       body: SafeArea(
         child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('assets/pages1.jpg'),
                 fit: BoxFit.cover,
               ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+            child: ListView(
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(width: 5.0),
-                    CircleAvatar(
-                      backgroundImage:
-                          AssetImage('assets/app_logo_final_jpg_ws.jpg'),
-                      radius: 20.0,
+                    SizedBox(
+                      width: 20.0,
                     ),
-                    SizedBox(width: 5.0),
-                    Text('InstiComplaints',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Roboto',
-                          fontSize: 15.0,
-                        )),
+                    new Container(
+                        width: 50.0,
+                        height: 50.0,
+                        decoration: new BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: new DecorationImage(
+                              fit: BoxFit.fill,
+                              image: AssetImage(
+                                  "assets/app_logo_final_jpg_ws.jpg"),
+                            ))),
+                    SizedBox(
+                      width: 20.0,
+                    ),
+                    Text(
+                      "InstiComplaints",
+                      style: TextStyle(
+                        fontFamily: 'Amaranth',
+                        fontSize: 20.0,
+                        color: Colors.white,
+                      ),
+                    ),
                   ],
                 ),
-                SizedBox(height: 25.0),
-                Text('Profile',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Roboto',
-                      fontSize: 30.0,
-                    )),
-                SizedBox(height: 50.0),
-                Camera(),
+                SizedBox(height: 20.0),
+                Center(
+                  child: Text('Profile',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Roboto',
+                        fontSize: 30.0,
+                      )),
+                ),
+                SizedBox(height: 40.0),
+                Center(child: Camera()),
                 SizedBox(height: 10.0),
                 Center(
                   child: Text('John Leutis',
@@ -61,7 +76,9 @@ class _ProfileState extends State<Profile> {
                 Row(children: [
                   Expanded(
                     child: FlatButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/filed');
+                        },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
@@ -93,7 +110,9 @@ class _ProfileState extends State<Profile> {
                   ),
                   Expanded(
                     child: FlatButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/resolved');
+                        },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
@@ -163,7 +182,7 @@ class _ProfileState extends State<Profile> {
 
         color: Color(0xFF181d3d),
 
-        buttonBackgroundColor: Colors.red,
+        buttonBackgroundColor: Color(0xFFF49F1C),
         height: 60,
         animationDuration: Duration(
           milliseconds: 200,

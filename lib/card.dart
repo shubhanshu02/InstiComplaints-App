@@ -13,7 +13,7 @@ List<Category> categories = [
   Category(
       name: 'Hostel Name',
       iconName: Icons.location_on,
-      text: 'Ramanujan Hostel')
+      text: 'Ramanujan Hostel'),
 ];
 
 class CardCategory extends StatefulWidget {
@@ -61,43 +61,44 @@ class _CardCategoryState extends State<CardCategory> {
     }
 
     return Card(
-        elevation: 5.0,
-        margin: EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(category.name,
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontFamily: 'Roboto',
-                      )),
-                  SizedBox(height: 5.0),
-                  Row(
-                    children: [
-                      Icon(category.iconName),
-                      SizedBox(width: 5.0),
-                      Text(category.text,
-                          style: TextStyle(
-                            color: Colors.black87,
-                            fontFamily: 'Roboto',
-                          )),
-                    ],
-                  )
-                ],
-              ),
-              IconButton(
-                  onPressed: () {
-                    editList(context);
-                  },
-                  icon: Icon(Icons.edit, color: Colors.red)),
-            ],
-          ),
-        ));
+      elevation: 5.0,
+      margin: EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(category.name,
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontFamily: 'Roboto',
+                    )),
+                SizedBox(height: 5.0),
+                Row(
+                  children: [
+                    Icon(category.iconName),
+                    SizedBox(width: 5.0),
+                    Text(category.text,
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontFamily: 'Roboto',
+                        )),
+                  ],
+                )
+              ],
+            ),
+            IconButton(
+                onPressed: () {
+                  editList(context);
+                },
+                icon: Icon(Icons.edit, color: Colors.red)),
+          ],
+        ),
+      ),
+    );
   }
 
   @override

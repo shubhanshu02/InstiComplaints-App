@@ -141,8 +141,7 @@ class _CameraState extends State<Camera> {
             shape: BoxShape.circle,
             image: DecorationImage(
                 image: imageFile == null
-                    ? NetworkImage(
-                        'https://www.mgretails.com/assets/img/default.png')
+                    ? AssetImage('assets/default.png')
                     : FileImage(imageFile),
                 fit: BoxFit.cover)),
       ),
