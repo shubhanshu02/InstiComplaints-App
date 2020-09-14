@@ -270,6 +270,7 @@ class _RegisterFormState extends State<RegisterForm> {
                           SnackBar(content: Text('Processing Data')));
                       _showDialog(context);
                       formProcessor();
+                      Navigator.pushReplacementNamed(context, '/navigation');
                     }
                   },
                   child: Text(

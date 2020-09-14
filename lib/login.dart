@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'app.dart';
+import 'Compose.dart';
 
 class MyLoginPage extends StatefulWidget {
   @override
@@ -118,6 +120,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 color: registerChange ? Colors.transparent : Color(0xFFF49F1C),
                 onPressed: () {
                   registerStateChange();
+                  Navigator.pushReplacementNamed(context, '/register');
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(2.0),
