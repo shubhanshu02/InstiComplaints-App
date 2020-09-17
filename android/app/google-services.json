@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "766322402533",
+    "firebase_url": "https://insticomplaints.firebaseio.com",
+    "project_id": "insticomplaints",
+    "storage_bucket": "insticomplaints.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:766322402533:android:bdc9b48579c28dd25de00c",
+        "android_client_info": {
+          "package_name": "com.example.InstiComplaints"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "766322402533-vrf39v5d0i9u7llv8rs1a6d8p1fk6g4q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.InstiComplaints",
+            "certificate_hash": "209b99f83f299629d2856c46bdbfd88136ede267"
+          }
+        },
+        {
+          "client_id": "766322402533-1ral9kskgmgf6efmbhodsvcboiuvtisd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYL3dDz_O7XdTHq1synjJZnxeoD5Js1_4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "766322402533-1ral9kskgmgf6efmbhodsvcboiuvtisd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
