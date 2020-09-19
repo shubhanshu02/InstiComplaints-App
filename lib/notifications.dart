@@ -105,7 +105,7 @@ class _NotificationsState extends State<Notifications> {
                 ),
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height / 11.0,
+                height: 11.0,
               ),
               new Expanded(
                 child: ListView.separated(

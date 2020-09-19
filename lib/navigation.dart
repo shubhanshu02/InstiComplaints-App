@@ -1,3 +1,4 @@
+import 'package:InstiComplaints/Compose.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'st_profile.dart';
@@ -11,7 +12,7 @@ class BottomNavigation extends StatefulWidget {
 
 class _BottomNavigationState extends State<BottomNavigation> {
   int currentIndex = 0;
-  final List<Widget> children = [Feed(), Notifications(), Profile()];
+  final List<Widget> children = [Feed(), Notifications(), Profile(), Compose()];
   void onTapped(int index) {
     setState(() {
       currentIndex = index;
@@ -44,6 +45,11 @@ class _BottomNavigationState extends State<BottomNavigation> {
             ),
             Icon(
               Icons.person,
+              size: 30,
+              color: Colors.white,
+            ),
+            Icon(
+              Icons.add,
               size: 30,
               color: Colors.white,
             ),
