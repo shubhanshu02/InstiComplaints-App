@@ -4,14 +4,14 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 
-class Trial extends StatefulWidget {
-  const Trial({Key key}) : super(key: key);
+class Feed extends StatefulWidget {
+  const Feed({Key key}) : super(key: key);
 
   @override
-  _TrialState createState() => _TrialState();
+  _FeedState createState() => _FeedState();
 }
 
-class _TrialState extends State<Trial> with SingleTickerProviderStateMixin {
+class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   TabController _tabController;
   int selectedIndex = 0;
 
