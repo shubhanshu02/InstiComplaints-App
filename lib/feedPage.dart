@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
+final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+    new GlobalKey<RefreshIndicatorState>();
 
 class Feed extends StatefulWidget {
   const Feed({Key key}) : super(key: key);
@@ -36,6 +38,18 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  List<ComplaintBox> _listBuilder() {
+    List<ComplaintBox> _list = [];
+    for (int i = 0; i < 10; i++) {
+      _list.insert(0, ComplaintBox());
+    }
+    return _list;
+  }
+
+  Future<Null> _refresh() {
+    return () {}();
   }
 
   @override
@@ -90,12 +104,22 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
             child: TabBarView(
               controller: _tabController,
               children: <Widget>[
-                Container(
-                    // add contents of the feed page
-                    ),
-                Container(
-                    // add contents of the bookmark page
-                    ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      right: 20, left: 20, top: 150, bottom: 0),
+                  child: Container(
+                      // add contents of the feed page
+                      child: ListView.builder(
+                          itemBuilder: (_, index) => ComplaintBox())),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      right: 20, left: 20, top: 150, bottom: 0),
+                  child: Container(
+                      // add contents of the bookmark page
+                      child: ListView.builder(
+                          itemBuilder: (_, index) => ComplaintBox())),
+                ),
               ],
             ),
           ),
@@ -167,7 +191,8 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                     // Implementation of tabbar
                     Center(
                       child: Container(
-                        width: 285.0,
+                        width: 300.0,
+                        height: 60,
                         child: TabBar(
                           controller: _tabController,
                           indicatorSize: TabBarIndicatorSize.label,
@@ -184,13 +209,13 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                             Tab(
                               child: Padding(
                                 padding: const EdgeInsets.fromLTRB(
-                                    40.0, 7.0, 40.0, 3.0),
+                                    42.0, 5.0, 42.0, 0),
                                 child: Column(
                                   children: [
                                     Icon(
                                       Icons.mode_comment,
                                       color: Colors.white,
-                                      size: 18.0,
+                                      size: 24.0,
                                     ),
                                     SizedBox(
                                       height: 1.0,
@@ -206,14 +231,14 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                             ),
                             Tab(
                               child: Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                    17.0, 7.0, 17.0, 3.0),
+                                padding:
+                                    const EdgeInsets.fromLTRB(25, 5.0, 25, 0),
                                 child: Column(
                                   children: [
                                     Icon(
                                       Icons.bookmark,
                                       color: Colors.white,
-                                      size: 18.0,
+                                      size: 24,
                                     ),
                                     SizedBox(
                                       height: 1.0,
@@ -709,5 +734,158 @@ class _NavDrawerState extends State<NavDrawer> {
         ),
       ),
     );
+  }
+}
+
+class ComplaintBox extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
+        child: Container(
+          // TODO: Adjust height according to generator function
+          height: 210,
+          child: InkWell(
+            splashColor: Colors.blue.withAlpha(300),
+            onTap: () {
+              //TODO: Add navigator to other card
+            },
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Row(children: [
+                            Text('Fan Not Working in C402',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 18))
+                          ]),
+                          Row(
+                            children: <Widget>[
+                              Text(
+                                'Posted by ',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              Text(
+                                'Raju Rastogi',
+                                style: TextStyle(
+                                    fontSize: 12, fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                      IconButton(
+                          icon: Icon(Icons.bookmark_outline),
+                          onPressed: () {
+                            //TODO: Add color change
+                          })
+                    ],
+                  ),
+                  SizedBox(height: 7),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Icon(Icons.calendar_today),
+                        Text(
+                          '  24-07-2020  ',
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold),
+                        ),
+                        Text('in '),
+                        Text(
+                          'C.V. Raman Hostel',
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Row(
+                    children: <Widget>[
+                      Flexible(
+                        child: Text(
+                          'The fan was not found in working state as of 10th...',
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 7),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      SizedBox(
+                        width: 70,
+                        
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Text('Pending  ',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.red.withOpacity(0.6),
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                                SizedBox(height: 5,),
+                              Text(
+                                'Status',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Column(
+                        children: <Widget>[
+                          IconButton(
+                            icon: Icon(Icons.share),
+                            onPressed: () {},
+                          ),
+                          Text(
+                            'Share',
+                            style: TextStyle(
+                              fontSize: 11,
+                            ),
+                          )
+                        ],
+                      ),
+                      Column(
+                        children: <Widget>[
+                          IconButton(
+                            icon: Icon(Icons.arrow_upward),
+                            onPressed: () {},
+                          ),
+                          Text(
+                            '4 Upvotes',
+                            style: TextStyle(
+                              fontSize: 11,
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        ));
   }
 }
