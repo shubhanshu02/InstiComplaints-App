@@ -41,102 +41,108 @@ class _MyLoginPageState extends State<MyLoginPage> {
               ),
             ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(
-                height: 20.0,
-              ),
+          ListView(children: <Widget>[
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(
+                  height: 20.0,
+                ),
 
-              // code for separately attaching logo and title of app on the background
-              // Column(
-              //   mainAxisAlignment: MainAxisAlignment.start,
-              //   children: [
-              //     Image.asset("assets/app_logo_final0.png",
-              //       height: 300, width: 300, fit: BoxFit.fill,
-              //     ),
-              //     Text(
-              //       "InstiComplaints",
-              //       style: TextStyle(
-              //         fontFamily: 'Amaranth',
-              //         fontSize: 20.0,
-              //         fontWeight: FontWeight.w500,
-              //         decoration: TextDecoration.none,
-              //         color: Color(0xFF181D3D),
-              //       ),
-              //     ),
-              //   ],
-              // ),
+                // code for separately attaching logo and title of app on the background
+                // Column(
+                //   mainAxisAlignment: MainAxisAlignment.start,
+                //   children: [
+                //     Image.asset("assets/app_logo_final0.png",
+                //       height: 300, width: 300, fit: BoxFit.fill,
+                //     ),
+                //     Text(
+                //       "InstiComplaints",
+                //       style: TextStyle(
+                //         fontFamily: 'Amaranth',
+                //         fontSize: 20.0,
+                //         fontWeight: FontWeight.w500,
+                //         decoration: TextDecoration.none,
+                //         color: Color(0xFF181D3D),
+                //       ),
+                //     ),
+                //   ],
+                // ),
 
-              SizedBox(
-                height: 500.0,
-              ),
+                SizedBox(
+                  height: 500.0,
+                ),
 
-              Container(
-                child: RaisedButton(
-                  padding: EdgeInsets.fromLTRB(58.0, 12.0, 58.0, 10.0),
-                  elevation: 20.0,
-                  shape: loginChange
-                      ? RoundedRectangleBorder(
-                          side: BorderSide(color: Colors.white, width: 3.0),
-                          borderRadius: BorderRadius.all(Radius.circular(40.0)))
-                      : RoundedRectangleBorder(
-                          side:
-                              BorderSide(color: Colors.transparent, width: 3.0),
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(40.0))),
-                  color: loginChange ? Colors.transparent : Color(0xFFF49F1C),
-                  onPressed: () {
-                    loginStateChange();
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(2.0),
-                    child: Text(
-                      "LOGIN",
-                      style: TextStyle(
-                        fontFamily: 'JosefinSans',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18.0,
-                        color: loginChange ? Colors.white : Color(0xFF181D3D),
+                Container(
+                  child: RaisedButton(
+                    padding: EdgeInsets.fromLTRB(58.0, 12.0, 58.0, 10.0),
+                    elevation: 20.0,
+                    shape: loginChange
+                        ? RoundedRectangleBorder(
+                            side: BorderSide(color: Colors.white, width: 3.0),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(40.0)))
+                        : RoundedRectangleBorder(
+                            side: BorderSide(
+                                color: Colors.transparent, width: 3.0),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(40.0))),
+                    color: loginChange ? Colors.transparent : Color(0xFFF49F1C),
+                    onPressed: () {
+                      loginStateChange();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: Text(
+                        "LOGIN",
+                        style: TextStyle(
+                          fontFamily: 'JosefinSans',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
+                          color: loginChange ? Colors.white : Color(0xFF181D3D),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              RaisedButton(
-                padding: EdgeInsets.fromLTRB(44.0, 12.0, 44.0, 10.0),
-                elevation: 20.0,
-                shape: registerChange
-                    ? RoundedRectangleBorder(
-                        side: BorderSide(color: Colors.white, width: 3.0),
-                        borderRadius: BorderRadius.all(Radius.circular(40.0)))
-                    : RoundedRectangleBorder(
-                        side: BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.all(Radius.circular(40.0))),
-                color: registerChange ? Colors.transparent : Color(0xFFF49F1C),
-                onPressed: () {
-                  registerStateChange();
-                  Navigator.pushNamed(context, '/register');
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: Text(
-                    "REGISTER",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'JosefinSans',
-                      fontSize: 18.0,
-                      color: registerChange ? Colors.white : Color(0xFF181D3D),
+                SizedBox(
+                  height: 20.0,
+                ),
+                RaisedButton(
+                  padding: EdgeInsets.fromLTRB(44.0, 12.0, 44.0, 10.0),
+                  elevation: 20.0,
+                  shape: registerChange
+                      ? RoundedRectangleBorder(
+                          side: BorderSide(color: Colors.white, width: 3.0),
+                          borderRadius: BorderRadius.all(Radius.circular(40.0)))
+                      : RoundedRectangleBorder(
+                          side: BorderSide(color: Colors.transparent),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(40.0))),
+                  color:
+                      registerChange ? Colors.transparent : Color(0xFFF49F1C),
+                  onPressed: () {
+                    registerStateChange();
+                    Navigator.pushNamed(context, '/register');
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: Text(
+                      "REGISTER",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'JosefinSans',
+                        fontSize: 18.0,
+                        color:
+                            registerChange ? Colors.white : Color(0xFF181D3D),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
+          ]),
           SizedBox(height: 30.0),
         ],
       ),
