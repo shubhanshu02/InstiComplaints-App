@@ -55,47 +55,6 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: CurvedNavigationBar(
-        backgroundColor: Colors.white,
-        color: Color(0xFF181d3d),
-        buttonBackgroundColor: Color(0xFFF49F1C),
-        height: 60,
-        animationDuration: Duration(
-          milliseconds: 200,
-        ),
-        index: 0,
-        //.. default start position for icon
-        animationCurve: Curves.bounceInOut,
-        items: <Widget>[
-          Icon(
-            Icons.home,
-            size: 30,
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.notifications,
-            size: 30,
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.add,
-            size: 30,
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.person,
-            size: 30,
-            color: Colors.white,
-          ),
-          // Icon(          // extra icon in case of moderator and admin
-          //   Icons.person,
-          //   size: 30,
-          //   color: Colors.white,
-          // ),
-        ],
-
-        onTap: onItemTapped,
-      ),
       key: _scaffoldState,
       drawer: NavDrawer(),
       body: Stack(
@@ -706,7 +665,7 @@ class _NavDrawerState extends State<NavDrawer> {
                 color: Color(0xFF181D3D),
               ),
               title: Text('About'),
-              onTap: () => {Navigator.of(context).pop()},
+              onTap: () => {Navigator.pushNamed(context, '/about')},
             ),
             Divider(
               height: 0.5,
@@ -721,7 +680,7 @@ class _NavDrawerState extends State<NavDrawer> {
                 color: Color(0xFF181D3D),
               ),
               title: Text('Log Out'),
-              onTap: () => {Navigator.of(context).pop()},
+              onTap: () => {Navigator.pushReplacementNamed(context, '/')},
             ),
             Divider(
               height: 0.75,
@@ -783,7 +742,7 @@ class ComplaintBox extends StatelessWidget {
                         ],
                       ),
                       IconButton(
-                          icon: Icon(Icons.bookmark_outline),
+                          icon: Icon(Icons.bookmark_border),
                           onPressed: () {
                             //TODO: Add color change
                           })
@@ -827,11 +786,9 @@ class ComplaintBox extends StatelessWidget {
                     children: <Widget>[
                       SizedBox(
                         width: 70,
-                        
                         child: Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.end,
-                            
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               Text('Pending  ',
@@ -840,7 +797,9 @@ class ComplaintBox extends StatelessWidget {
                                     color: Colors.red.withOpacity(0.6),
                                     fontWeight: FontWeight.bold,
                                   )),
-                                SizedBox(height: 5,),
+                              SizedBox(
+                                height: 5,
+                              ),
                               Text(
                                 'Status',
                                 style: TextStyle(

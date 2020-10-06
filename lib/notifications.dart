@@ -45,41 +45,6 @@ class _NotificationsState extends State<Notifications> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: CurvedNavigationBar(
-        backgroundColor: Colors.white,
-        color: Color(0xFF181d3d),
-        buttonBackgroundColor: Color(0xFFF49F1C),
-        height: 60,
-        animationDuration: Duration(
-          milliseconds: 200,
-        ),
-        index: 0, //.. default start position for icon
-        animationCurve: Curves.bounceInOut,
-        items: <Widget>[
-          Icon(
-            Icons.home,
-            size: 30,
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.notifications,
-            size: 30,
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.add,
-            size: 30,
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.person,
-            size: 30,
-            color: Colors.white,
-          ),
-        ],
-        // TODO: creating onTap functionality to take user to the desired complaints on clicking their notifs
-        onTap: onItemTapped,
-      ),
       body: Stack(
         alignment: Alignment(0.0, 2.0),
         children: [

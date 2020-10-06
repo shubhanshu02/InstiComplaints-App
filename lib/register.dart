@@ -230,6 +230,10 @@ class _RegisterFormState extends State<RegisterForm> {
                         _showDialog(context);
                         formProcessor();
                       }
+
+                      Navigator.pop(context, '/');
+                      Navigator.pop(context, '/RegisterPage');
+                      Navigator.pushReplacementNamed(context, '/navigation');
                     },
                     child: Text(
                       'Submit',
