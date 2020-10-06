@@ -22,7 +22,8 @@ class InstiComplaints extends StatelessWidget {
       '/compose': (context) => Compose(),
       '/notifications': (context) => Notifications(),
       '/navigation': (context) => BottomNavigation(),
-      '/register': (context) => RegisterPage()
+      '/register': (context) => RegisterPage(),
+      'login': (context) => MyLoginPage()
     });
   }
 }

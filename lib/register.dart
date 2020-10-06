@@ -17,36 +17,7 @@ class RegisterPage extends StatelessWidget {
               constraints: BoxConstraints.expand(),
               color: Color(0xFF181D3D),
               child: Column(children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: 20.0,
-                    ),
-                    new Container(
-                        width: 50.0,
-                        height: 50.0,
-                        decoration: new BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: new DecorationImage(
-                              fit: BoxFit.fill,
-                              image: AssetImage(
-                                  "assets/app_logo_final_jpg_ws.jpg"),
-                            ))),
-                    SizedBox(
-                      width: 20.0,
-                    ),
-                    Text(
-                      "InstiComplaints",
-                      style: TextStyle(
-                        fontFamily: 'Amaranth',
-                        fontSize: 20.0,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 25),
+                SizedBox(height: MediaQuery.of(context).size.height / 16),
                 Text(
                   'Sign Up',
                   style: Theme.of(context)
@@ -259,6 +230,8 @@ class _RegisterFormState extends State<RegisterForm> {
                         _showDialog(context);
                         formProcessor();
                       }
+
+                      Navigator.pop(context, '/login');
                       Navigator.pop(context, '/RegisterPage');
                       Navigator.pushReplacementNamed(context, '/navigation');
                     },

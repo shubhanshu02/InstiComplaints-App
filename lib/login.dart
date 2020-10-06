@@ -120,7 +120,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 color: registerChange ? Colors.transparent : Color(0xFFF49F1C),
                 onPressed: () {
                   registerStateChange();
-                  Navigator.pushReplacementNamed(context, '/register');
+                  Navigator.pushNamed(context, '/register');
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(2.0),

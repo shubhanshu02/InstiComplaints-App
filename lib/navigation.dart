@@ -2,7 +2,7 @@ import 'package:InstiComplaints/Compose.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'st_profile.dart';
-import 'package:InstiComplaints/feed.dart';
+import 'package:InstiComplaints/feedPage.dart';
 import 'package:InstiComplaints/notifications.dart';
 
 class BottomNavigation extends StatefulWidget {
