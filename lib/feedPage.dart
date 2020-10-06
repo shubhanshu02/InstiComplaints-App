@@ -665,7 +665,7 @@ class _NavDrawerState extends State<NavDrawer> {
                 color: Color(0xFF181D3D),
               ),
               title: Text('About'),
-              onTap: () => {Navigator.of(context).pop()},
+              onTap: () => {Navigator.pushNamed(context, '/about')},
             ),
             Divider(
               height: 0.5,
@@ -680,7 +680,7 @@ class _NavDrawerState extends State<NavDrawer> {
                 color: Color(0xFF181D3D),
               ),
               title: Text('Log Out'),
-              onTap: () => {Navigator.of(context).pop()},
+              onTap: () => {Navigator.pushReplacementNamed(context, '/')},
             ),
             Divider(
               height: 0.75,

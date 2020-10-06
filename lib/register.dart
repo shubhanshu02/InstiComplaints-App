@@ -231,7 +231,7 @@ class _RegisterFormState extends State<RegisterForm> {
                         formProcessor();
                       }
 
-                      Navigator.pop(context, '/login');
+                      Navigator.pop(context, '/');
                       Navigator.pop(context, '/RegisterPage');
                       Navigator.pushReplacementNamed(context, '/navigation');
                     },
