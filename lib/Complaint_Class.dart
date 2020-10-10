@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 
+
 class MailContent {
   String title;
   String category;
@@ -21,6 +22,14 @@ class MailContent {
       this.upvotes,
       this.email});
 }
+
+List<String> status=[
+  'Pending',
+  'Passed',
+  'In Progress',
+  'Rejected',
+  'Solved'
+  ];
 
 List<MailContent> complaints = [
   MailContent(
@@ -174,3 +183,6 @@ List<MailContent> complaints = [
       upvotes: [],
       email: 'abhishek.civil.19@itbhu.ac.in'),
 ];
+
+
+

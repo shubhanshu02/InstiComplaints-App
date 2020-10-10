@@ -4,7 +4,12 @@ import 'package:image_picker/image_picker.dart';
 import 'DropDown.dart';
 import 'package:path/path.dart' as path;
 import 'dart:math';
+import 'ComplaintDialog.dart';
+import 'Complaint_Class.dart';
+import 'AdminDialog.dart';
+import 'ModeratorDialog.dart';
 
+MailContent complaint;
 
 class BackgroundMaker extends StatelessWidget {
   @override
@@ -32,15 +37,15 @@ class BackgroundMaker extends StatelessWidget {
                         SizedBox(height: 30.0),
                         CircleAvatar(
                           backgroundImage: AssetImage('assets/app_logo_final_jpg_ws.jpg'),
-                          radius: 27.0,
+                          radius: (38*MediaQuery.of(context).size.height)/1000,
                         ),
                         SizedBox(width: 10.0,),
                         Text(
-                          'InstiComplaints',
+                          'InstiComplaint',
                           style: TextStyle(
                             fontFamily: 'Amaranth',
                             color: Colors.white,
-                            fontSize: 22.0
+                            fontSize: (34*MediaQuery.of(context).size.height)/1000
                           ),
                         )
                       ],),
@@ -48,11 +53,12 @@ class BackgroundMaker extends StatelessWidget {
                     SizedBox(height: MediaQuery.of(context).size.height / 24),
                     Text(
                       'File a Complaint',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline5
-                          .apply(color: Colors.white,),
-                    )
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: (30*MediaQuery.of(context).size.height)/1000
+                      )
+                    ),
+                    //SizedBox(height: MediaQuery.of(context).size.height / 12),
                   ]),
                 )
               ),
@@ -97,6 +103,7 @@ class ImageShow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: (3.5*MediaQuery.of(context).size.width)/6,
       margin: EdgeInsets.symmetric(vertical:5.0),
       padding: EdgeInsets.only(left:5.0),
       color: Colors.grey[300],      
@@ -104,8 +111,9 @@ class ImageShow extends StatelessWidget {
         children: <Widget>[
           Icon(Icons.image),
           SizedBox(width: 3.0,),
-          Text(name.length>18 ? name.substring(0,9)+'...'+name.substring(name.length-6) :name),
-          SizedBox(width: 3.0,),
+          Text(name.length>18 ? name.substring(0,6)+'...'+name.substring(name.length-5) :name),
+          //SizedBox(width: 3.0,),
+          new Spacer(),
           IconButton(
             padding: EdgeInsets.only(right:2.0),
             onPressed: delete,
@@ -115,18 +123,6 @@ class ImageShow extends StatelessWidget {
       ),
     );
   }
-}
-
-
-
-
-class MailContent {
-  String title;
-  CategoryItem category;
-  String description;
-  List<File> images;
-
-  MailContent(this.title, this.category,this.description,this.images);
 }
 
 
@@ -181,7 +177,7 @@ class _ComposeState extends State<Compose> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  DropDownMenu(),
+                  CategoryDropdown(),
                   SizedBox(height: 10.0,),
                   Container(
                     padding: EdgeInsets.only(left:10.0,right: 10.0),
@@ -284,15 +280,28 @@ class _ComposeState extends State<Compose> {
             SizedBox(height: 30.0,),
             Center(
               child: RaisedButton(
-                onPressed: (){
-                  MailContent mail = MailContent(titleController.text, selectedItem, descripController.text, imagesInComplaint);
-                  print(mail.title + '\n' + mail.category.categoryName  + '\n' + mail.description);
+                onPressed: () {
+                  complaint = MailContent(
+                    title: titleController.text,
+                    category: selectedCategory,
+                    description: descripController.text,
+                    images: imagesInComplaint,
+                    filingTime: DateTime.now(),
+                    status: 'pending',
+                    upvotes: [],
+                    email: "jain2305@gmail.com");
+        
+                  print(complaint.title + '\n' + complaint.category  + '\n' + complaint.description+'\n'+complaint.images.length.toString());
+                  //Future.delayed(Duration(seconds: 10),(){imagesInComplaint.clear();});
                   //TODO: Add mail to database.
-                  titleController.dispose();
-                  descripController.dispose();
-                  imagesInComplaint.clear();
+                  titleController.clear();
+                  descripController.clear();
+                  //imagesInComplaint.clear();
                   //TODO: Navigate to next page
-
+                  /*showDialog(
+                    context: context,
+                    builder: (BuildContext context) => ModeratorDialog()
+                  );*/
                 },
                 child: Text(
                   'Submit',
