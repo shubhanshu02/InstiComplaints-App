@@ -281,7 +281,15 @@ class _ComposeState extends State<Compose> {
             Center(
               child: RaisedButton(
                 onPressed: () {
-                  complaint = MailContent(titleController.text, selectedCategory, descripController.text, imagesInComplaint,DateTime.now(),"pending",[],"jain2305@gmail.com");
+                  complaint = MailContent(
+                    title: titleController.text,
+                    category: selectedCategory,
+                    description: descripController.text,
+                    images: imagesInComplaint,
+                    filingTime: DateTime.now(),
+                    status: 'pending',
+                    upvotes: [],
+                    email: "jain2305@gmail.com");
         
                   print(complaint.title + '\n' + complaint.category  + '\n' + complaint.description+'\n'+complaint.images.length.toString());
                   //Future.delayed(Duration(seconds: 10),(){imagesInComplaint.clear();});
