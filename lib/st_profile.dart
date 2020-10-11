@@ -67,11 +67,14 @@ class _ProfileState extends State<Profile> {
                 Center(child: Camera()),
                 SizedBox(height: 10.0),
                 Center(
-                  child: Text('${FirebaseAuth.instance.currentUser.displayName}',
-                      style: TextStyle(
-                        fontFamily: 'Roboto',
-                        fontSize: 20.0,
-                      )),
+                  child: Text(
+                    '${FirebaseAuth.instance.currentUser.displayName}',
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 20.0,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
                 SizedBox(height: 20.0),
                 Row(children: [

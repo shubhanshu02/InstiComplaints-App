@@ -325,12 +325,15 @@ class _NavDrawerState extends State<NavDrawer> {
                 color: Color(0xFF181D3D),
                 child: ListTile(
                   title: Center(
-                    child: Text(
-                      'Hi, ${FirebaseAuth.instance.currentUser.displayName}', // declare the variable for the name of user
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontFamily: 'JosefinSans',
-                        color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: Text(
+                        'Hi, ${FirebaseAuth.instance.currentUser.displayName}',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontFamily: 'JosefinSans',
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
@@ -680,7 +683,10 @@ class _NavDrawerState extends State<NavDrawer> {
                 color: Color(0xFF181D3D),
               ),
               title: Text('Log Out'),
-              onTap: () => {Navigator.pushReplacementNamed(context, '/')},
+              onTap: () {
+                FirebaseAuth.instance.signOut();
+                Navigator.pushReplacementNamed(context, '/');
+              },
             ),
             Divider(
               height: 0.75,
