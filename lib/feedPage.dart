@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
+import 'package:google_sign_in/google_sign_in.dart';
+
 GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
     new GlobalKey<RefreshIndicatorState>();
@@ -683,8 +685,9 @@ class _NavDrawerState extends State<NavDrawer> {
                 color: Color(0xFF181D3D),
               ),
               title: Text('Log Out'),
-              onTap: () {
-                FirebaseAuth.instance.signOut();
+              onTap: () async {
+                await FirebaseAuth.instance.signOut();
+                await GoogleSignIn().signOut();
                 Navigator.pushReplacementNamed(context, '/');
               },
             ),
