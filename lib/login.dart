@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'app.dart';
 import 'Compose.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class MyLoginPage extends StatefulWidget {
   @override
@@ -24,6 +26,23 @@ class _MyLoginPageState extends State<MyLoginPage> {
       registerChange = !registerChange;
     });
     return registerChange;
+  }
+
+  Future<void> _handleButtonClick() async {
+    await _handleGoogleSignin();
+    final User user = FirebaseAuth.instance.currentUser;
+    // Times for checking if the user is a new user or not
+    final creationTime = user.metadata.creationTime;
+    final lastSignin = user.metadata.lastSignInTime;
+
+    if (creationTime == lastSignin) {
+      // The user is just created
+      Navigator.pushNamed(context, '/register');
+    } else {
+      // The user is already there, so redirect to feed
+      Navigator.pop(context);
+      Navigator.pushNamed(context, '/navigation');
+    }
   }
 
   @override
@@ -91,6 +110,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                     color: loginChange ? Colors.transparent : Color(0xFFF49F1C),
                     onPressed: () {
                       loginStateChange();
+                      _handleButtonClick();
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(2.0),
@@ -124,7 +144,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                       registerChange ? Colors.transparent : Color(0xFFF49F1C),
                   onPressed: () {
                     registerStateChange();
-                    Navigator.pushNamed(context, '/register');
+                    _handleButtonClick();
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(2.0),
@@ -149,5 +169,18 @@ class _MyLoginPageState extends State<MyLoginPage> {
     );
   }
 }
-// TODO: LogIn and SignUp through Google Authentication using Django Backend
 //.only(topLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0)) -- differently shaped button
+
+Future<UserCredential> _handleGoogleSignin() async {
+  // Start Authentication Process
+  final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+  // Obtain the auth details from the request
+  final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+  // Create a new credential
+  final GoogleAuthCredential credential = GoogleAuthProvider.credential(
+    accessToken: googleAuth.accessToken,
+    idToken: googleAuth.idToken,
+  );
+  // Once signed in, return the UserCredential
+  return await FirebaseAuth.instance.signInWithCredential(credential);
+}
