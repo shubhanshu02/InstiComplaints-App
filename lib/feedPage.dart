@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
@@ -307,8 +308,8 @@ class _NavDrawerState extends State<NavDrawer> {
                     ],
                   ),
                   child: CircleAvatar(
-                    radius: 70.0,
-                    backgroundImage: AssetImage("assets/profilePic.jpg"),
+                    radius: 60.0,
+                    backgroundImage: NetworkImage('${FirebaseAuth.instance.currentUser.photoURL}'),// AssetImage("assets/profilePic.jpg"),
                     backgroundColor: Colors.black,
                   ),
                 ),
@@ -325,9 +326,9 @@ class _NavDrawerState extends State<NavDrawer> {
                 child: ListTile(
                   title: Center(
                     child: Text(
-                      'Hi, Kenny ', // declare the variable for the name of user
+                      'Hi, ${FirebaseAuth.instance.currentUser.displayName}', // declare the variable for the name of user
                       style: TextStyle(
-                        fontSize: 25.0,
+                        fontSize: 20.0,
                         fontFamily: 'JosefinSans',
                         color: Colors.white,
                       ),
