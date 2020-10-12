@@ -170,21 +170,19 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                             Tab(
                               child: Padding(
                                 padding: const EdgeInsets.fromLTRB(
-                                    42.0, 5.0, 42.0, 0),
+                                    42.0, 0, 42.0, 0),
                                 child: Column(
                                   children: [
                                     Icon(
                                       Icons.mode_comment,
                                       color: Colors.white,
-                                      size: 24.0,
+                                      size: 24,
                                     ),
-                                    SizedBox(
-                                      height: 1.0,
-                                    ),
+                                  
                                     Text(
                                       'Feed',
                                       style: TextStyle(
-                                          fontSize: 12, color: Colors.white),
+                                          fontSize: 11, color: Colors.white),
                                     ),
                                   ],
                                 ),
@@ -193,7 +191,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                             Tab(
                               child: Padding(
                                 padding:
-                                    const EdgeInsets.fromLTRB(25, 5.0, 25, 0),
+                                    const EdgeInsets.fromLTRB(25, 0, 25, 0),
                                 child: Column(
                                   children: [
                                     Icon(
@@ -201,13 +199,11 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                       color: Colors.white,
                                       size: 24,
                                     ),
-                                    SizedBox(
-                                      height: 1.0,
-                                    ),
+                                    
                                     Text(
                                       'Bookmarks',
                                       style: TextStyle(
-                                          fontSize: 12, color: Colors.white),
+                                          fontSize: 11, color: Colors.white),
                                     ),
                                   ],
                                 ),
