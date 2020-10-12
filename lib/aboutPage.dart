@@ -13,7 +13,10 @@ class AboutPage extends StatelessWidget {
               .subtitle1
               .copyWith(color: Colors.white),
         ),
-        leading: Icon(Icons.arrow_back_ios),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
       body: Container(
         padding: EdgeInsets.all(30),

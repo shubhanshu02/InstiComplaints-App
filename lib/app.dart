@@ -1,5 +1,6 @@
 
 import 'package:InstiComplaints/register.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'st_profile.dart';
@@ -24,7 +25,7 @@ class InstiComplaints extends StatelessWidget {
       '/notifications': (context) => Notifications(),
       '/navigation': (context) => BottomNavigation(),
       '/register': (context) => RegisterPage(),
-      '/': (context) => MyLoginPage(),
+      '/': (context) => (FirebaseAuth.instance.currentUser == null)? MyLoginPage():BottomNavigation(),
       '/about': (context)=> AboutPage()
     });
   }

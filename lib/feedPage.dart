@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
+
+import 'package:google_sign_in/google_sign_in.dart';
 
 GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
@@ -167,21 +170,19 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                             Tab(
                               child: Padding(
                                 padding: const EdgeInsets.fromLTRB(
-                                    42.0, 5.0, 42.0, 0),
+                                    42.0, 0, 42.0, 0),
                                 child: Column(
                                   children: [
                                     Icon(
                                       Icons.mode_comment,
                                       color: Colors.white,
-                                      size: 24.0,
+                                      size: 24,
                                     ),
-                                    SizedBox(
-                                      height: 1.0,
-                                    ),
+                                  
                                     Text(
                                       'Feed',
                                       style: TextStyle(
-                                          fontSize: 12, color: Colors.white),
+                                          fontSize: 11, color: Colors.white),
                                     ),
                                   ],
                                 ),
@@ -190,7 +191,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                             Tab(
                               child: Padding(
                                 padding:
-                                    const EdgeInsets.fromLTRB(25, 5.0, 25, 0),
+                                    const EdgeInsets.fromLTRB(25, 0, 25, 0),
                                 child: Column(
                                   children: [
                                     Icon(
@@ -198,13 +199,11 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                       color: Colors.white,
                                       size: 24,
                                     ),
-                                    SizedBox(
-                                      height: 1.0,
-                                    ),
+                                    
                                     Text(
                                       'Bookmarks',
                                       style: TextStyle(
-                                          fontSize: 12, color: Colors.white),
+                                          fontSize: 11, color: Colors.white),
                                     ),
                                   ],
                                 ),
@@ -307,8 +306,8 @@ class _NavDrawerState extends State<NavDrawer> {
                     ],
                   ),
                   child: CircleAvatar(
-                    radius: 70.0,
-                    backgroundImage: AssetImage("assets/profilePic.jpg"),
+                    radius: 60.0,
+                    backgroundImage: NetworkImage('${FirebaseAuth.instance.currentUser.photoURL}'),// AssetImage("assets/profilePic.jpg"),
                     backgroundColor: Colors.black,
                   ),
                 ),
@@ -324,12 +323,15 @@ class _NavDrawerState extends State<NavDrawer> {
                 color: Color(0xFF181D3D),
                 child: ListTile(
                   title: Center(
-                    child: Text(
-                      'Hi, Kenny ', // declare the variable for the name of user
-                      style: TextStyle(
-                        fontSize: 25.0,
-                        fontFamily: 'JosefinSans',
-                        color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: Text(
+                        'Hi, ${FirebaseAuth.instance.currentUser.displayName}',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontFamily: 'JosefinSans',
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
@@ -679,7 +681,11 @@ class _NavDrawerState extends State<NavDrawer> {
                 color: Color(0xFF181D3D),
               ),
               title: Text('Log Out'),
-              onTap: () => {Navigator.pushReplacementNamed(context, '/')},
+              onTap: () async {
+                await FirebaseAuth.instance.signOut();
+                await GoogleSignIn().signOut();
+                Navigator.pushReplacementNamed(context, '/');
+              },
             ),
             Divider(
               height: 0.75,
