@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 class Filed extends StatefulWidget {
   @override
@@ -9,66 +10,88 @@ class _FiledState extends State<Filed> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(alignment: Alignment(0.0, 2.0), children: [
-        Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/pages1.jpg"),
-              fit: BoxFit.fill,
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 100.0,
-        ),
-        Column(children: [
-          SizedBox(
-            height: 25.0,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: 20.0,
-              ),
-              new Container(
-                  width: 50.0,
-                  height: 50.0,
-                  decoration: new BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: new DecorationImage(
-                        fit: BoxFit.fill,
-                        image: AssetImage("assets/app_logo_final_jpg_ws.jpg"),
-                      ))),
-              SizedBox(
-                width: 20.0,
-              ),
-              Text(
-                "InstiComplaints",
-                style: TextStyle(
-                  fontFamily: 'Amaranth',
-                  fontSize: 20.0,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 40.0,
-          ),
-          Text(
-            "Complaints Filed",
-            style: TextStyle(
-              fontSize: 25.0,
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: (4.3 * MediaQuery.of(context).size.width) / 8,
+        child: Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            Container(
+              constraints: BoxConstraints.expand(),
               color: Colors.white,
-              fontFamily: 'JosefinSans',
+              //child: Compose(),
             ),
-          ),
-          SizedBox(
-            height: 11.0,
-          ),
-        ]),
-      ]),
+            ClipPath(
+                clipper: CurveClipper(),
+                child: Container(
+                  constraints: BoxConstraints.expand(),
+                  color: Color(0xFF181D3D),
+                  child: Column(children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(15.0, 25.0, 0.0, 0.0),
+                      child: Row(
+                        children: <Widget>[
+                          SizedBox(height: 30.0),
+                          CircleAvatar(
+                            backgroundImage:
+                                AssetImage('assets/app_logo_final_jpg_ws.jpg'),
+                            radius: (38 * MediaQuery.of(context).size.height) /
+                                1000,
+                          ),
+                          SizedBox(
+                            width: 10.0,
+                          ),
+                          Text(
+                            'InstiComplaint',
+                            style: TextStyle(
+                                fontFamily: 'Amaranth',
+                                color: Colors.white,
+                                fontSize:
+                                    (34 * MediaQuery.of(context).size.height) /
+                                        1000),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: MediaQuery.of(context).size.height / 24),
+                    Text('Complaints Filed',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize:
+                                (30 * MediaQuery.of(context).size.height) /
+                                    1000)),
+                    //SizedBox(height: MediaQuery.of(context).size.height / 12),
+                  ]),
+                )),
+          ],
+        ))
     );
   }
+}
+
+class CurveClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path()
+      // set the "current point"
+      ..lineTo(0, size.width / 8)
+      ..addArc(
+          Rect.fromLTWH(0, size.width / 512 - size.width / 8, size.width / 2,
+              size.width / 2),
+          pi,
+          -pi / 2)
+      ..lineTo(4 * size.width / 4, size.width / 2 - size.width / 8)
+      ..addArc(
+          Rect.fromLTWH(2 * size.width / 4, size.width / 2 - size.width / 8,
+              size.width / 2, size.width / 2),
+          3.14 + 1.57,
+          1.57)
+      ..lineTo(size.width, 0)
+      ..lineTo(0, 0)
+      ..lineTo(0, size.width / 8);
+    return path;
+  }
+
+  @override
+  bool shouldReclip(oldCliper) => false;
 }
