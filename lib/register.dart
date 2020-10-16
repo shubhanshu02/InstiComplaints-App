@@ -47,10 +47,10 @@ class _RegisterFormState extends State<RegisterForm> {
 
   void formProcessor() {
     UserModal _currentDetails = UserModal(
-        _nameController.text,
-        int.parse(_rollNoController.text),
-        hostelname,
-        int.parse(_roomNoController.text));
+        name: _nameController.text,
+        rollNo: int.parse(_rollNoController.text),
+        hostel: hostelname,
+        roomNo: int.parse(_roomNoController.text));
     // TODO: Send to backend server
   }
 

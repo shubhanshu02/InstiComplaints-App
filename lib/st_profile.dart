@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'userDatabase.dart';
 import 'camera.dart';
 import 'card.dart';
 
@@ -10,6 +10,14 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  Future<void> createCollection() async {
+   await DatabaseService(uid: '456').addComplaints('qwert');
+  }
+ @override
+  void initState() { 
+    super.initState();
+    createCollection();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,7 +76,7 @@ class _ProfileState extends State<Profile> {
                 SizedBox(height: 10.0),
                 Center(
                   child: Text(
-                    '${FirebaseAuth.instance.currentUser.displayName}',
+                    'sdfgh',
                     style: TextStyle(
                       fontFamily: 'Roboto',
                       fontSize: 20.0,
