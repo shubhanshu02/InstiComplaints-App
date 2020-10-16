@@ -115,7 +115,7 @@ class _CameraState extends State<Camera> {
                     child: Column(
                       children: [
                         CircleAvatar(
-                          backgroundImage: NetworkImage('${FirebaseAuth.instance.currentUser.photoURL}'),
+                          backgroundImage: AssetImage('assets/photo.png'),
                           radius: 30.0,
                         ),
                         Text('Camera'),
@@ -142,7 +142,7 @@ class _CameraState extends State<Camera> {
             shape: BoxShape.circle,
             image: DecorationImage(
                 image: imageFile == null
-                    ? AssetImage('assets/photo.png')
+                    ? NetworkImage('${FirebaseAuth.instance.currentUser.photoURL}')
                     : FileImage(imageFile),
                 fit: BoxFit.cover)),
       ),
