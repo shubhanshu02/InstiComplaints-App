@@ -76,7 +76,7 @@ class _ProfileState extends State<Profile> {
                 SizedBox(height: 10.0),
                 Center(
                   child: Text(
-                    'sdfgh',
+                    '${FirebaseAuth.instance.currentUser.displayName}',
                     style: TextStyle(
                       fontFamily: 'Roboto',
                       fontSize: 20.0,
