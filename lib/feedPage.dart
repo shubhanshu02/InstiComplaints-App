@@ -66,20 +66,22 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
               controller: _tabController,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(
-                      right: 20, left: 20, top: 150, bottom: 0),
-                  child: Container(
+                    padding: const EdgeInsets.only(
+                        right: 20, left: 20, top: 150, bottom: 0),
+                    child: Container(
                       // add contents of the feed page
-                      child: ListView.builder(
-                          itemBuilder: (_, index) => ComplaintBox())),
-                ),
+                      child: ListView(
+                        children: _listBuilder(),
+                      ),
+                    )),
                 Padding(
                   padding: const EdgeInsets.only(
                       right: 20, left: 20, top: 150, bottom: 0),
                   child: Container(
                       // add contents of the bookmark page
-                      child: ListView.builder(
-                          itemBuilder: (_, index) => ComplaintBox())),
+                      child: ListView(
+                    children: _listBuilder(),
+                  )),
                 ),
               ],
             ),
@@ -169,8 +171,8 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                           tabs: [
                             Tab(
                               child: Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                    42.0, 0, 42.0, 0),
+                                padding:
+                                    const EdgeInsets.fromLTRB(42.0, 0, 42.0, 0),
                                 child: Column(
                                   children: [
                                     Icon(
@@ -178,7 +180,6 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                       color: Colors.white,
                                       size: 24,
                                     ),
-                                  
                                     Text(
                                       'Feed',
                                       style: TextStyle(
@@ -199,7 +200,6 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                       color: Colors.white,
                                       size: 24,
                                     ),
-                                    
                                     Text(
                                       'Bookmarks',
                                       style: TextStyle(
@@ -307,7 +307,8 @@ class _NavDrawerState extends State<NavDrawer> {
                   ),
                   child: CircleAvatar(
                     radius: 60.0,
-                    backgroundImage: NetworkImage('${FirebaseAuth.instance.currentUser.photoURL}'),// AssetImage("assets/profilePic.jpg"),
+                    backgroundImage: NetworkImage(
+                        '${FirebaseAuth.instance.currentUser.photoURL}'), // AssetImage("assets/profilePic.jpg"),
                     backgroundColor: Colors.black,
                   ),
                 ),

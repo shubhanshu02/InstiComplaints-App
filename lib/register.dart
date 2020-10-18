@@ -60,7 +60,7 @@ class _RegisterFormState extends State<RegisterForm> {
       Add the document of the UserDetails to the usercollection class
       For model reference, check models.dart
     */
-    final database = FirebaseFirestore.instance.collection('usercollection');
+    final database = FirebaseFirestore.instance.collection('users');
     await database.doc('${user.uid}').set({
       'name': _nameController.text,
       'uid': user.uid,
@@ -230,7 +230,6 @@ class _RegisterFormState extends State<RegisterForm> {
                     return null;
                   },
                   controller: _roomNoController,
-                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelStyle: TextStyle(
                       color: Colors.black,
