@@ -12,20 +12,25 @@ import 'notifications.dart';
 import 'navigation.dart';
 import 'login.dart';
 import 'aboutPage.dart';
+import 'admin_pending_complaints.dart';
+import 'admin_resolved_complaints.dart';
 
 class InstiComplaints extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'InstiComplaints',  routes: {
+    return MaterialApp(title: 'InstiComplaints',  
+    routes: {
+      '/ad_pending': (context) => AdPending(),
+      '/ad_resolved': (context) => AdResolved(),
       '/filed': (context) => Filed(),
       '/resolved': (context) => Resolved(),
       '/st_profile': (context) => Profile(),
       '/ad_profile': (context) => AdProfile(),
       '/compose': (context) => Compose(),
       '/notifications': (context) => Notifications(),
-      '/navigation': (context) => BottomNavigation(),
+      '/navigation': (context) => User1(),
       '/register': (context) => RegisterPage(),
-      '/': (context) => (FirebaseAuth.instance.currentUser == null)? MyLoginPage():BottomNavigation(),
+      '/': (context) => (FirebaseAuth.instance.currentUser == null)? MyLoginPage():User1(),
       '/about': (context)=> AboutPage()
     });
   }

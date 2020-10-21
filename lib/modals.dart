@@ -10,6 +10,7 @@ class UserModal {
   int rollNo;
   int roomNo;
   String hostel;
-  UserModal({this.uid, this.email, this.name, this.rollNo, this.roomNo, this.hostel, this.category});
+  String type;
+  UserModal({this.uid, this.email, this.name, this.rollNo, this.roomNo, this.hostel, this.category, this.type, this.photoURL});
 }
 
