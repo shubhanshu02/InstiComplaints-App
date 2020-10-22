@@ -3,7 +3,6 @@ import 'package:flutter/painting.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
 class MyLoginPage extends StatefulWidget {
   @override
   _MyLoginPageState createState() => _MyLoginPageState();
@@ -28,7 +27,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
 
   Future<void> _handleButtonClick() async {
     final UserCredential _currentUser = await _handleGoogleSignin();
-    
+
     if (_currentUser.additionalUserInfo.isNewUser) {
       // The user is just created
       Navigator.pushNamed(context, '/register');
@@ -174,9 +173,8 @@ Future<UserCredential> _handleGoogleSignin() async {
   final GoogleAuthCredential credential = GoogleAuthProvider.credential(
     accessToken: googleAuth.accessToken,
     idToken: googleAuth.idToken,
-    
   );
- 
+
   // Once signed in, return the UserCredential
   return await FirebaseAuth.instance.signInWithCredential(credential);
 }

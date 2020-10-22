@@ -209,7 +209,6 @@ class _AdProfileState extends State<AdProfile> {
               ],
             )),
       ),
-      
     );
   }
 }

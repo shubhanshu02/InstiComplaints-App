@@ -9,7 +9,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-var user=FirebaseAuth.instance.currentUser;
+var user = FirebaseAuth.instance.currentUser;
 
 GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
@@ -22,7 +22,8 @@ class Resolved extends StatefulWidget {
   _ResolvedState createState() => _ResolvedState();
 }
 
-class _ResolvedState extends State<Resolved> with SingleTickerProviderStateMixin {
+class _ResolvedState extends State<Resolved>
+    with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,13 +31,12 @@ class _ResolvedState extends State<Resolved> with SingleTickerProviderStateMixin
       body: Stack(
         children: [
           Container(
-            child:
-                Padding(
-                    padding: const EdgeInsets.only(
-                        right: 20, left: 20, top: 150, bottom: 0),
-                    child: Container(
-                      child: ComplaintList(),
-                       )),
+            child: Padding(
+                padding: const EdgeInsets.only(
+                    right: 20, left: 20, top: 150, bottom: 0),
+                child: Container(
+                  child: ComplaintList(),
+                )),
           ),
           Container(
             child: Stack(
@@ -68,10 +68,10 @@ class _ResolvedState extends State<Resolved> with SingleTickerProviderStateMixin
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         CircleAvatar(
-                      backgroundImage:
-                          AssetImage('assets/app_logo_final_jpg_ws.jpg'),
-                      radius: 25.0,
-                    ),
+                          backgroundImage:
+                              AssetImage('assets/app_logo_final_jpg_ws.jpg'),
+                          radius: 25.0,
+                        ),
                         SizedBox(
                           width: 35.0,
                         ),
@@ -87,12 +87,11 @@ class _ResolvedState extends State<Resolved> with SingleTickerProviderStateMixin
                     ),
                     SizedBox(height: 20.0),
                     Text('Complaints Resolved',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize:
-                                        (30 * MediaQuery.of(context).size.height) /
-                                            1000)),
-                    
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize:
+                                (30 * MediaQuery.of(context).size.height) /
+                                    1000)),
                   ],
                 ),
               ],
@@ -136,7 +135,6 @@ class ComplaintList extends StatefulWidget {
 }
 
 class _ComplaintListState extends State<ComplaintList> {
-
   @override
   Widget build(BuildContext context) {
     return StreamProvider<List<String>>.value(
@@ -146,22 +144,25 @@ class _ComplaintListState extends State<ComplaintList> {
   }
 }
 
-List<String> getComplaints(DocumentSnapshot snapshot){
+List<String> getComplaints(DocumentSnapshot snapshot) {
   print(snapshot.data());
   return List.from(snapshot['list of my filed Complaints']);
 }
 
 Stream<List<String>> get getComplaintId {
-  return FirebaseFirestore.instance.collection('users').doc(user.uid).get().then((snapshot){
-    try{
+  return FirebaseFirestore.instance
+      .collection('users')
+      .doc(user.uid)
+      .get()
+      .then((snapshot) {
+    try {
       return getComplaints(snapshot);
-    } catch(e) {
+    } catch (e) {
       print(e);
       return null;
     }
   }).asStream();
 }
-
 
 class ComplaintTile1 extends StatefulWidget {
   @override
@@ -171,210 +172,202 @@ class ComplaintTile1 extends StatefulWidget {
 class _ComplaintTile1State extends State<ComplaintTile1> {
   @override
   Widget build(BuildContext context) {
-    final complaintIds= Provider.of<List<String>>(context) ?? [];
-    return ListView.builder (
+    final complaintIds = Provider.of<List<String>>(context) ?? [];
+    return ListView.builder(
       itemCount: complaintIds.length,
-      itemBuilder: (context, index){
-        Future<QuerySnapshot> ref=FirebaseFirestore.instance.collection('complaints').where('status', isEqualTo: 'resolved').where(FieldPath.documentId, isEqualTo: complaintIds[index]).limit(1).get();
-        var ref1=ref.then((data){return data.docs[0];});
+      itemBuilder: (context, index) {
+        Future<QuerySnapshot> ref = FirebaseFirestore.instance
+            .collection('complaints')
+            .where('status', isEqualTo: 'resolved')
+            .where(FieldPath.documentId, isEqualTo: complaintIds[index])
+            .limit(1)
+            .get();
+        var ref1 = ref.then((data) {
+          return data.docs[0];
+        });
         return FutureBuilder(
-    future: ref1,
-    builder: (BuildContext context,
-        AsyncSnapshot<DocumentSnapshot> user) {
-      switch (user.connectionState) {
-        case ConnectionState.none:
-          return Text('Press button to start.');
-        case ConnectionState.active:
-        case ConnectionState.waiting:
-          return Text('Awaiting result...');
-        case ConnectionState.done:
-          if (user.hasError)
-            return Container(width: 0.0, height: 0.0,);
-          return Card(
-                                elevation: 2,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(11)),
-                                child: Container(
-                                  // TODO: Adjust height according to generator function
-                                  height: 210,
-                                  child: InkWell(
-                                    splashColor: Colors.blue.withAlpha(300),
-                                    onTap: () {
-                                      //TODO: Add navigator to other card
-                                    },
-                                    child: Container(
-                                      padding: EdgeInsets.all(10),
+          future: ref1,
+          builder:
+              (BuildContext context, AsyncSnapshot<DocumentSnapshot> user) {
+            switch (user.connectionState) {
+              case ConnectionState.none:
+                return Text('Press button to start.');
+              case ConnectionState.active:
+              case ConnectionState.waiting:
+                return Text('Awaiting result...');
+              case ConnectionState.done:
+                if (user.hasError)
+                  return Container(
+                    width: 0.0,
+                    height: 0.0,
+                  );
+                return Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(11)),
+                    child: Container(
+                      // TODO: Adjust height according to generator function
+                      height: 210,
+                      child: InkWell(
+                        splashColor: Colors.blue.withAlpha(300),
+                        onTap: () {
+                          //TODO: Add navigator to other card
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Row(children: [
+                                        Text(user.data["title"],
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18))
+                                      ]),
+                                      Row(
+                                        children: <Widget>[
+                                          Text(
+                                            'Posted by ',
+                                            style: TextStyle(fontSize: 12),
+                                          ),
+                                          Text(
+                                            'Name', // todo: add name field in complaints collection docs
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold),
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  IconButton(
+                                      icon: Icon(Icons.bookmark_border),
+                                      onPressed: () {
+                                        //TODO: Add color change
+                                      })
+                                ],
+                              ),
+                              SizedBox(height: 7),
+                              Expanded(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Icon(Icons.calendar_today),
+                                    Text(
+                                      DateFormat.yMd()
+                                          .format(
+                                              user.data['filing time'].toDate())
+                                          .toString(),
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(' in '),
+                                    Text(
+                                      user.data["category"],
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Row(
+                                children: <Widget>[
+                                  Flexible(
+                                    child: Text(
+                                      user.data["description"],
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(height: 7),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: <Widget>[
+                                  SizedBox(
+                                    width: 70,
+                                    child: Center(
                                       child: Column(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                            MainAxisAlignment.end,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
                                         children: <Widget>[
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: <Widget>[
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: <Widget>[
-                                                  Row(children: [
-                                                    Text(user.data["title"],
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 18))
-                                                  ]),
-                                                  Row(
-                                                    children: <Widget>[
-                                                      Text(
-                                                        'Posted by ',
-                                                        style: TextStyle(
-                                                            fontSize: 12),
-                                                      ),
-                                                      Text(
-                                                        'Name', // todo: add name field in complaints collection docs
-                                                        style: TextStyle(
-                                                            fontSize: 12,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                              IconButton(
-                                                  icon: Icon(
-                                                      Icons.bookmark_border),
-                                                  onPressed: () {
-                                                    //TODO: Add color change
-                                                  })
-                                            ],
+                                          Text(user.data["status"],
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color:
+                                                    Colors.red.withOpacity(0.6),
+                                                fontWeight: FontWeight.bold,
+                                              )),
+                                          SizedBox(
+                                            height: 5,
                                           ),
-                                          SizedBox(height: 7),
-                                          Expanded(
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: <Widget>[
-                                                Icon(Icons.calendar_today),
-                                                Text(
-                                                  DateFormat.yMd()
-                                                      .format(user.data[
-                                                              'filing time']
-                                                          .toDate())
-                                                      .toString(),
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                Text(' in '),
-                                                Text(
-                                                  user.data["category"],
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                )
-                                              ],
+                                          Text(
+                                            'Status',
+                                            style: TextStyle(
+                                              fontSize: 11,
                                             ),
+                                            textAlign: TextAlign.center,
                                           ),
-                                          SizedBox(height: 4),
-                                          Row(
-                                            children: <Widget>[
-                                              Flexible(
-                                                child: Text(
-                                                  user.data["description"],
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style:
-                                                      TextStyle(fontSize: 15),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                          SizedBox(height: 7),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: <Widget>[
-                                              SizedBox(
-                                                width: 70,
-                                                child: Center(
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: <Widget>[
-                                                      Text(user.data["status"],
-                                                          style: TextStyle(
-                                                            fontSize: 16,
-                                                            color: Colors.red
-                                                                .withOpacity(
-                                                                    0.6),
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          )),
-                                                      SizedBox(
-                                                        height: 5,
-                                                      ),
-                                                      Text(
-                                                        'Status',
-                                                        style: TextStyle(
-                                                          fontSize: 11,
-                                                        ),
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              Column(
-                                                children: <Widget>[
-                                                  IconButton(
-                                                    icon: Icon(Icons.share),
-                                                    onPressed: () {},
-                                                  ),
-                                                  Text(
-                                                    'Share',
-                                                    style: TextStyle(
-                                                      fontSize: 11,
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                              Column(
-                                                children: <Widget>[
-                                                  IconButton(
-                                                    icon: Icon(
-                                                        Icons.arrow_upward),
-                                                    onPressed: () {},
-                                                  ),
-                                                  Text(
-                                                    //todo : get the size of upvotes array from the backend
-                                                    ' Upvotes',
-                                                    style: TextStyle(
-                                                      fontSize: 11,
-                                                    ),
-                                                  )
-                                                ],
-                                              )
-                                            ],
-                                          )
                                         ],
                                       ),
                                     ),
                                   ),
-                                ));
-      }
-      return null; // unreachable
-    },
-  );
+                                  Column(
+                                    children: <Widget>[
+                                      IconButton(
+                                        icon: Icon(Icons.share),
+                                        onPressed: () {},
+                                      ),
+                                      Text(
+                                        'Share',
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  Column(
+                                    children: <Widget>[
+                                      IconButton(
+                                        icon: Icon(Icons.arrow_upward),
+                                        onPressed: () {},
+                                      ),
+                                      Text(
+                                        //todo : get the size of upvotes array from the backend
+                                        ' Upvotes',
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ));
+            }
+            return null; // unreachable
+          },
+        );
       },
     );
   }

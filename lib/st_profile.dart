@@ -9,10 +9,11 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
- @override
-  void initState() { 
+  @override
+  void initState() {
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
