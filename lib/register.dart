@@ -249,7 +249,8 @@ class _RegisterFormState extends State<RegisterForm> {
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
                         Scaffold.of(context).showSnackBar(SnackBar(
-                            content: Text('Establishing Contact with the Server')));
+                            content:
+                                Text('Establishing Contact with the Server')));
                         _showDialog(context);
                         formProcessor();
                         Navigator.pop(context, '/');

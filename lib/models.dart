@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'st_profile.dart';
 
 class UserModel {
-  String photoURL='';
+  String photoURL = '';
   String uid;
   String email;
   String category;
@@ -11,6 +11,12 @@ class UserModel {
   String type;
   String roomNo;
   String hostel;
-  UserModel({this.uid, this.email, this.name, this.rollNo, this.roomNo, this.hostel, this.category});
+  UserModel(
+      {this.uid,
+      this.email,
+      this.name,
+      this.rollNo,
+      this.roomNo,
+      this.hostel,
+      this.category});
 }
-

@@ -142,7 +142,8 @@ class _CameraState extends State<Camera> {
             shape: BoxShape.circle,
             image: DecorationImage(
                 image: imageFile == null
-                    ? NetworkImage('${FirebaseAuth.instance.currentUser.photoURL}')
+                    ? NetworkImage(
+                        '${FirebaseAuth.instance.currentUser.photoURL}')
                     : FileImage(imageFile),
                 fit: BoxFit.cover)),
       ),
