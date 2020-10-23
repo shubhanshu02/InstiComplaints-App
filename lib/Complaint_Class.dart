@@ -4,10 +4,11 @@ class MailContent {
   String title;
   String category;
   String description;
-  List<File> images = [];
+  List<String> images = [];
   DateTime filingTime;
   String status;
   List<String> upvotes = [];
+  String uid;
   String email;
 
   MailContent(
@@ -18,6 +19,7 @@ class MailContent {
       this.filingTime,
       this.status,
       this.upvotes,
+      this.uid,
       this.email});
 }
 
@@ -29,7 +31,7 @@ List<String> status = [
   'Solved'
 ];
 
-List<MailContent> complaints = [
+/*List<MailContent> complaints = [
   MailContent(
       title: 'industry standard dummy',
       category: 'GYMKHANA',
@@ -180,4 +182,4 @@ List<MailContent> complaints = [
       status: 'pending',
       upvotes: [],
       email: 'abhishek.civil.19@itbhu.ac.in'),
-];
+];*/
