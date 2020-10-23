@@ -1,12 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+var user = FirebaseAuth.instance.currentUser;
 
 GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
     new GlobalKey<RefreshIndicatorState>();
+
+ValueNotifier<Map<String, bool>> _filter =
+    ValueNotifier<Map<String, bool>>(categoryComaplints);
 
 class Feed extends StatefulWidget {
   const Feed({Key key}) : super(key: key);
@@ -18,7 +26,6 @@ class Feed extends StatefulWidget {
 class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   TabController _tabController;
   int selectedIndex = 0;
-
   void onItemTapped(int index) {
     setState(() {
       selectedIndex = index;
@@ -42,20 +49,35 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
-  List<ComplaintBox> _listBuilder() {
-    List<ComplaintBox> _list = [];
-    for (int i = 0; i < 10; i++) {
-      _list.insert(0, ComplaintBox());
-    }
-    return _list;
-  }
-
   Future<Null> _refresh() {
     return () {}();
   }
 
   @override
   Widget build(BuildContext context) {
+    isSwitched1 = true;
+    isSwitched2 = true;
+    isSwitched3 = true;
+    isSwitched4 = true;
+    isSwitched5 = true;
+    isSwitched6 = true;
+    isSwitched7 = true;
+    isSwitched8 = true;
+    isSwitched9 = true;
+    isSwitched10 = true;
+    isSwitched11 = true;
+    isSwitched12 = true;
+    isSwitched13 = true;
+    isSwitched14 = true;
+    isSwitched15 = true;
+    isSwitched16 = true;
+    isSwitched17 = true;
+    isSwitched18 = true;
+    isSwitched19 = true;
+    isSwitched20 = true;
+    isSwitched21 = true;
+    isSwitched22 = true;
+
     return Scaffold(
       key: _scaffoldState,
       drawer: NavDrawer(),
@@ -69,18 +91,245 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                     padding: const EdgeInsets.only(
                         right: 20, left: 20, top: 150, bottom: 0),
                     child: Container(
-                      // add contents of the feed page
-                      child: ListView(
-                        children: _listBuilder(),
-                      ),
-                    )),
+                        child: ValueListenableBuilder(
+                      valueListenable: _filter,
+                      builder: (BuildContext context, Map<String, bool> value,
+                          Widget child) {
+                        return StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance
+                              .collection('complaints')
+                              .snapshots(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (snapshot.hasError) {
+                              return Text('Something went wrong');
+                            }
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return CircularProgressIndicator();
+                            }
+
+                            return new ListView(
+                              children: snapshot.data.docs
+                                  .map((DocumentSnapshot document) {
+                                if (value[document['category']] == true) {
+                                  return Card(
+                                      elevation: 2,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(11)),
+                                      child: Container(
+                                        // TODO: Adjust height according to generator function
+                                        height: 210,
+                                        child: InkWell(
+                                          splashColor:
+                                              Colors.blue.withAlpha(300),
+                                          onTap: () {
+                                            //TODO: Add navigator to other card
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.all(10),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: <Widget>[
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: <Widget>[
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: <Widget>[
+                                                        Row(children: [
+                                                          Text(
+                                                              document["title"],
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 18))
+                                                        ]),
+                                                        Row(
+                                                          children: <Widget>[
+                                                            Text(
+                                                              'Posted by ',
+                                                              style: TextStyle(
+                                                                  fontSize: 12),
+                                                            ),
+                                                            Text(
+                                                              'Name', // todo: add name field in complaints collection docs
+                                                              style: TextStyle(
+                                                                  fontSize: 12,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    IconButton(
+                                                        icon: Icon(Icons
+                                                            .bookmark_border),
+                                                        onPressed: () {
+                                                          //TODO: Add color change
+                                                        })
+                                                  ],
+                                                ),
+                                                SizedBox(height: 7),
+                                                Expanded(
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: <Widget>[
+                                                      Icon(
+                                                          Icons.calendar_today),
+                                                      Text(
+                                                        DateFormat.yMd()
+                                                            .format(document[
+                                                                    'filing time']
+                                                                .toDate())
+                                                            .toString(),
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      Text(' in '),
+                                                      Text(
+                                                        document["category"],
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(height: 4),
+                                                Row(
+                                                  children: <Widget>[
+                                                    Flexible(
+                                                      child: Text(
+                                                        document["description"],
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                            fontSize: 15),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                                SizedBox(height: 7),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.end,
+                                                  children: <Widget>[
+                                                    SizedBox(
+                                                      width: 70,
+                                                      child: Center(
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .end,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
+                                                          children: <Widget>[
+                                                            Text(
+                                                                document[
+                                                                    "status"],
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: 16,
+                                                                  color: Colors
+                                                                      .red
+                                                                      .withOpacity(
+                                                                          0.6),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                )),
+                                                            SizedBox(
+                                                              height: 5,
+                                                            ),
+                                                            Text(
+                                                              'Status',
+                                                              style: TextStyle(
+                                                                fontSize: 11,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Column(
+                                                      children: <Widget>[
+                                                        IconButton(
+                                                          icon:
+                                                              Icon(Icons.share),
+                                                          onPressed: () {},
+                                                        ),
+                                                        Text(
+                                                          'Share',
+                                                          style: TextStyle(
+                                                            fontSize: 11,
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                    Column(
+                                                      children: <Widget>[
+                                                        IconButton(
+                                                          icon: Icon(Icons
+                                                              .arrow_upward),
+                                                          onPressed: () {},
+                                                        ),
+                                                        Text(
+                                                          //todo : get the size of upvotes array from the backend
+                                                          ' Upvotes',
+                                                          style: TextStyle(
+                                                            fontSize: 11,
+                                                          ),
+                                                        )
+                                                      ],
+                                                    )
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ));
+                                } else
+                                  return Container(
+                                    height: 0,
+                                  );
+                              }).toList(),
+                            );
+                          },
+                        );
+                      },
+                    ))),
                 Padding(
                   padding: const EdgeInsets.only(
                       right: 20, left: 20, top: 150, bottom: 0),
                   child: Container(
                       // add contents of the bookmark page
-                      child: ListView(
-                    children: _listBuilder(),
+                      child: StreamProvider<List<String>>.value(
+                    value: getComplaintId,
+                    child: ComplaintTile1(),
                   )),
                 ),
               ],
@@ -252,7 +501,54 @@ class CurveClipper extends CustomClipper<Path> {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+Map<String, bool> categoryComaplints = {
+  "Administration": isSwitched1,
+  "Gymkhana": isSwitched2,
+  "General": isSwitched3,
+  "Campus": isSwitched4,
+  "Proctor": isSwitched5,
+  "C. V. Raman": isSwitched6,
+  "Morvi": isSwitched7,
+  "Dhanrajgiri": isSwitched8,
+  "Rajputana": isSwitched9,
+  "Limbdi": isSwitched10,
+  "Vivekanand": isSwitched11,
+  "Vishwakarma": isSwitched12,
+  "Vishweshvariaya": isSwitched13,
+  "Aryabhatt-I": isSwitched14,
+  "Aryabhatt–II": isSwitched15,
+  "S. N. Bose": isSwitched16,
+  "S. Ramanujan": isSwitched17,
+  "Gandhi Smriti Chhatravas(Old)": isSwitched18,
+  "Gandhi Smriti Chhatravas(Extension)": isSwitched19,
+  "IIT (BHU) Girls Hostel": isSwitched20,
+  "S. C. Dey": isSwitched21,
+  "IIT Boys (Saluja)": isSwitched22,
+};
+
 // code for the sidebar
+bool isSwitched1;
+bool isSwitched2;
+bool isSwitched3;
+bool isSwitched4;
+bool isSwitched5;
+bool isSwitched6;
+bool isSwitched7;
+bool isSwitched8;
+bool isSwitched9;
+bool isSwitched10;
+bool isSwitched11;
+bool isSwitched12;
+bool isSwitched13;
+bool isSwitched14;
+bool isSwitched15;
+bool isSwitched16;
+bool isSwitched17;
+bool isSwitched18;
+bool isSwitched19;
+bool isSwitched20;
+bool isSwitched21;
+bool isSwitched22;
 
 class NavDrawer extends StatefulWidget {
   @override
@@ -260,30 +556,9 @@ class NavDrawer extends StatefulWidget {
 }
 
 class _NavDrawerState extends State<NavDrawer> {
-  bool isSwitched1 = true;
-  bool isSwitched2 = true;
-  bool isSwitched3 = true;
-  bool isSwitched4 = true;
-  bool isSwitched5 = true;
-  bool isSwitched6 = true;
-  bool isSwitched7 = true;
-  bool isSwitched8 = true;
-  bool isSwitched9 = true;
-  bool isSwitched10 = true;
-  bool isSwitched11 = true;
-  bool isSwitched12 = true;
-  bool isSwitched13 = true;
-  bool isSwitched14 = true;
-  bool isSwitched15 = true;
-  bool isSwitched16 = true;
-  bool isSwitched17 = true;
-  bool isSwitched18 = true;
-  bool isSwitched19 = true;
-  bool isSwitched20 = true;
-  bool isSwitched21 = true;
-
   @override
   Widget build(BuildContext context) {
+    print(categoryComaplints);
     return Container(
       width: MediaQuery.of(context).size.width * 0.7,
       child: Drawer(
@@ -308,7 +583,7 @@ class _NavDrawerState extends State<NavDrawer> {
                   child: CircleAvatar(
                     radius: 60.0,
                     backgroundImage: NetworkImage(
-                        '${FirebaseAuth.instance.currentUser.photoURL}'), // AssetImage("assets/profilePic.jpg"),
+                        '${FirebaseAuth.instance.currentUser.photoURL}'),
                     backgroundColor: Colors.black,
                   ),
                 ),
@@ -358,10 +633,12 @@ class _NavDrawerState extends State<NavDrawer> {
                       ListTile(
                         leading: Switch(
                           value: isSwitched1,
-                          onChanged: (value) {
+                          onChanged: (bool value) {
                             setState(() {
                               isSwitched1 = value;
-                              print(isSwitched1);
+                              categoryComaplints["Administration"] =
+                                  isSwitched1;
+                              _filter.notifyListeners();
                             });
                           },
                           activeTrackColor: Colors.grey[800],
@@ -375,7 +652,8 @@ class _NavDrawerState extends State<NavDrawer> {
                           onChanged: (value) {
                             setState(() {
                               isSwitched2 = value;
-                              print(isSwitched2);
+                              categoryComaplints["Gymkhana"] = isSwitched2;
+                              _filter.notifyListeners();
                             });
                           },
                           activeTrackColor: Colors.grey[800],
@@ -389,7 +667,8 @@ class _NavDrawerState extends State<NavDrawer> {
                           onChanged: (value) {
                             setState(() {
                               isSwitched3 = value;
-                              print(isSwitched3);
+                              categoryComaplints["General"] = isSwitched3;
+                              _filter.notifyListeners();
                             });
                           },
                           activeTrackColor: Colors.grey[800],
@@ -403,7 +682,8 @@ class _NavDrawerState extends State<NavDrawer> {
                           onChanged: (value) {
                             setState(() {
                               isSwitched4 = value;
-                              print(isSwitched4);
+                              categoryComaplints["Campus"] = isSwitched4;
+                              _filter.notifyListeners();
                             });
                           },
                           activeTrackColor: Colors.grey[800],
@@ -417,7 +697,8 @@ class _NavDrawerState extends State<NavDrawer> {
                           onChanged: (value) {
                             setState(() {
                               isSwitched5 = value;
-                              print(isSwitched5);
+                              categoryComaplints["Proctor"] = isSwitched5;
+                              _filter.notifyListeners();
                             });
                           },
                           activeTrackColor: Colors.grey[800],
@@ -431,7 +712,8 @@ class _NavDrawerState extends State<NavDrawer> {
                           onChanged: (value) {
                             setState(() {
                               isSwitched6 = value;
-                              print(isSwitched6);
+                              categoryComaplints["C. V. Raman"] = isSwitched6;
+                              _filter.notifyListeners();
                             });
                           },
                           activeTrackColor: Colors.grey[800],
@@ -445,7 +727,8 @@ class _NavDrawerState extends State<NavDrawer> {
                           onChanged: (value) {
                             setState(() {
                               isSwitched7 = value;
-                              print('Hello');
+                              categoryComaplints["Morvi"] = isSwitched7;
+                              _filter.notifyListeners();
                             });
                           },
                           activeTrackColor: Colors.grey[800],
@@ -459,7 +742,8 @@ class _NavDrawerState extends State<NavDrawer> {
                           onChanged: (value) {
                             setState(() {
                               isSwitched8 = value;
-                              print(isSwitched8);
+                              categoryComaplints["Dhanrajgiri"] = isSwitched8;
+                              _filter.notifyListeners();
                             });
                           },
                           activeTrackColor: Colors.grey[800],
@@ -473,7 +757,8 @@ class _NavDrawerState extends State<NavDrawer> {
                           onChanged: (value) {
                             setState(() {
                               isSwitched9 = value;
-                              print(isSwitched9);
+                              categoryComaplints["Rajputana"] = isSwitched9;
+                              _filter.notifyListeners();
                             });
                           },
                           activeTrackColor: Colors.grey[800],
@@ -487,7 +772,8 @@ class _NavDrawerState extends State<NavDrawer> {
                           onChanged: (value) {
                             setState(() {
                               isSwitched10 = value;
-                              print(isSwitched10);
+                              categoryComaplints["Limbdi"] = isSwitched10;
+                              _filter.notifyListeners();
                             });
                           },
                           activeTrackColor: Colors.grey[800],
@@ -501,7 +787,8 @@ class _NavDrawerState extends State<NavDrawer> {
                           onChanged: (value) {
                             setState(() {
                               isSwitched11 = value;
-                              print(isSwitched11);
+                              categoryComaplints["Vivekanand"] = isSwitched11;
+                              _filter.notifyListeners();
                             });
                           },
                           activeTrackColor: Colors.grey[800],
@@ -515,7 +802,8 @@ class _NavDrawerState extends State<NavDrawer> {
                           onChanged: (value) {
                             setState(() {
                               isSwitched12 = value;
-                              print(isSwitched12);
+                              categoryComaplints["Vishwakarma"] = isSwitched12;
+                              _filter.notifyListeners();
                             });
                           },
                           activeTrackColor: Colors.grey[800],
@@ -529,7 +817,9 @@ class _NavDrawerState extends State<NavDrawer> {
                           onChanged: (value) {
                             setState(() {
                               isSwitched13 = value;
-                              print(isSwitched13);
+                              categoryComaplints["Vishweshvaraiya"] =
+                                  isSwitched13;
+                              _filter.notifyListeners();
                             });
                           },
                           activeTrackColor: Colors.grey[800],
@@ -543,13 +833,14 @@ class _NavDrawerState extends State<NavDrawer> {
                           onChanged: (value) {
                             setState(() {
                               isSwitched14 = value;
-                              print(isSwitched14);
+                              categoryComaplints["Aryabhatt–I"] = isSwitched14;
+                              _filter.notifyListeners();
                             });
                           },
                           activeTrackColor: Colors.grey[800],
                           activeColor: Colors.white,
                         ),
-                        title: Text('Aryabhatt'),
+                        title: Text('Aryabhatt-I'),
                       ),
                       ListTile(
                         leading: Switch(
@@ -557,13 +848,14 @@ class _NavDrawerState extends State<NavDrawer> {
                           onChanged: (value) {
                             setState(() {
                               isSwitched15 = value;
-                              print(isSwitched15);
+                              categoryComaplints["Aryabhatt-II"] = isSwitched15;
+                              _filter.notifyListeners();
                             });
                           },
                           activeTrackColor: Colors.grey[800],
                           activeColor: Colors.white,
                         ),
-                        title: Text('S.N.Bose'),
+                        title: Text('Aryabhatt-II'),
                       ),
                       ListTile(
                         leading: Switch(
@@ -571,13 +863,14 @@ class _NavDrawerState extends State<NavDrawer> {
                           onChanged: (value) {
                             setState(() {
                               isSwitched16 = value;
-                              print(isSwitched16);
+                              categoryComaplints["S. N. Bose"] = isSwitched16;
+                              _filter.notifyListeners();
                             });
                           },
                           activeTrackColor: Colors.grey[800],
                           activeColor: Colors.white,
                         ),
-                        title: Text('Dr. S. Ramanujan'),
+                        title: Text('S. N. Bose'),
                       ),
                       ListTile(
                         leading: Switch(
@@ -585,13 +878,14 @@ class _NavDrawerState extends State<NavDrawer> {
                           onChanged: (value) {
                             setState(() {
                               isSwitched17 = value;
-                              print(isSwitched17);
+                              categoryComaplints["S. Ramanujan"] = isSwitched17;
+                              _filter.notifyListeners();
                             });
                           },
                           activeTrackColor: Colors.grey[800],
                           activeColor: Colors.white,
                         ),
-                        title: Text('Gandhi Smriti Chatravas (Old)'),
+                        title: Text('S. Ramanujan'),
                       ),
                       ListTile(
                         leading: Switch(
@@ -599,13 +893,16 @@ class _NavDrawerState extends State<NavDrawer> {
                           onChanged: (value) {
                             setState(() {
                               isSwitched18 = value;
-                              print(isSwitched18);
+                              categoryComaplints[
+                                      "Gandhi Smriti Chhatravas(Old)"] =
+                                  isSwitched18;
+                              _filter.notifyListeners();
                             });
                           },
                           activeTrackColor: Colors.grey[800],
                           activeColor: Colors.white,
                         ),
-                        title: Text('Gandhi Smriti Chatravas(Extension)'),
+                        title: Text('Gandhi Smriti Chhatravas(Old)'),
                       ),
                       ListTile(
                         leading: Switch(
@@ -613,13 +910,16 @@ class _NavDrawerState extends State<NavDrawer> {
                           onChanged: (value) {
                             setState(() {
                               isSwitched19 = value;
-                              print(isSwitched19);
+                              categoryComaplints[
+                                      "Gandhi Smriti Chhatravas(Extension)"] =
+                                  isSwitched19;
+                              _filter.notifyListeners();
                             });
                           },
                           activeTrackColor: Colors.grey[800],
                           activeColor: Colors.white,
                         ),
-                        title: Text('IIT Boys (Saluja)'),
+                        title: Text('Gandhi Smriti Chhatravas(Extension)'),
                       ),
                       ListTile(
                         leading: Switch(
@@ -627,13 +927,15 @@ class _NavDrawerState extends State<NavDrawer> {
                           onChanged: (value) {
                             setState(() {
                               isSwitched20 = value;
-                              print(isSwitched20);
+                              categoryComaplints["IIT (BHU) Girls Hostel"] =
+                                  isSwitched20;
+                              _filter.notifyListeners();
                             });
                           },
                           activeTrackColor: Colors.grey[800],
                           activeColor: Colors.white,
                         ),
-                        title: Text('IIT(BHU) Girls'),
+                        title: Text('IIT (BHU) Girls Hostel'),
                       ),
                       ListTile(
                         leading: Switch(
@@ -641,13 +943,30 @@ class _NavDrawerState extends State<NavDrawer> {
                           onChanged: (value) {
                             setState(() {
                               isSwitched21 = value;
-                              print(isSwitched21);
+                              categoryComaplints["S. C. Dey"] = isSwitched21;
+                              _filter.notifyListeners();
                             });
                           },
                           activeTrackColor: Colors.grey[800],
                           activeColor: Colors.white,
                         ),
                         title: Text('S. C. Dey'),
+                      ),
+                      ListTile(
+                        leading: Switch(
+                          value: isSwitched22,
+                          onChanged: (value) {
+                            setState(() {
+                              isSwitched21 = value;
+                              categoryComaplints["IIT Boys (Saluja)"] =
+                                  isSwitched22;
+                              _filter.notifyListeners();
+                            });
+                          },
+                          activeTrackColor: Colors.grey[800],
+                          activeColor: Colors.white,
+                        ),
+                        title: Text('IIT Boys (Saluja)'),
                       ),
                     ],
                   ),
@@ -702,155 +1021,224 @@ class _NavDrawerState extends State<NavDrawer> {
   }
 }
 
-class ComplaintBox extends StatelessWidget {
+List<String> getComplaints(DocumentSnapshot snapshot) {
+  print(snapshot.data());
+  return List.from(snapshot['list of my filed Complaints']);
+}
+
+Stream<List<String>> get getComplaintId {
+  return FirebaseFirestore.instance
+      .collection('users')
+      .doc(user.uid)
+      .get()
+      .then((snapshot) {
+    try {
+      return getComplaints(snapshot);
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }).asStream();
+}
+
+class ComplaintTile1 extends StatefulWidget {
+  @override
+  _ComplaintTile1State createState() => _ComplaintTile1State();
+}
+
+class _ComplaintTile1State extends State<ComplaintTile1> {
   @override
   Widget build(BuildContext context) {
-    return Card(
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
-        child: Container(
-          // TODO: Adjust height according to generator function
-          height: 210,
-          child: InkWell(
-            splashColor: Colors.blue.withAlpha(300),
-            onTap: () {
-              //TODO: Add navigator to other card
-            },
-            child: Container(
-              padding: EdgeInsets.all(10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Row(children: [
-                            Text('Fan Not Working in C402',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 18))
-                          ]),
-                          Row(
+    final complaintIds = Provider.of<List<String>>(context) ?? [];
+    return ListView.builder(
+      itemCount: complaintIds.length,
+      itemBuilder: (context, index) {
+        print(complaintIds[index]);
+        return FutureBuilder(
+          future: FirebaseFirestore.instance
+              .collection('complaints')
+              .doc(complaintIds[index])
+              .get(),
+          builder:
+              (BuildContext context, AsyncSnapshot<DocumentSnapshot> user) {
+            switch (user.connectionState) {
+              case ConnectionState.none:
+                return Text('Press button to start.');
+              case ConnectionState.active:
+              case ConnectionState.waiting:
+                return Text('Awaiting result...');
+              case ConnectionState.done:
+                if (user.hasError) return Text('Error: ${user.error}');
+                if (user.data['status'] == 'resolved')
+                  return Container(width: 0.0, height: 0.0);
+                return Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(11)),
+                    child: Container(
+                      // TODO: Adjust height according to generator function
+                      height: 210,
+                      child: InkWell(
+                        splashColor: Colors.blue.withAlpha(300),
+                        onTap: () {
+                          //TODO: Add navigator to other card
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
-                              Text(
-                                'Posted by ',
-                                style: TextStyle(fontSize: 12),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Row(children: [
+                                        Text(user.data["title"],
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18))
+                                      ]),
+                                      Row(
+                                        children: <Widget>[
+                                          Text(
+                                            'Posted by ',
+                                            style: TextStyle(fontSize: 12),
+                                          ),
+                                          Text(
+                                            'Name', // todo: add name field in complaints collection docs
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold),
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  IconButton(
+                                      icon: Icon(Icons.bookmark_border),
+                                      onPressed: () {
+                                        //TODO: Add color change
+                                      })
+                                ],
                               ),
-                              Text(
-                                'Raju Rastogi',
-                                style: TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.bold),
+                              SizedBox(height: 7),
+                              Expanded(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Icon(Icons.calendar_today),
+                                    Text(
+                                      DateFormat.yMd()
+                                          .format(
+                                              user.data['filing time'].toDate())
+                                          .toString(),
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(' in '),
+                                    Text(
+                                      user.data["category"] ?? "",
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Row(
+                                children: <Widget>[
+                                  Flexible(
+                                    child: Text(
+                                      user.data["description"],
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(height: 7),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: <Widget>[
+                                  SizedBox(
+                                    width: 70,
+                                    child: Center(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: <Widget>[
+                                          Text(user.data["status"],
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color:
+                                                    Colors.red.withOpacity(0.6),
+                                                fontWeight: FontWeight.bold,
+                                              )),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(
+                                            'Status',
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Column(
+                                    children: <Widget>[
+                                      IconButton(
+                                        icon: Icon(Icons.share),
+                                        onPressed: () {},
+                                      ),
+                                      Text(
+                                        'Share',
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  Column(
+                                    children: <Widget>[
+                                      IconButton(
+                                        icon: Icon(Icons.arrow_upward),
+                                        onPressed: () {},
+                                      ),
+                                      Text(
+                                        //todo : get the size of upvotes array from the backend
+                                        ' Upvotes',
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                ],
                               )
                             ],
                           ),
-                        ],
-                      ),
-                      IconButton(
-                          icon: Icon(Icons.bookmark_border),
-                          onPressed: () {
-                            //TODO: Add color change
-                          })
-                    ],
-                  ),
-                  SizedBox(height: 7),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Icon(Icons.calendar_today),
-                        Text(
-                          '  24-07-2020  ',
-                          style: TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.bold),
-                        ),
-                        Text('in '),
-                        Text(
-                          'C.V. Raman Hostel',
-                          style: TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  Row(
-                    children: <Widget>[
-                      Flexible(
-                        child: Text(
-                          'The fan was not found in working state as of 10th...',
-                          style: TextStyle(fontSize: 15),
-                        ),
-                      )
-                    ],
-                  ),
-                  SizedBox(height: 7),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      SizedBox(
-                        width: 70,
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Text('Pending  ',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.red.withOpacity(0.6),
-                                    fontWeight: FontWeight.bold,
-                                  )),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                'Status',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
                         ),
                       ),
-                      Column(
-                        children: <Widget>[
-                          IconButton(
-                            icon: Icon(Icons.share),
-                            onPressed: () {},
-                          ),
-                          Text(
-                            'Share',
-                            style: TextStyle(
-                              fontSize: 11,
-                            ),
-                          )
-                        ],
-                      ),
-                      Column(
-                        children: <Widget>[
-                          IconButton(
-                            icon: Icon(Icons.arrow_upward),
-                            onPressed: () {},
-                          ),
-                          Text(
-                            '4 Upvotes',
-                            style: TextStyle(
-                              fontSize: 11,
-                            ),
-                          )
-                        ],
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ),
-        ));
+                    ));
+            }
+            return null; // unreachable
+          },
+        );
+      },
+    );
   }
 }
