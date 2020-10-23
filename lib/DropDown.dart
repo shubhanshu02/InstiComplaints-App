@@ -10,7 +10,7 @@ List<String> _categories = [
   "GENERAL",
   "ARYABHATT–I",
   "ARYABHATT–II",
-  "C.V. Raman",
+  "C.V. RAMAN",
   "DHANRAJGIRI",
   "GANDHI SMRITI\nCHHATRAVAS(OLD)",
   "GANDHI SMRITI\nCHHATRAVAS(EXTENSION)",

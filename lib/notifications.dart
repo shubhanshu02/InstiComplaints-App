@@ -3,6 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'dart:math';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:provider/provider.dart';
+import 'UpdateNotification.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
+import 'loading.dart';
+import 'ComplaintDialog.dart';
 
 // TODO: Generating list of notifications for the complaints taken from the backend
 
@@ -28,6 +35,90 @@ List notifications = List.generate(
               "assets/cm${random.nextInt(5)}.jpg", //images of different categories
         });
 
+
+
+class Tile extends StatefulWidget {
+  @override
+  _TileState createState() => _TileState();
+}
+
+class _TileState extends State<Tile> {
+  @override
+  Widget build(BuildContext context) {
+
+    return StreamBuilder<DocumentSnapshot>(
+      stream: UpdateNotification().userssnap,
+      builder: (context, snapshot){
+        if(snapshot.hasData){
+          return new Expanded(
+            child: ListView.separated(
+              padding: EdgeInsets.all(8.0),
+              separatorBuilder: (BuildContext context, int index) {
+                return Align(
+                  alignment: Alignment.centerRight,
+                  child: Container(
+                    height: 0.4,
+                    width: MediaQuery.of(context).size.width / 1.3,
+                    child: Divider(),
+                  ),
+                );
+              },
+              itemCount: snapshot.data.data()['notification'].length,
+              itemBuilder: (BuildContext context, int index) {
+                //Map<String,String> notification = snapshot.data.data()['notification'][snapshot.data.data()['notification'].length-index-1];
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      //backgroundImage: AssetImage(notif['dp']),
+                      backgroundColor: Colors.blue,
+                      radius: 25,
+                    ),
+                    contentPadding: EdgeInsets.all(1.2),
+                    title: Text(
+                      "Status Updated",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    /*subtitle: Text(
+                      title.then((value) => value).toString()
+                      ,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),*/
+                    trailing: Text(
+                      DateFormat('kk:mm:a').format(DateTime.parse(snapshot.data.data()['notification'][snapshot.data.data()['notification'].length-index-1]['time'])) +
+                          '\n' +
+                          DateFormat('dd-MM-yyyy').format(DateTime.parse(snapshot.data.data()['notification'][snapshot.data.data()['notification'].length-index-1]['time'])),
+
+                      style: TextStyle(
+                        fontWeight: FontWeight.w300,
+                        fontSize: 11,
+                      ),
+                    ),
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) => ComplaintDialog(snapshot.data.data()['notification'][snapshot.data.data()['notification'].length-index-1]['complaintID'])
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+          );
+        }
+        else{
+          return Loading();
+        }
+      }
+    );
+  }
+}
+
+
+
 class Notifications extends StatefulWidget {
   @override
   _NotificationsState createState() => _NotificationsState();
@@ -44,6 +135,7 @@ class _NotificationsState extends State<Notifications> {
   // TODO: Deciding the location of compose button(as a floating button or in the bottom bar)
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: Stack(
         alignment: Alignment(0.0, 2.0),
@@ -107,56 +199,7 @@ class _NotificationsState extends State<Notifications> {
               SizedBox(
                 height: 11.0,
               ),
-              new Expanded(
-                child: ListView.separated(
-                  padding: EdgeInsets.all(8.0),
-                  separatorBuilder: (BuildContext context, int index) {
-                    return Align(
-                      alignment: Alignment.centerRight,
-                      child: Container(
-                        height: 0.4,
-                        width: MediaQuery.of(context).size.width / 1.3,
-                        child: Divider(),
-                      ),
-                    );
-                  },
-                  itemCount: notifications.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    Map notif = notifications[index];
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: AssetImage(notif['dp']),
-                          radius: 25,
-                        ),
-                        contentPadding: EdgeInsets.all(1.2),
-                        title: Text(
-                          "Status Updated",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        subtitle: Text(
-                          notif['complaint'],
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        trailing: Text(
-                          notif['time'],
-                          style: TextStyle(
-                            fontWeight: FontWeight.w300,
-                            fontSize: 11,
-                          ),
-                        ),
-                        onTap: () {
-                          Navigator.pushNamed(context, '/');
-                        },
-                      ),
-                    );
-                  },
-                ),
-              ),
+              Tile(),
               SizedBox(
                 height: 15.0,
               ),

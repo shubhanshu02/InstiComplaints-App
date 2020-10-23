@@ -1,10 +1,17 @@
 import 'dart:io';
+import 'package:InstiComplaints/ComplaintFiling.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'DropDown.dart';
 import 'package:path/path.dart' as path;
 import 'dart:math';
 import 'Complaint_Class.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'AdminDialog.dart';
+import 'ModeratorDialog.dart';
+import 'ComplaintDialog.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 MailContent complaint;
 
@@ -97,8 +104,8 @@ class CurveClipper extends CustomClipper<Path> {
 }
 
 class ImageShow extends StatelessWidget {
-  String name;
-  Function delete;
+  final String name;
+  final Function delete;
   ImageShow({this.name, this.delete});
 
   @override
@@ -114,9 +121,10 @@ class ImageShow extends StatelessWidget {
           SizedBox(
             width: 3.0,
           ),
-          Text(name.length > 18
+          /*Text(name.length > 18
               ? name.substring(0, 6) + '...' + name.substring(name.length - 5)
-              : name),
+              : name),*/
+          Text(name),
           //SizedBox(width: 3.0,),
           new Spacer(),
           IconButton(
@@ -136,19 +144,44 @@ class Compose extends StatefulWidget {
 }
 
 class _ComposeState extends State<Compose> {
-  List<File> imagesInComplaint = [];
+
+  File _image;
+  String _uploadedFileURL;
+
+  List<String> imagesInComplaint = [];
 
   Future<void> _pickImage(ImageSource source) async {
-    File selected = await ImagePicker.pickImage(source: source);
+    await ImagePicker.pickImage(source: source).then((image){
+      setState((){
+        _image=image;
+      });
+    });
 
-    setState(() {
+    /*setState(() {
       if (selected != null) {
         imagesInComplaint.add(selected);
       }
       print(
           imagesInComplaint.length.toString() + '\n\n\n' + selected.toString());
-    });
+    });*/
   }
+
+  Future uploadFile() async {    
+    StorageReference storageReference = FirebaseStorage.instance    
+        .ref()    
+        .child('complaintImages/${path.basename(_image.path)}}');    
+    StorageUploadTask uploadTask = storageReference.putFile(_image);    
+    await uploadTask.onComplete;    
+    print('File Uploaded');    
+    await storageReference.getDownloadURL().then((fileURL) {   
+      //print(fileURL); 
+      setState(() {    
+        //print(fileURL);
+        _uploadedFileURL = fileURL;
+        //print(_uploadedFileURL);    
+      });    
+    });    
+  }  
 
   final titleController = TextEditingController();
   final descripController = TextEditingController();
@@ -255,8 +288,16 @@ class _ComposeState extends State<Compose> {
                       size: 40.0,
                     ),
                     color: Colors.blue,
-                    onPressed: () {
-                      _pickImage(ImageSource.gallery);
+                    onPressed: () async{
+                      await _pickImage(ImageSource.gallery);
+                      if (_image != null) {
+                        await uploadFile();
+                        setState(() {
+                          imagesInComplaint.add(_uploadedFileURL);
+                          //print(_uploadedFileURL);
+                          //print(imagesInComplaint);
+                        });
+                      }
                     },
                   ),
                   Text(
@@ -267,7 +308,7 @@ class _ComposeState extends State<Compose> {
                   Column(
                     children: imagesInComplaint
                         .map((imag) => ImageShow(
-                            name: path.basename(imag.path),
+                            name: 'Uploaded Image ${imagesInComplaint.indexOf(imag)}',
                             delete: () {
                               setState(() {
                                 imagesInComplaint.remove(imag);
@@ -288,34 +329,46 @@ class _ComposeState extends State<Compose> {
         ),
         Center(
           child: RaisedButton(
-            onPressed: () {
+            onPressed: () async {
               complaint = MailContent(
                   title: titleController.text,
                   category: selectedCategory,
                   description: descripController.text,
                   images: imagesInComplaint,
                   filingTime: DateTime.now(),
-                  status: 'pending',
+                  status: status[0],
                   upvotes: [],
-                  email: "jain2305@gmail.com");
-
-              print(complaint.title +
-                  '\n' +
-                  complaint.category +
-                  '\n' +
-                  complaint.description +
-                  '\n' +
-                  complaint.images.length.toString());
-              //Future.delayed(Duration(seconds: 10),(){imagesInComplaint.clear();});
+                  uid: FirebaseAuth.instance.currentUser.uid,
+                  email: FirebaseAuth.instance.currentUser.email
+                  );
+              /*await Future.delayed(Duration(seconds: 2),(){
+                
+              });*/
               //TODO: Add mail to database.
               titleController.clear();
               descripController.clear();
-              //imagesInComplaint.clear();
-              //TODO: Navigate to next page
+              
+
+              print(complaint.images);
+              //TODO: File the Complaint
+              await ComplaintFiling().fileComplaint(complaint.title,complaint.category,complaint.description,complaint.images,complaint.filingTime,complaint.status,complaint.upvotes,complaint.uid,complaint.email);
+              imagesInComplaint.clear();
+
               /*showDialog(
                     context: context,
-                    builder: (BuildContext context) => ModeratorDialog()
+                    builder: (BuildContext context) => AdminDialog('SCvnnfBP66JpkhBK12do')
                   );*/
+
+              showDialog(context: context,builder: (BuildContext context) => Dialog(
+                child: Container(
+                  child: Center(
+                    child: Text('Complaint Filed'),
+                  ),
+                  //color: Color.fromRGBO(24, 29, 61,1),
+                  height: 50.0,
+                  width: 70.0,
+                ),
+              ));
             },
             child: Text(
               'Submit',
