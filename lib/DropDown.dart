@@ -15,7 +15,7 @@ List<String> _categories = [
   "Limbdi",
   "Vivekanand",
   "Vishwakarma",
-  "Vishweshvariaya",
+  "Vishweshvaraiya",
   "Aryabhatt–I",
   "Aryabhatt–II",
   "S. N. Bose",
