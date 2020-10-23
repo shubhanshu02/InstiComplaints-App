@@ -26,13 +26,9 @@ class _MyLoginPageState extends State<MyLoginPage> {
   }
 
   Future<void> _handleButtonClick() async {
-    await _handleGoogleSignin();
-    final User user = FirebaseAuth.instance.currentUser;
-    // Times for checking if the user is a new user or not
-    final creationTime = user.metadata.creationTime;
-    final lastSignin = user.metadata.lastSignInTime;
+    final UserCredential _currentUser = await _handleGoogleSignin();
 
-    if (creationTime == lastSignin) {
+    if (_currentUser.additionalUserInfo.isNewUser) {
       // The user is just created
       Navigator.pushNamed(context, '/register');
     } else {
@@ -178,6 +174,7 @@ Future<UserCredential> _handleGoogleSignin() async {
     accessToken: googleAuth.accessToken,
     idToken: googleAuth.idToken,
   );
+
   // Once signed in, return the UserCredential
   return await FirebaseAuth.instance.signInWithCredential(credential);
 }

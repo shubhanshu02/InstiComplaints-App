@@ -1,4 +1,6 @@
-import 'package:InstiComplaints/modals.dart';
+import 'package:InstiComplaints/models.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
@@ -44,14 +46,30 @@ class _RegisterFormState extends State<RegisterForm> {
   final _rollNoController = TextEditingController();
   final _roomNoController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  User user;
 
-  void formProcessor() {
-    UserModal _currentDetails = UserModal(
-        _nameController.text,
-        int.parse(_rollNoController.text),
-        hostelname,
-        int.parse(_roomNoController.text));
-    // TODO: Send to backend server
+  @override
+  void initState() {
+    super.initState();
+    user = FirebaseAuth.instance.currentUser;
+    _nameController.text = user.displayName;
+  }
+
+  void formProcessor() async {
+    /*
+      Add the document of the UserDetails to the usercollection class
+      For model reference, check models.dart
+    */
+    final database = FirebaseFirestore.instance.collection('users');
+    await database.doc('${user.uid}').set({
+      'name': _nameController.text,
+      'uid': user.uid,
+      'email': user.email,
+      'hostel': hostelname,
+      'rollNo': int.parse(_rollNoController.text),
+      'roomNo': _roomNoController.text,
+      'type': 'student'
+    });
   }
 
   void _showDialog(BuildContext context) {
@@ -62,7 +80,8 @@ class _RegisterFormState extends State<RegisterForm> {
             valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF181D3D)),
           ),
           Container(
-              margin: EdgeInsets.only(left: 7), child: Text(" Loading...")),
+              margin: EdgeInsets.only(left: 7),
+              child: Text("  Registering...")),
         ],
       ),
     );
@@ -70,7 +89,12 @@ class _RegisterFormState extends State<RegisterForm> {
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
-        return alert;
+        // Doesn't allow the dialog box to pop
+        return WillPopScope(
+            onWillPop: () {
+              return;
+            },
+            child: alert);
       },
     );
   }
@@ -113,7 +137,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     }
                     final n = num.tryParse(value);
                     if (n == null) {
-                      return '"$value" is not a valid number';
+                      return '"$value" is not a valid roll number';
                     }
                     if (value.length != 8)
                       return 'Roll Number must contain 8 digits';
@@ -206,7 +230,6 @@ class _RegisterFormState extends State<RegisterForm> {
                     return null;
                   },
                   controller: _roomNoController,
-                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelStyle: TextStyle(
                       color: Colors.black,
@@ -225,8 +248,9 @@ class _RegisterFormState extends State<RegisterForm> {
                   child: RaisedButton(
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
-                        Scaffold.of(context).showSnackBar(
-                            SnackBar(content: Text('Processing Data')));
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                            content:
+                                Text('Establishing Contact with the Server')));
                         _showDialog(context);
                         formProcessor();
                         Navigator.pop(context, '/');
