@@ -1046,16 +1046,16 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                 .get(),
             builder:
                 (BuildContext context, AsyncSnapshot<DocumentSnapshot> user) {
-              // switch (user.connectionState) {
-              //   case ConnectionState.none:
-              //     return Text('Press button to start.');
-              //   case ConnectionState.active:
-              //   case ConnectionState.waiting:
-              //     return Text('Awaiting result...');
-              //   case ConnectionState.done:
-              //     if (user.hasError) return Text('Error: ${user.error}');
-              //     if (user.data['status'] == 'resolved')
-              //       return Container(width: 0.0, height: 0.0);
+              switch (user.connectionState) {
+                case ConnectionState.none:
+                  return Text('Press button to start.');
+                case ConnectionState.active:
+                case ConnectionState.waiting:
+                  return Text('Awaiting result...');
+                case ConnectionState.done:
+                  if (user.hasError) return Text('Error: ${user.error}');
+                  if (user.data['status'] == 'resolved')
+                    return Container(width: 0.0, height: 0.0);
               if (user.hasData) {
                 return Card(
                     elevation: 2,
@@ -1226,8 +1226,8 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
             }
             }
             
-            //return null; // unreachable
-            //},
+            return null; // unreachable
+            },
             );
       },
     );
