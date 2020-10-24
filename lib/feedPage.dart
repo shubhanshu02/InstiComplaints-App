@@ -6,8 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
-var user = FirebaseAuth.instance.currentUser;
+import 'ComplaintDialog.dart';
 
 GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
@@ -55,29 +54,6 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    isSwitched1 = true;
-    isSwitched2 = true;
-    isSwitched3 = true;
-    isSwitched4 = true;
-    isSwitched5 = true;
-    isSwitched6 = true;
-    isSwitched7 = true;
-    isSwitched8 = true;
-    isSwitched9 = true;
-    isSwitched10 = true;
-    isSwitched11 = true;
-    isSwitched12 = true;
-    isSwitched13 = true;
-    isSwitched14 = true;
-    isSwitched15 = true;
-    isSwitched16 = true;
-    isSwitched17 = true;
-    isSwitched18 = true;
-    isSwitched19 = true;
-    isSwitched20 = true;
-    isSwitched21 = true;
-    isSwitched22 = true;
-
     return Scaffold(
       key: _scaffoldState,
       drawer: NavDrawer(),
@@ -125,6 +101,10 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                           splashColor:
                                               Colors.blue.withAlpha(300),
                                           onTap: () {
+                                            showDialog(
+                        context: context,
+                        builder: (BuildContext context) => ComplaintDialog(document.id)
+                      );
                                             //TODO: Add navigator to other card
                                           },
                                           child: Container(
@@ -160,7 +140,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                                                   fontSize: 12),
                                                             ),
                                                             Text(
-                                                              'Name', // todo: add name field in complaints collection docs
+                                                              document['email'], // todo: add name field in complaints collection docs
                                                               style: TextStyle(
                                                                   fontSize: 12,
                                                                   fontWeight:
@@ -188,7 +168,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                                       Icon(
                                                           Icons.calendar_today),
                                                       Text(
-                                                        DateFormat.yMd()
+                                                        DateFormat.yMMMMd()
                                                             .format(document[
                                                                     'filing time']
                                                                 .toDate())
@@ -527,28 +507,28 @@ Map<String, bool> categoryComaplints = {
 };
 
 // code for the sidebar
-bool isSwitched1;
-bool isSwitched2;
-bool isSwitched3;
-bool isSwitched4;
-bool isSwitched5;
-bool isSwitched6;
-bool isSwitched7;
-bool isSwitched8;
-bool isSwitched9;
-bool isSwitched10;
-bool isSwitched11;
-bool isSwitched12;
-bool isSwitched13;
-bool isSwitched14;
-bool isSwitched15;
-bool isSwitched16;
-bool isSwitched17;
-bool isSwitched18;
-bool isSwitched19;
-bool isSwitched20;
-bool isSwitched21;
-bool isSwitched22;
+bool isSwitched1 = true;
+bool isSwitched2 = true;
+bool isSwitched3 = true;
+bool isSwitched4 = true;
+bool isSwitched5 = true;
+bool isSwitched6 = true;
+bool isSwitched7 = true;
+bool isSwitched8 = true;
+bool isSwitched9 = true;
+bool isSwitched10 = true;
+bool isSwitched11 = true;
+bool isSwitched12 = true;
+bool isSwitched13 = true;
+bool isSwitched14 = true;
+bool isSwitched15 = true;
+bool isSwitched16 = true;
+bool isSwitched17 = true;
+bool isSwitched18 = true;
+bool isSwitched19 = true;
+bool isSwitched20 = true;
+bool isSwitched21 = true;
+bool isSwitched22 = true;
 
 class NavDrawer extends StatefulWidget {
   @override
@@ -957,7 +937,7 @@ class _NavDrawerState extends State<NavDrawer> {
                           value: isSwitched22,
                           onChanged: (value) {
                             setState(() {
-                              isSwitched21 = value;
+                              isSwitched22 = value;
                               categoryComaplints["IIT Boys (Saluja)"] =
                                   isSwitched22;
                               _filter.notifyListeners();
@@ -1021,9 +1001,14 @@ class _NavDrawerState extends State<NavDrawer> {
   }
 }
 
+//////////////////////////////////////////////////////////////////////////////
+// code for bookmarks page
+
+var user = FirebaseAuth.instance.currentUser;
+
 List<String> getComplaints(DocumentSnapshot snapshot) {
   print(snapshot.data());
-  return List.from(snapshot['list of my filed Complaints']);
+  return List.from(snapshot['bookmarked']);
 }
 
 Stream<List<String>> get getComplaintId {
@@ -1055,22 +1040,23 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
       itemBuilder: (context, index) {
         print(complaintIds[index]);
         return FutureBuilder(
-          future: FirebaseFirestore.instance
-              .collection('complaints')
-              .doc(complaintIds[index])
-              .get(),
-          builder:
-              (BuildContext context, AsyncSnapshot<DocumentSnapshot> user) {
-            switch (user.connectionState) {
-              case ConnectionState.none:
-                return Text('Press button to start.');
-              case ConnectionState.active:
-              case ConnectionState.waiting:
-                return Text('Awaiting result...');
-              case ConnectionState.done:
-                if (user.hasError) return Text('Error: ${user.error}');
-                if (user.data['status'] == 'resolved')
-                  return Container(width: 0.0, height: 0.0);
+            future: FirebaseFirestore.instance
+                .collection('complaints')
+                .doc(complaintIds[index])
+                .get(),
+            builder:
+                (BuildContext context, AsyncSnapshot<DocumentSnapshot> user) {
+              // switch (user.connectionState) {
+              //   case ConnectionState.none:
+              //     return Text('Press button to start.');
+              //   case ConnectionState.active:
+              //   case ConnectionState.waiting:
+              //     return Text('Awaiting result...');
+              //   case ConnectionState.done:
+              //     if (user.hasError) return Text('Error: ${user.error}');
+              //     if (user.data['status'] == 'resolved')
+              //       return Container(width: 0.0, height: 0.0);
+              if (user.hasData) {
                 return Card(
                     elevation: 2,
                     shape: RoundedRectangleBorder(
@@ -1109,7 +1095,7 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                                             style: TextStyle(fontSize: 12),
                                           ),
                                           Text(
-                                            'Name', // todo: add name field in complaints collection docs
+                                            user.data['email'], // todo: add name field in complaints collection docs
                                             style: TextStyle(
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.bold),
@@ -1234,10 +1220,15 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                         ),
                       ),
                     ));
+              }
+              else{
+              return CircularProgressIndicator();
             }
-            return null; // unreachable
-          },
-        );
+            }
+            
+            //return null; // unreachable
+            //},
+            );
       },
     );
   }
