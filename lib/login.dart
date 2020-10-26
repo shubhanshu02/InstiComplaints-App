@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:connectivity/connectivity.dart';
 
 class MyLoginPage extends StatefulWidget {
   @override
@@ -26,7 +27,71 @@ class _MyLoginPageState extends State<MyLoginPage> {
   }
 
   Future<void> _handleButtonClick() async {
-    final UserCredential _currentUser = await _handleGoogleSignin();
+    var connectivityResult = await (Connectivity().checkConnectivity());
+
+    if (connectivityResult == ConnectivityResult.none) {
+      return showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('No Internet Connection'),
+            content: SingleChildScrollView(
+              child: Text(
+                  "You need to have an active internet connection to access this. Please try again later."),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Close'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    // Start Authentication Process
+    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+    // Obtain the auth details from the request
+    final String email = googleUser.email;
+    if (email.substring(email.length - 11) != 'itbhu.ac.in') {
+      await GoogleSignIn().signOut();
+      return showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Row(
+              children: [
+                Icon(Icons.error),
+                Text(' Sorry!'),
+              ],
+            ), //
+            content: SingleChildScrollView(
+              child: Text(
+                  "This email doesn't seem to belong to the IIT BHU domain. Please try again with your institute email"),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Close'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+    final GoogleAuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    final UserCredential _currentUser =
+        await FirebaseAuth.instance.signInWithCredential(credential);
 
     if (_currentUser.additionalUserInfo.isNewUser) {
       // The user is just created
@@ -163,18 +228,3 @@ class _MyLoginPageState extends State<MyLoginPage> {
   }
 }
 //.only(topLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0)) -- differently shaped button
-
-Future<UserCredential> _handleGoogleSignin() async {
-  // Start Authentication Process
-  final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
-  // Obtain the auth details from the request
-  final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-  // Create a new credential
-  final GoogleAuthCredential credential = GoogleAuthProvider.credential(
-    accessToken: googleAuth.accessToken,
-    idToken: googleAuth.idToken,
-  );
-
-  // Once signed in, return the UserCredential
-  return await FirebaseAuth.instance.signInWithCredential(credential);
-}
