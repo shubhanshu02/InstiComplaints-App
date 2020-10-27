@@ -40,7 +40,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                   "You need to have an active internet connection to access this. Please try again later."),
             ),
             actions: <Widget>[
-              TextButton(
+              RaisedButton(
                 child: Text('Close'),
                 onPressed: () {
                   Navigator.of(context).pop();
@@ -73,7 +73,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                   "This email doesn't seem to belong to the IIT BHU domain. Please try again with your institute email"),
             ),
             actions: <Widget>[
-              TextButton(
+              RaisedButton(
                 child: Text('Close'),
                 onPressed: () {
                   Navigator.of(context).pop();
