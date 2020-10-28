@@ -71,234 +71,277 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                       valueListenable: _filter,
                       builder: (BuildContext context, Map<String, bool> value,
                           Widget child) {
-                        return StreamBuilder<QuerySnapshot>(
-                          stream: FirebaseFirestore.instance
-                              .collection('complaints')
-                              .snapshots(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<QuerySnapshot> snapshot) {
-                            if (snapshot.hasError) {
-                              return Text('Something went wrong');
-                            }
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return CircularProgressIndicator();
-                            }
-
-                            return new ListView(
-                              children: snapshot.data.docs
-                                  .map((DocumentSnapshot document) {
-                                if (value[document['category']] == true) {
-                                  return Card(
-                                      elevation: 2,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(11)),
-                                      child: Container(
-                                        // TODO: Adjust height according to generator function
-                                        height: 210,
-                                        child: InkWell(
-                                          splashColor:
-                                              Colors.blue.withAlpha(300),
-                                          onTap: () {
-                                            showDialog(
-                        context: context,
-                        builder: (BuildContext context) => ComplaintDialog(document.id)
-                      );
-                                            //TODO: Add navigator to other card
-                                          },
+                        return Column(
+                          children: [
+                            Flexible(
+                              child: StreamBuilder<QuerySnapshot>(
+                                stream: FirebaseFirestore.instance
+                                    .collection('complaints')
+                                    .snapshots(),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                                  if (snapshot.hasError) {
+                                    return Text('Something went wrong');
+                                  }
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return CircularProgressIndicator();
+                                  }
+                                  List feedcomplaints = snapshot.data.docs
+                                      .map((DocumentSnapshot document) {
+                                    if (value[document['category']] == true) {
+                                      return Card(
+                                          elevation: 2,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(11)),
                                           child: Container(
-                                            padding: EdgeInsets.all(10),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: <Widget>[
-                                                Row(
+                                            // TODO: Adjust height according to generator function
+                                            height: 210,
+                                            child: InkWell(
+                                              splashColor:
+                                                  Colors.blue.withAlpha(300),
+                                              onTap: () {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (BuildContext
+                                                            context) =>
+                                                        ComplaintDialog(
+                                                            document.id));
+                                                //TODO: Add navigator to other card
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.all(10),
+                                                child: Column(
                                                   mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
+                                                      MainAxisAlignment.start,
                                                   children: <Widget>[
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
                                                       children: <Widget>[
-                                                        Row(children: [
-                                                          Text(
-                                                              document["title"],
-                                                              style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  fontSize: 18))
-                                                        ]),
-                                                        Row(
-                                                          children: <Widget>[
-                                                            Text(
-                                                              'Posted by ',
-                                                              style: TextStyle(
-                                                                  fontSize: 12),
-                                                            ),
-                                                            Text(
-                                                              document['email'], // todo: add name field in complaints collection docs
-                                                              style: TextStyle(
-                                                                  fontSize: 12,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
-                                                            )
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    IconButton(
-                                                        icon: Icon(Icons
-                                                            .bookmark_border),
-                                                        onPressed: () {
-                                                          //TODO: Add color change
-                                                        })
-                                                  ],
-                                                ),
-                                                SizedBox(height: 7),
-                                                Expanded(
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: <Widget>[
-                                                      Icon(
-                                                          Icons.calendar_today),
-                                                      Text(
-                                                        DateFormat.yMMMMd()
-                                                            .format(document[
-                                                                    'filing time']
-                                                                .toDate())
-                                                            .toString(),
-                                                        style: TextStyle(
-                                                            fontSize: 12,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                      Text(' in '),
-                                                      Text(
-                                                        document["category"],
-                                                        style: TextStyle(
-                                                            fontSize: 12,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                                SizedBox(height: 4),
-                                                Row(
-                                                  children: <Widget>[
-                                                    Flexible(
-                                                      child: Text(
-                                                        document["description"],
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        style: TextStyle(
-                                                            fontSize: 15),
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                                SizedBox(height: 7),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceEvenly,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.end,
-                                                  children: <Widget>[
-                                                    SizedBox(
-                                                      width: 70,
-                                                      child: Center(
-                                                        child: Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .end,
+                                                        Column(
                                                           crossAxisAlignment:
                                                               CrossAxisAlignment
-                                                                  .center,
+                                                                  .start,
                                                           children: <Widget>[
-                                                            Text(
-                                                                document[
-                                                                    "status"],
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize: 16,
-                                                                  color: Colors
-                                                                      .red
-                                                                      .withOpacity(
-                                                                          0.6),
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                )),
-                                                            SizedBox(
-                                                              height: 5,
+                                                            Row(children: [
+                                                              Text(
+                                                                  document[
+                                                                      "title"],
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontSize:
+                                                                          18))
+                                                            ]),
+                                                            Row(
+                                                              children: <
+                                                                  Widget>[
+                                                                Text(
+                                                                  'Posted by ',
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          12),
+                                                                ),
+                                                                Text(
+                                                                  document[
+                                                                      'email'], // todo: add name field in complaints collection docs
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          12,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        IconButton(
+                                                            icon: Icon(Icons
+                                                                .bookmark_border),
+                                                            onPressed: () {
+                                                              //TODO: Add color change
+                                                            })
+                                                      ],
+                                                    ),
+                                                    SizedBox(height: 7),
+                                                    Expanded(
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        children: <Widget>[
+                                                          Icon(Icons
+                                                              .calendar_today),
+                                                          Text(
+                                                            DateFormat.yMMMMd()
+                                                                .format(document[
+                                                                        'filing time']
+                                                                    .toDate())
+                                                                .toString(),
+                                                            style: TextStyle(
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          Text(' in '),
+                                                          Text(
+                                                            document[
+                                                                "category"],
+                                                            style: TextStyle(
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 4),
+                                                    Row(
+                                                      children: <Widget>[
+                                                        Flexible(
+                                                          child: Text(
+                                                            document[
+                                                                "description"],
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style: TextStyle(
+                                                                fontSize: 15),
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                    SizedBox(height: 7),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceEvenly,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .end,
+                                                      children: <Widget>[
+                                                        SizedBox(
+                                                          width: 70,
+                                                          child: Center(
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .end,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .center,
+                                                              children: <
+                                                                  Widget>[
+                                                                Text(
+                                                                    document[
+                                                                        "status"],
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          16,
+                                                                      color: Colors
+                                                                          .red
+                                                                          .withOpacity(
+                                                                              0.6),
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                    )),
+                                                                SizedBox(
+                                                                  height: 5,
+                                                                ),
+                                                                Text(
+                                                                  'Status',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        11,
+                                                                  ),
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Column(
+                                                          children: <Widget>[
+                                                            IconButton(
+                                                              icon: Icon(
+                                                                  Icons.share),
+                                                              onPressed: () {},
                                                             ),
                                                             Text(
-                                                              'Status',
+                                                              'Share',
                                                               style: TextStyle(
                                                                 fontSize: 11,
                                                               ),
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                            ),
+                                                            )
                                                           ],
                                                         ),
-                                                      ),
-                                                    ),
-                                                    Column(
-                                                      children: <Widget>[
-                                                        IconButton(
-                                                          icon:
-                                                              Icon(Icons.share),
-                                                          onPressed: () {},
-                                                        ),
-                                                        Text(
-                                                          'Share',
-                                                          style: TextStyle(
-                                                            fontSize: 11,
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                    Column(
-                                                      children: <Widget>[
-                                                        IconButton(
-                                                          icon: Icon(Icons
-                                                              .arrow_upward),
-                                                          onPressed: () {},
-                                                        ),
-                                                        Text(
-                                                          //todo : get the size of upvotes array from the backend
-                                                          ' Upvotes',
-                                                          style: TextStyle(
-                                                            fontSize: 11,
-                                                          ),
+                                                        Column(
+                                                          children: <Widget>[
+                                                            IconButton(
+                                                              icon: Icon(Icons
+                                                                  .arrow_upward),
+                                                              onPressed: () {},
+                                                            ),
+                                                            Text(
+                                                              //todo : get the size of upvotes array from the backend
+                                                              ' Upvotes',
+                                                              style: TextStyle(
+                                                                fontSize: 11,
+                                                              ),
+                                                            )
+                                                          ],
                                                         )
                                                       ],
                                                     )
                                                   ],
-                                                )
-                                              ],
+                                                ),
+                                              ),
                                             ),
-                                          ),
+                                          ));
+                                    } else
+                                      return Container(
+                                        height: 0,
+                                      );
+                                  }).toList();
+                                  feedcomplaints.add(Container(
+                                      padding: EdgeInsets.all(10),
+                                      child: Expanded(
+                                        child: Column(
+                                          children: [
+                                            Divider(
+                                              color: Colors.black,
+                                            ),
+                                            Icon(
+                                              Icons.check_circle,
+                                              size: 40,
+                                              color: Color(0xFF36497E),
+                                            ),
+                                            Text(
+                                              "You're All Caught Up",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6,
+                                            )
+                                          ],
                                         ),
-                                      ));
-                                } else
-                                  return Container(
-                                    height: 0,
-                                  );
-                              }).toList(),
-                            );
-                          },
+                                      )));
+                                  return new ListView(children: feedcomplaints);
+                                },
+                              ),
+                            ),
+                          ],
                         );
                       },
                     ))),
@@ -987,13 +1030,6 @@ class _NavDrawerState extends State<NavDrawer> {
                 Navigator.pushReplacementNamed(context, '/');
               },
             ),
-            Divider(
-              height: 0.75,
-              color: Color(0xFF181D3D),
-              thickness: 0.75,
-              indent: 15.0,
-              endIndent: 15.0,
-            ),
           ],
         ),
       ),
@@ -1040,195 +1076,196 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
       itemBuilder: (context, index) {
         print(complaintIds[index]);
         return FutureBuilder(
-            future: FirebaseFirestore.instance
-                .collection('complaints')
-                .doc(complaintIds[index])
-                .get(),
-            builder:
-                (BuildContext context, AsyncSnapshot<DocumentSnapshot> user) {
-              switch (user.connectionState) {
-                case ConnectionState.none:
-                  return Text('Press button to start.');
-                case ConnectionState.active:
-                case ConnectionState.waiting:
-                  return Text('Awaiting result...');
-                case ConnectionState.done:
-                  if (user.hasError) return Text('Error: ${user.error}');
-                  if (user.data['status'] == 'resolved')
-                    return Container(width: 0.0, height: 0.0);
-              if (user.hasData) {
-                return Card(
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(11)),
-                    child: Container(
-                      // TODO: Adjust height according to generator function
-                      height: 210,
-                      child: InkWell(
-                        splashColor: Colors.blue.withAlpha(300),
-                        onTap: () {
-                          //TODO: Add navigator to other card
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(10),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+          future: FirebaseFirestore.instance
+              .collection('complaints')
+              .doc(complaintIds[index])
+              .get(),
+          builder:
+              (BuildContext context, AsyncSnapshot<DocumentSnapshot> user) {
+            switch (user.connectionState) {
+              case ConnectionState.none:
+                return Text('Press button to start.');
+              case ConnectionState.active:
+              case ConnectionState.waiting:
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              case ConnectionState.done:
+                if (user.hasError) return Text('Error: ${user.error}');
+                if (user.data['status'] == 'resolved')
+                  return Container(width: 0.0, height: 0.0);
+                if (user.hasData) {
+                  return Card(
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(11)),
+                      child: Container(
+                        // TODO: Adjust height according to generator function
+                        height: 210,
+                        child: InkWell(
+                          splashColor: Colors.blue.withAlpha(300),
+                          onTap: () {
+                            //TODO: Add navigator to other card
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Row(children: [
+                                          Text(user.data["title"],
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18))
+                                        ]),
+                                        Row(
+                                          children: <Widget>[
+                                            Text(
+                                              'Posted by ',
+                                              style: TextStyle(fontSize: 12),
+                                            ),
+                                            Text(
+                                              user.data[
+                                                  'email'], // todo: add name field in complaints collection docs
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    IconButton(
+                                        icon: Icon(Icons.bookmark_border),
+                                        onPressed: () {
+                                          //TODO: Add color change
+                                        })
+                                  ],
+                                ),
+                                SizedBox(height: 7),
+                                Expanded(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: <Widget>[
-                                      Row(children: [
-                                        Text(user.data["title"],
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 18))
-                                      ]),
-                                      Row(
-                                        children: <Widget>[
-                                          Text(
-                                            'Posted by ',
-                                            style: TextStyle(fontSize: 12),
-                                          ),
-                                          Text(
-                                            user.data['email'], // todo: add name field in complaints collection docs
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold),
-                                          )
-                                        ],
+                                      Icon(Icons.calendar_today),
+                                      Text(
+                                        DateFormat.yMd()
+                                            .format(user.data['filing time']
+                                                .toDate())
+                                            .toString(),
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold),
                                       ),
+                                      Text(' in '),
+                                      Text(
+                                        user.data["category"] ?? "",
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold),
+                                      )
                                     ],
                                   ),
-                                  IconButton(
-                                      icon: Icon(Icons.bookmark_border),
-                                      onPressed: () {
-                                        //TODO: Add color change
-                                      })
-                                ],
-                              ),
-                              SizedBox(height: 7),
-                              Expanded(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
+                                ),
+                                SizedBox(height: 4),
+                                Row(
                                   children: <Widget>[
-                                    Icon(Icons.calendar_today),
-                                    Text(
-                                      DateFormat.yMd()
-                                          .format(
-                                              user.data['filing time'].toDate())
-                                          .toString(),
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(' in '),
-                                    Text(
-                                      user.data["category"] ?? "",
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold),
+                                    Flexible(
+                                      child: Text(
+                                        user.data["description"],
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(fontSize: 15),
+                                      ),
                                     )
                                   ],
                                 ),
-                              ),
-                              SizedBox(height: 4),
-                              Row(
-                                children: <Widget>[
-                                  Flexible(
-                                    child: Text(
-                                      user.data["description"],
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              SizedBox(height: 7),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  SizedBox(
-                                    width: 70,
-                                    child: Center(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text(user.data["status"],
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color:
-                                                    Colors.red.withOpacity(0.6),
-                                                fontWeight: FontWeight.bold,
-                                              )),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text(
-                                            'Status',
-                                            style: TextStyle(
-                                              fontSize: 11,
+                                SizedBox(height: 7),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: <Widget>[
+                                    SizedBox(
+                                      width: 70,
+                                      child: Center(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: <Widget>[
+                                            Text(user.data["status"],
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.red
+                                                      .withOpacity(0.6),
+                                                  fontWeight: FontWeight.bold,
+                                                )),
+                                            SizedBox(
+                                              height: 5,
                                             ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ],
+                                            Text(
+                                              'Status',
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Column(
-                                    children: <Widget>[
-                                      IconButton(
-                                        icon: Icon(Icons.share),
-                                        onPressed: () {},
-                                      ),
-                                      Text(
-                                        'Share',
-                                        style: TextStyle(
-                                          fontSize: 11,
+                                    Column(
+                                      children: <Widget>[
+                                        IconButton(
+                                          icon: Icon(Icons.share),
+                                          onPressed: () {},
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                  Column(
-                                    children: <Widget>[
-                                      IconButton(
-                                        icon: Icon(Icons.arrow_upward),
-                                        onPressed: () {},
-                                      ),
-                                      Text(
-                                        //todo : get the size of upvotes array from the backend
-                                        ' Upvotes',
-                                        style: TextStyle(
-                                          fontSize: 11,
+                                        Text(
+                                          'Share',
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    Column(
+                                      children: <Widget>[
+                                        IconButton(
+                                          icon: Icon(Icons.arrow_upward),
+                                          onPressed: () {},
                                         ),
-                                      )
-                                    ],
-                                  )
-                                ],
-                              )
-                            ],
+                                        Text(
+                                          //todo : get the size of upvotes array from the backend
+                                          ' Upvotes',
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ));
-              }
-              else{
-              return CircularProgressIndicator();
+                      ));
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
             }
-            }
-            
             return null; // unreachable
-            },
-            );
+          },
+        );
       },
     );
   }

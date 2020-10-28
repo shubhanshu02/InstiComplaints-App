@@ -68,7 +68,10 @@ class _RegisterFormState extends State<RegisterForm> {
       'hostel': hostelname,
       'rollNo': int.parse(_rollNoController.text),
       'roomNo': _roomNoController.text,
-      'type': 'student'
+      'type': 'student',
+      'notification': [],
+      'bookmarked': [],
+      'category': "general",
     });
   }
 
