@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 final _emailController = TextEditingController();
+String category;
 
 class ModifyModerators extends StatefulWidget {
   @override
@@ -30,9 +31,35 @@ class _ModifyModeratorsState extends State<ModifyModerators> {
           actions: <Widget>[
             new FlatButton(
               child: new Text("Add"),
-              onPressed: () {
-                //TODO: Edit function for backend POST request
+              onPressed: () async {
                 if (_formKey.currentState.validate()) {
+                  await FirebaseFirestore.instance
+                      .collection('users')
+                      .where('email', isEqualTo: _emailController.text)
+                      .get()
+                      .then((QuerySnapshot querySnapshot) async {
+                        if (_emailController.text == FirebaseAuth.instance.currentUser.email) {
+                          return errorDialog(context, 'You cannot change your own User type');
+                        }
+                    if (querySnapshot.docs.length == 0) {
+                      return errorDialog(
+                          context, 'No User with this Email Found.');
+                    }
+                    Map<String, dynamic> data = querySnapshot.docs.first.data();
+                    if (data['category'] != category) {
+                      return errorDialog(context,
+                          'You can only add moderators for your category.');
+                    }
+                    if (data['type'] == 'moderator') {
+                      return errorDialog(context, 'The given user is already a moderator in some category')
+                    }
+                    String uid = data['uid'];
+                    FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(uid)
+                        .update({'type': 'moderator','category':category});
+                  });
+                  _emailController.clear();
                   Navigator.of(context).pop();
                 }
               },
@@ -99,7 +126,7 @@ class _ModifyModeratorsState extends State<ModifyModerators> {
                       ),
                     );
                   }
-                  String category = snapshot.data.data()['category'];
+                  category = snapshot.data.data()['category'];
                   return StreamBuilder(
                     stream: users
                         .where('category', isEqualTo: category)
@@ -218,7 +245,6 @@ class _ModifyModeratorsState extends State<ModifyModerators> {
                     },
                   );
                 }
-
                 return Center(child: CircularProgressIndicator());
               },
             ),
@@ -254,6 +280,8 @@ class AddModeratorForm extends StatelessWidget {
                 RegExp regex = new RegExp(pattern);
                 if (!regex.hasMatch(value))
                   return 'Enter Valid Email';
+                else if (value.substring(value.length - 11) != 'itbhu.ac.in')
+                  return 'Enter Valid Institute Email';
                 else
                   return null;
               },
@@ -269,4 +297,24 @@ class AddModeratorForm extends StatelessWidget {
       ),
     );
   }
+}
+
+dynamic errorDialog(context, String message) {
+  return showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: new Text("Warning!"),
+        content: Text(message),
+        actions: <Widget>[
+          FlatButton(
+            child: new Text("Okay"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
 }
