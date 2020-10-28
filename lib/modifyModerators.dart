@@ -38,9 +38,11 @@ class _ModifyModeratorsState extends State<ModifyModerators> {
                       .where('email', isEqualTo: _emailController.text)
                       .get()
                       .then((QuerySnapshot querySnapshot) async {
-                        if (_emailController.text == FirebaseAuth.instance.currentUser.email) {
-                          return errorDialog(context, 'You cannot change your own User type');
-                        }
+                    if (_emailController.text ==
+                        FirebaseAuth.instance.currentUser.email) {
+                      return errorDialog(
+                          context, 'You cannot change your own User type');
+                    }
                     if (querySnapshot.docs.length == 0) {
                       return errorDialog(
                           context, 'No User with this Email Found.');
@@ -51,13 +53,14 @@ class _ModifyModeratorsState extends State<ModifyModerators> {
                           'You can only add moderators for your category.');
                     }
                     if (data['type'] == 'moderator') {
-                      return errorDialog(context, 'The given user is already a moderator in some category')
+                      return errorDialog(context,
+                          'The given user is already a moderator in some category');
                     }
                     String uid = data['uid'];
                     FirebaseFirestore.instance
                         .collection('users')
                         .doc(uid)
-                        .update({'type': 'moderator','category':category});
+                        .update({'type': 'moderator', 'category': category});
                   });
                   _emailController.clear();
                   Navigator.of(context).pop();
