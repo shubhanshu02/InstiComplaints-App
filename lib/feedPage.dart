@@ -1,3 +1,4 @@
+import 'package:InstiComplaints/search.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -418,7 +419,10 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                             color: Colors.white,
                             size: 30.0,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => Search()));
+                          },
                         ),
                       ],
                     ),
@@ -578,7 +582,7 @@ class NavDrawer extends StatefulWidget {
   _NavDrawerState createState() => _NavDrawerState();
 }
 
-class _NavDrawerState extends State<NavDrawer> {
+class _NavDrawerState extends State<NavDrawer> with ChangeNotifier {
   @override
   Widget build(BuildContext context) {
     print(categoryComaplints);
