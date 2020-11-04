@@ -1,8 +1,13 @@
+import 'package:InstiComplaints/UpdateNotification.dart';
+import 'package:InstiComplaints/loading.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart' as path;
 
 class Camera extends StatefulWidget {
   @override
@@ -10,6 +15,27 @@ class Camera extends StatefulWidget {
 }
 
 class _CameraState extends State<Camera> {
+
+  String _uploadedFileURL;
+  final DocumentReference _userDocument = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser.uid);
+
+  Future uploadFile() async {    
+    StorageReference storageReference = FirebaseStorage.instance    
+        .ref()    
+        .child('complaintImages/${path.basename(imageFile.path)}}');    
+    StorageUploadTask uploadTask = storageReference.putFile(imageFile);    
+    await uploadTask.onComplete;    
+    print('File Uploaded');    
+    await storageReference.getDownloadURL().then((fileURL) {   
+      //print(fileURL); 
+      setState(() {    
+        //print(fileURL);
+        _uploadedFileURL = fileURL;
+        //print(_uploadedFileURL);    
+      });    
+    });    
+  }  
+
   File imageFile;
   bool inProcess = false;
   getImage() async {
@@ -43,6 +69,8 @@ class _CameraState extends State<Camera> {
       imageFile = File(picture.path);
     });
     getImage();
+    await uploadFile();
+    _userDocument.update({'profilePic':_uploadedFileURL});
     Navigator.of(context).pop();
   }
 
@@ -52,15 +80,20 @@ class _CameraState extends State<Camera> {
       imageFile = File(picture.path);
     });
     getImage();
+    await uploadFile();
+    _userDocument.update({'profilePic':_uploadedFileURL});
     Navigator.of(context).pop();
   }
 
   _openRemove(BuildContext context) async {
     imageFile = null;
+    _userDocument.update({'profilePic':""});
     Navigator.of(context).pop();
   }
 
   Future<void> _showChoiceDialog(BuildContext context) {
+
+    final DocumentReference _userDocument = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser.uid);
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -132,39 +165,49 @@ class _CameraState extends State<Camera> {
 
   @override
   Widget build(BuildContext context) {
-    return new Stack(children: <Widget>[
-      Container(
-        width: 160,
-        height: 160,
-        margin: EdgeInsets.fromLTRB(110, 0, 110, 0),
-        decoration: BoxDecoration(
-            color: Colors.grey,
-            shape: BoxShape.circle,
-            image: DecorationImage(
-                image: imageFile == null
-                    ? NetworkImage(
-                        '${FirebaseAuth.instance.currentUser.photoURL}')
-                    : FileImage(imageFile),
-                fit: BoxFit.cover)),
-      ),
-      Container(
-        margin: EdgeInsets.fromLTRB(210, 110, 0, 0),
-        child: RaisedButton(
-          onPressed: () {
-            _showChoiceDialog(context);
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Icon(
-              Icons.photo_camera,
-              color: Color(0xFF181d3d),
-              size: 35,
+    return StreamBuilder<DocumentSnapshot>(
+      stream: UpdateNotification().userssnap,
+      builder: (context, snapshot) {
+        if(snapshot.hasData){
+          return new Stack(children: <Widget>[
+            Container(
+              width: 160,
+              height: 160,
+              margin: EdgeInsets.fromLTRB(110, 0, 110, 0),
+              decoration: BoxDecoration(
+                  color: Colors.grey,
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                      image: snapshot.data.data()['profilePic']==""
+                          ? AssetImage('assets/blankProfile.png')
+                          : NetworkImage(
+                              snapshot.data.data()['profilePic']),
+                      fit: BoxFit.cover)),
             ),
-          ),
-          color: Colors.white,
-          shape: CircleBorder(),
-        ),
-      ),
-    ]);
+            Container(
+              margin: EdgeInsets.fromLTRB(210, 110, 0, 0),
+              child: RaisedButton(
+                onPressed: () {
+                  _showChoiceDialog(context);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Icon(
+                    Icons.photo_camera,
+                    color: Color(0xFF181d3d),
+                    size: 35,
+                  ),
+                ),
+                color: Colors.white,
+                shape: CircleBorder(),
+              ),
+            ),
+          ]);
+        }
+        else{
+          return Loading();
+        }
+      }
+    );
   }
 }
