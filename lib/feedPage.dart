@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'ComplaintDialog.dart';
 import 'UpdateNotification.dart';
+import 'package:InstiComplaints/search.dart';
 
 GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
@@ -377,7 +378,10 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                             color: Colors.white,
                             size: 30.0,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => Search()));
+                          },
                         ),
                       ],
                     ),
@@ -537,7 +541,7 @@ class NavDrawer extends StatefulWidget {
   _NavDrawerState createState() => _NavDrawerState();
 }
 
-class _NavDrawerState extends State<NavDrawer> {
+class _NavDrawerState extends State<NavDrawer> with ChangeNotifier {
   @override
   Widget build(BuildContext context) {
     print(categoryComaplints);
