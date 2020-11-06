@@ -127,7 +127,15 @@ class _AboutPageState extends State<AboutPage> {
                 ).toList(),
               )
             )
-          ),          
+          ),  
+          SizedBox(
+            height: 5,
+          ),
+          Center(
+            child: Text(
+              'Slide to know about other devlopers ->',
+            ),
+          ),        
           SizedBox(
             height: 20,
           ),

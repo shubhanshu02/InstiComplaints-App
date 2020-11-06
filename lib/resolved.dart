@@ -1,5 +1,5 @@
 //import 'dart:html';
-
+import 'ComplaintDialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
@@ -212,6 +212,10 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                         splashColor: Colors.blue.withAlpha(300),
                         onTap: () {
                           //TODO: Add navigator to other card
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) => ComplaintDialog(complaintIds[index])
+                          );
                         },
                         child: Container(
                           padding: EdgeInsets.all(10),

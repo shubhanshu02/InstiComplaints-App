@@ -331,11 +331,12 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height * 0.8,
                       child: ClipPath(
-                          clipper: CurveClipper(),
-                          child: Container(
-                            //constraints: BoxConstraints.expand(),
-                            color: Color(0xFF181D3D),
-                          )),
+                        clipper: CurveClipper(),
+                        child: Container(
+                          //constraints: BoxConstraints.expand(),
+                          color: Color(0xFF181D3D),
+                        )
+                      ),
                     ),
                   ],
                 ),
@@ -541,7 +542,7 @@ class NavDrawer extends StatefulWidget {
   _NavDrawerState createState() => _NavDrawerState();
 }
 
-class _NavDrawerState extends State<NavDrawer> with ChangeNotifier {
+class _NavDrawerState extends State<NavDrawer> {
   @override
   Widget build(BuildContext context) {
     print(categoryComaplints);
@@ -1087,6 +1088,10 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                         splashColor: Colors.blue.withAlpha(300),
                         onTap: () {
                           //TODO: Add navigator to other card
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) => ComplaintDialog(complaintIds[index])
+                          );
                         },
                         child: Container(
                           padding: EdgeInsets.all(10),
