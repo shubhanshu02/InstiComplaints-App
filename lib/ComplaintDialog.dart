@@ -256,7 +256,7 @@ class _ComplaintDialogState extends State<ComplaintDialog> {
                                           10,
                                 ),
                                 Text(
-                                  '1',
+                                  snapshot.data.data()['upvotes'].length.toString(),
                                   //complaint.upvotes.length.toString(),
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,

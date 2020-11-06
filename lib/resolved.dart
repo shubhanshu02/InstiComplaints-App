@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'ComplaintDialog.dart';
 
 var user = FirebaseAuth.instance.currentUser;
 
@@ -211,6 +212,12 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                       child: InkWell(
                         splashColor: Colors.blue.withAlpha(300),
                         onTap: () {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext
+                              context) =>
+                                  ComplaintDialog(
+                                      user.data.id));
                           //TODO: Add navigator to other card
                         },
                         child: Container(
@@ -239,7 +246,7 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                                             style: TextStyle(fontSize: 12),
                                           ),
                                           Text(
-                                            'Name', // todo: add name field in complaints collection docs
+                                            user.data['email'], // todo: add name field in complaints collection docs
                                             style: TextStyle(
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.bold),
@@ -262,7 +269,7 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                                   children: <Widget>[
                                     Icon(Icons.calendar_today),
                                     Text(
-                                      DateFormat.yMd()
+                                      DateFormat.yMMMMd()
                                           .format(
                                               user.data['filing time'].toDate())
                                           .toString(),
@@ -350,9 +357,9 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                                       ),
                                       Text(
                                         //todo : get the size of upvotes array from the backend
-                                        ' Upvotes',
+                                        user.data['upvotes'].length.toString(),
                                         style: TextStyle(
-                                          fontSize: 11,
+                                          fontSize: 13,
                                         ),
                                       )
                                     ],

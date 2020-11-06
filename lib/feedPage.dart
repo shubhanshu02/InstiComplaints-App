@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -76,7 +78,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                             Flexible(
                               child: StreamBuilder<QuerySnapshot>(
                                 stream: FirebaseFirestore.instance
-                                    .collection('complaints')
+                                    .collection('complaints').orderBy('filing time', descending: true)
                                     .snapshots(),
                                 builder: (BuildContext context,
                                     AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -296,9 +298,9 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                                             ),
                                                             Text(
                                                               //todo : get the size of upvotes array from the backend
-                                                              ' Upvotes',
+                                                              document['upvotes'].length.toString(),
                                                               style: TextStyle(
-                                                                fontSize: 11,
+                                                                fontSize: 13,
                                                               ),
                                                             )
                                                           ],
@@ -350,10 +352,8 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                       right: 20, left: 20, top: 150, bottom: 0),
                   child: Container(
                       // add contents of the bookmark page
-                      child: StreamProvider<List<String>>.value(
-                    value: getComplaintId,
-                    child: ComplaintTile1(),
-                  )),
+                    child: ComplaintList(),
+                  ),
                 ),
               ],
             ),
@@ -1042,10 +1042,35 @@ class _NavDrawerState extends State<NavDrawer> {
 
 var user = FirebaseAuth.instance.currentUser;
 
+class ComplaintList extends StatefulWidget {
+  @override
+  _ComplaintListState createState() => _ComplaintListState();
+}
+
+class _ComplaintListState extends State<ComplaintList> {
+  @override
+  Widget build(BuildContext context) {
+    return StreamProvider<List<String>>.value(
+      value: getComplaintId,
+      child: ComplaintTile1(),
+    );
+  }
+}
+
 List<String> getComplaints(DocumentSnapshot snapshot) {
   print(snapshot.data());
   return List.from(snapshot['bookmarked']);
 }
+// class Comp {
+//   String title;
+//   String category;
+//   String description;
+//   Timestamp filingTime;
+//   String status;
+//   // List<String> upvotes = [];
+//   String email;
+// }
+
 
 Stream<List<String>> get getComplaintId {
   return FirebaseFirestore.instance
@@ -1068,205 +1093,224 @@ class ComplaintTile1 extends StatefulWidget {
 }
 
 class _ComplaintTile1State extends State<ComplaintTile1> {
+  //var arr = new List<Comp>();
   @override
   Widget build(BuildContext context) {
     final complaintIds = Provider.of<List<String>>(context) ?? [];
-    return ListView.builder(
-      itemCount: complaintIds.length,
-      itemBuilder: (context, index) {
-        print(complaintIds[index]);
-        return FutureBuilder(
-          future: FirebaseFirestore.instance
-              .collection('complaints')
-              .doc(complaintIds[index])
-              .get(),
-          builder:
-              (BuildContext context, AsyncSnapshot<DocumentSnapshot> user) {
-            switch (user.connectionState) {
-              case ConnectionState.none:
-                return Text('Press button to start.');
-              case ConnectionState.active:
-              case ConnectionState.waiting:
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              case ConnectionState.done:
-                if (user.hasError) return Text('Error: ${user.error}');
-                if (user.data['status'] == 'resolved')
-                  return Container(width: 0.0, height: 0.0);
-                if (user.hasData) {
-                  return Card(
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(11)),
-                      child: Container(
-                        // TODO: Adjust height according to generator function
-                        height: 210,
-                        child: InkWell(
-                          splashColor: Colors.blue.withAlpha(300),
-                          onTap: () {
-                            //TODO: Add navigator to other card
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(10),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+
+        return ListView.builder(
+          itemCount: complaintIds.length,
+          itemBuilder: (context, index) {
+            Future<QuerySnapshot> ref = FirebaseFirestore.instance
+                .collection('complaints')
+                 // .orderBy('filing time', descending: true)
+                .where(FieldPath.documentId, isEqualTo: complaintIds[index])
+                .get();
+
+              // ref.then((value) => value.docs.forEach((element) {
+              //   var ss = element.data();
+              //   Comp c = new Comp();
+              //   c.title = ss['title'];
+              //   c.category = ss['category'];
+              //   c.description = ss['description'];
+              //   c.filingTime = ss['filing time'];
+              //   c.status = ss['status'];
+              //   c.email = ss['email'];
+              //   arr.add(c);
+              //   arr.sort((x,y) => y.filingTime.compareTo(x.filingTime));
+              // }));
+
+            return FutureBuilder(
+              future: ref.then((value) => value.docs[0]),
+              builder:
+                  (BuildContext context, AsyncSnapshot<DocumentSnapshot> user) {
+
+                switch (user.connectionState) {
+                  case ConnectionState.none:
+                    return Text('Press button to start.');
+                  case ConnectionState.active:
+                  case ConnectionState.waiting:
+                    return Text('Awaiting result...');
+                  case ConnectionState.done:
+                    if (user.hasError)
+                      return Container(
+                        width: 0.0,
+                        height: 0.0,
+                      );
+                    return Card(
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(11)),
+                        child: Container(
+                          // TODO: Adjust height according to generator function
+                          height: 210,
+                          child: InkWell(
+                            splashColor: Colors.blue.withAlpha(300),
+                            onTap: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext
+                                  context) =>
+                                      ComplaintDialog(
+                                          user.data.id));
+                              //TODO: Add navigator to other card
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Row(children: [
+                                            Text(user.data["title"],
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 18))
+                                          ]),
+                                          Row(
+                                            children: <Widget>[
+                                              Text(
+                                                'Posted by ',
+                                                style: TextStyle(fontSize: 12),
+                                              ),
+                                              Text(
+                                                user.data['email'], // todo: add name field in complaints collection docs
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.bold),
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      IconButton(
+                                          icon: Icon(Icons.bookmark_border),
+                                          onPressed: () {
+                                            //TODO: Add color change
+                                          })
+                                    ],
+                                  ),
+                                  SizedBox(height: 7),
+                                  Expanded(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
                                       children: <Widget>[
-                                        Row(children: [
-                                          Text(user.data["title"],
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18))
-                                        ]),
-                                        Row(
-                                          children: <Widget>[
-                                            Text(
-                                              'Posted by ',
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                            Text(
-                                              user.data[
-                                                  'email'], // todo: add name field in complaints collection docs
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.bold),
-                                            )
-                                          ],
+                                        Icon(Icons.calendar_today),
+                                        Text(
+                                          DateFormat.yMMMMd()
+                                              .format(
+                                              user.data['filing time'].toDate())
+                                              .toString(),
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold),
                                         ),
+                                        Text(' in '),
+                                        Text(
+                                          user.data["category"],
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold),
+                                        )
                                       ],
                                     ),
-                                    IconButton(
-                                        icon: Icon(Icons.bookmark_border),
-                                        onPressed: () {
-                                          //TODO: Add color change
-                                        })
-                                  ],
-                                ),
-                                SizedBox(height: 7),
-                                Expanded(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                                  ),
+                                  SizedBox(height: 4),
+                                  Row(
                                     children: <Widget>[
-                                      Icon(Icons.calendar_today),
-                                      Text(
-                                        DateFormat.yMd()
-                                            .format(user.data['filing time']
-                                                .toDate())
-                                            .toString(),
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(' in '),
-                                      Text(
-                                        user.data["category"] ?? "",
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold),
+                                      Flexible(
+                                        child: Text(
+                                          user.data["description"],
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(fontSize: 15),
+                                        ),
                                       )
                                     ],
                                   ),
-                                ),
-                                SizedBox(height: 4),
-                                Row(
-                                  children: <Widget>[
-                                    Flexible(
-                                      child: Text(
-                                        user.data["description"],
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(fontSize: 15),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                SizedBox(height: 7),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: <Widget>[
-                                    SizedBox(
-                                      width: 70,
-                                      child: Center(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: <Widget>[
-                                            Text(user.data["status"],
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: Colors.red
-                                                      .withOpacity(0.6),
-                                                  fontWeight: FontWeight.bold,
-                                                )),
-                                            SizedBox(
-                                              height: 5,
-                                            ),
-                                            Text(
-                                              'Status',
-                                              style: TextStyle(
-                                                fontSize: 11,
+                                  SizedBox(height: 7),
+                                  Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: <Widget>[
+                                      SizedBox(
+                                        width: 70,
+                                        child: Center(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                            children: <Widget>[
+                                              Text(user.data["status"],
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    color:
+                                                    Colors.red.withOpacity(0.6),
+                                                    fontWeight: FontWeight.bold,
+                                                  )),
+                                              SizedBox(
+                                                height: 5,
                                               ),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ],
+                                              Text(
+                                                'Status',
+                                                style: TextStyle(
+                                                  fontSize: 11,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    Column(
-                                      children: <Widget>[
-                                        IconButton(
-                                          icon: Icon(Icons.share),
-                                          onPressed: () {},
-                                        ),
-                                        Text(
-                                          'Share',
-                                          style: TextStyle(
-                                            fontSize: 11,
+                                      Column(
+                                        children: <Widget>[
+                                          IconButton(
+                                            icon: Icon(Icons.share),
+                                            onPressed: () {},
                                           ),
-                                        )
-                                      ],
-                                    ),
-                                    Column(
-                                      children: <Widget>[
-                                        IconButton(
-                                          icon: Icon(Icons.arrow_upward),
-                                          onPressed: () {},
-                                        ),
-                                        Text(
-                                          //todo : get the size of upvotes array from the backend
-                                          ' Upvotes',
-                                          style: TextStyle(
-                                            fontSize: 11,
+                                          Text(
+                                            'Share',
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      Column(
+                                        children: <Widget>[
+                                          IconButton(
+                                            icon: Icon(Icons.arrow_upward),
+                                            onPressed: () {},
                                           ),
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                )
-                              ],
+                                          Text(
+                                            //todo : get the size of upvotes array from the backend
+                                            user.data['upvotes'].length.toString(),
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                            ),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ));
-                } else {
-                  return Center(child: CircularProgressIndicator());
+                        ));
                 }
-            }
-            return null; // unreachable
+                return null; // unreachable
+              },
+            );
           },
         );
-      },
-    );
   }
 }
