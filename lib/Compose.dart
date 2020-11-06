@@ -24,55 +24,60 @@ class BackgroundMaker extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: <Widget>[
-            Container(
+            /*Container(
               constraints: BoxConstraints.expand(),
               color: Colors.white,
               //child: Compose(),
             ),
+            Container(
+                 height: MediaQuery.of(context).size.height * 0.035,
+                 color: Color(0xFF181D3D),
+               ),*/
             ClipPath(
-                clipper: CurveClipper(),
-                child: Container(
-                  constraints: BoxConstraints.expand(),
-                  color: Color(0xFF181D3D),
-                  child: Column(children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(15.0, 25.0, 0.0, 0.0),
-                      child: Row(
-                        children: <Widget>[
-                          SizedBox(height: 30.0),
-                          CircleAvatar(
-                            backgroundImage:
-                                AssetImage('assets/app_logo_final_jpg_ws.jpg'),
-                            radius: (38 * MediaQuery.of(context).size.height) /
-                                1000,
-                          ),
-                          SizedBox(
-                            width: 10.0,
-                          ),
-                          Text(
-                            'InstiComplaint',
-                            style: TextStyle(
-                                fontFamily: 'Amaranth',
-                                color: Colors.white,
-                                fontSize:
-                                    (34 * MediaQuery.of(context).size.height) /
-                                        1000),
-                          )
-                        ],
-                      ),
+              clipper: CurveClipper(),
+              child: Container(
+                constraints: BoxConstraints.expand(),
+                color: Color(0xFF181D3D),
+                child: Column(children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(15.0, 25.0, 0.0, 0.0),
+                    child: Row(
+                      children: <Widget>[
+                        SizedBox(height: 30.0),
+                        CircleAvatar(
+                          backgroundImage:
+                              AssetImage('assets/app_logo_final_jpg_ws.jpg'),
+                          radius: (32 * MediaQuery.of(context).size.height) /
+                              1000,
+                        ),
+                        SizedBox(
+                          width: 10.0,
+                        ),
+                        Text(
+                          'InstiComplaint',
+                          style: TextStyle(
+                              fontFamily: 'Amaranth',
+                              color: Colors.white,
+                              fontSize:
+                                  (30 * MediaQuery.of(context).size.height) /
+                                      1000),
+                        )
+                      ],
                     ),
-                    SizedBox(height: MediaQuery.of(context).size.height / 24),
-                    Text('File a Complaint',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize:
-                                (30 * MediaQuery.of(context).size.height) /
-                                    1000)),
-                    //SizedBox(height: MediaQuery.of(context).size.height / 12),
-                  ]),
-                )),
-          ],
-        ));
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height / 28),
+                  Text('File a Complaint',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize:
+                              (30 * MediaQuery.of(context).size.height) /
+                                  1000)),
+                  //SizedBox(height: MediaQuery.of(context).size.height / 12),
+                ]),
+              )),
+        ],
+      )
+    );
   }
 }
 
@@ -183,212 +188,240 @@ class _ComposeState extends State<Compose> {
     });    
   }  
 
-  final titleController = TextEditingController();
-  final descripController = TextEditingController();
-
-  @override
-  void dispose() {
-    titleController.dispose();
-    descripController.dispose();
-    super.dispose();
-  }
+  String title='';
+  String description='';
+  final _formKey1 = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Container(
+      color: Color(0xFF181D3D),
+      child: SafeArea(
+        child: Scaffold(
         /*appBar: AppBar(
         backgroundColor: Color.fromRGBO(24, 29, 61,1),
 
-      ),*/
-        body: SafeArea(
+            ),*/
+          body: Form(
+            key: _formKey1,
             child: ListView(
-      children: <Widget>[
-        BackgroundMaker(),
-        Card(
-          //shadowColor: Color.fromRGBO(24, 29, 61,1),
-          margin: EdgeInsets.symmetric(horizontal: 15.0),
-          elevation: 10.0,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              CategoryDropdown(),
-              SizedBox(
-                height: 10.0,
-              ),
-              Container(
-                padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                width: 400.0,
-                constraints: BoxConstraints(
-                  maxHeight: 200.0,
-                  minHeight: 80.0,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 0.5),
-                  child: TextField(
-                    controller: titleController,
-                    minLines: 1,
-                    maxLines: 3,
-                    maxLength: 80,
-                    textAlignVertical: TextAlignVertical.center,
-                    style: TextStyle(
-                      height: 2.0,
-                    ),
-                    decoration: InputDecoration(
-                      labelText: 'Title:  ',
-                      alignLabelWithHint: true,
-                      labelStyle: TextStyle(
-                          color: Color.fromRGBO(24, 51, 98, 1),
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold),
-                      border: OutlineInputBorder(),
-                    ),
+              children: <Widget>[
+                BackgroundMaker(),
+                Card(
+                  //shadowColor: Color.fromRGBO(24, 29, 61,1),
+                  margin: EdgeInsets.symmetric(horizontal: 15.0),
+                  elevation: 10.0,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      CategoryDropdown(),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                        width: 400.0,
+                        constraints: BoxConstraints(
+                          maxHeight: 200.0,
+                          minHeight: 80.0,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 0.5),
+                          child: TextFormField(
+                            validator: (value){
+                              if(value.isEmpty){
+                                return "Title can't be left empty.";
+                              }
+                              return null;
+                            },
+                            onChanged: (value){
+                              setState(() {
+                                title=value;
+                              });
+                            },
+                            //controller: titleController,
+                            minLines: 1,
+                            maxLines: 3,
+                            maxLength: 80,
+                            textAlignVertical: TextAlignVertical.center,
+                            style: TextStyle(
+                              height: 2.0,
+                            ),
+                            decoration: InputDecoration(
+                              labelText: 'Title:  ',
+                              alignLabelWithHint: true,
+                              labelStyle: TextStyle(
+                                  color: Color.fromRGBO(24, 51, 98, 1),
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold),
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                        width: 400.0,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 0.8),
+                          child: TextFormField(
+                            validator: (value){
+                              if(value.isEmpty){
+                                return "Description can't be left empty.";
+                              }
+                              return null;
+                            },
+                            onChanged: (value){
+                              setState(() {
+                                description=value;
+                              });
+                            },
+                            //controller: descripController,
+                            minLines: 1,
+                            maxLines: 12,
+                            maxLength: 350,
+                            textAlignVertical: TextAlignVertical.center,
+                            style: TextStyle(
+                              height: 2.0,
+                            ),
+                            decoration: InputDecoration(
+                              isDense: true,
+                              labelText: 'Description:  ',
+                              alignLabelWithHint: true,
+                              labelStyle: TextStyle(
+                                  color: Color.fromRGBO(24, 51, 98, 1),
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold),
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      Row(
+                        children: <Widget>[
+                          IconButton(
+                            alignment: Alignment.centerLeft,
+                            icon: Icon(
+                              Icons.add_a_photo,
+                              color: Color.fromRGBO(24, 29, 61, 1),
+                              size: 40.0,
+                            ),
+                            color: Colors.blue,
+                            onPressed: () async{
+                              await _pickImage(ImageSource.gallery);
+                              if (_image != null) {
+                                await uploadFile();
+                                setState(() {
+                                  imagesInComplaint.add(_uploadedFileURL);
+                                  //print(_uploadedFileURL);
+                                  //print(imagesInComplaint);
+                                });
+                              }
+                            },
+                          ),
+                          Text(
+                            ':   ',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 30.0),
+                          ),
+                          Column(
+                            children: imagesInComplaint
+                                .map((imag) => ImageShow(
+                                    name: 'Uploaded Image ${imagesInComplaint.indexOf(imag)}',
+                                    delete: () {
+                                      setState(() {
+                                        imagesInComplaint.remove(imag);
+                                      });
+                                    }))
+                                .toList(),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      )
+                    ],
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              Container(
-                padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                width: 400.0,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 0.8),
-                  child: TextField(
-                    controller: descripController,
-                    minLines: 1,
-                    maxLines: 12,
-                    maxLength: 350,
-                    textAlignVertical: TextAlignVertical.center,
-                    style: TextStyle(
-                      height: 2.0,
-                    ),
-                    decoration: InputDecoration(
-                      isDense: true,
-                      labelText: 'Description:  ',
-                      alignLabelWithHint: true,
-                      labelStyle: TextStyle(
-                          color: Color.fromRGBO(24, 51, 98, 1),
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold),
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
+                SizedBox(
+                  height: 30.0,
                 ),
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              Row(
-                children: <Widget>[
-                  IconButton(
-                    alignment: Alignment.centerLeft,
-                    icon: Icon(
-                      Icons.add_a_photo,
-                      color: Color.fromRGBO(24, 29, 61, 1),
-                      size: 40.0,
-                    ),
-                    color: Colors.blue,
-                    onPressed: () async{
-                      await _pickImage(ImageSource.gallery);
-                      if (_image != null) {
-                        await uploadFile();
-                        setState(() {
-                          imagesInComplaint.add(_uploadedFileURL);
-                          //print(_uploadedFileURL);
-                          //print(imagesInComplaint);
-                        });
+                Center(
+                  child: RaisedButton(
+                    onPressed: () async {
+                      if(_formKey1.currentState.validate()){
+                        print(_formKey1.currentState.validate().toString());
+                        complaint = MailContent(
+                          title: title,
+                          category: selectedCategory,
+                          description: description,
+                          images: imagesInComplaint,
+                          filingTime: DateTime.now(),
+                          status: status[0],
+                          upvotes: [],
+                          uid: FirebaseAuth.instance.currentUser.uid,
+                          email: FirebaseAuth.instance.currentUser.email
+                        );
+                        /*await Future.delayed(Duration(seconds: 2),(){
+                          
+                        });*/
+                        //TODO: Add mail to database.
+                        title ='';
+                        description='';
+                        
+
+                        await ComplaintFiling().fileComplaint(complaint.title,complaint.category,complaint.description,complaint.images,complaint.filingTime,complaint.status,complaint.upvotes,complaint.uid,complaint.email);
+                        imagesInComplaint.clear();
+
+                        /*showDialog(
+                              context: context,
+                              builder: (BuildContext context) => AdminDialog('SCvnnfBP66JpkhBK12do')
+                            );*/
+
+                        showDialog(context: context,builder: (BuildContext context) => Dialog(
+                          child: Container(
+                            child: Center(
+                              child: Text('Complaint Filed'),
+                            ),
+                            //color: Color.fromRGBO(24, 29, 61,1),
+                            height: 50.0,
+                            width: 70.0,
+                          ),
+                        ));
+                      }
+                      else{
+                      print('yes');
                       }
                     },
+                    child: Text(
+                      'Submit',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    color: Color(0xFF181D3D),
                   ),
-                  Text(
-                    ':   ',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 30.0),
-                  ),
-                  Column(
-                    children: imagesInComplaint
-                        .map((imag) => ImageShow(
-                            name: 'Uploaded Image ${imagesInComplaint.indexOf(imag)}',
-                            delete: () {
-                              setState(() {
-                                imagesInComplaint.remove(imag);
-                              });
-                            }))
-                        .toList(),
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 10.0,
-              )
-            ],
-          ),
-        ),
-        SizedBox(
-          height: 30.0,
-        ),
-        Center(
-          child: RaisedButton(
-            onPressed: () async {
-              complaint = MailContent(
-                  title: titleController.text,
-                  category: selectedCategory,
-                  description: descripController.text,
-                  images: imagesInComplaint,
-                  filingTime: DateTime.now(),
-                  status: status[0],
-                  upvotes: [],
-                  uid: FirebaseAuth.instance.currentUser.uid,
-                  email: FirebaseAuth.instance.currentUser.email
-                  );
-              /*await Future.delayed(Duration(seconds: 2),(){
-                
-              });*/
-              //TODO: Add mail to database.
-              titleController.clear();
-              descripController.clear();
-              
-
-              print(complaint.images);
-              //TODO: File the Complaint
-              await ComplaintFiling().fileComplaint(complaint.title,complaint.category,complaint.description,complaint.images,complaint.filingTime,complaint.status,complaint.upvotes,complaint.uid,complaint.email);
-              imagesInComplaint.clear();
-
-              /*showDialog(
-                    context: context,
-                    builder: (BuildContext context) => AdminDialog('SCvnnfBP66JpkhBK12do')
-                  );*/
-
-              showDialog(context: context,builder: (BuildContext context) => Dialog(
-                child: Container(
-                  child: Center(
-                    child: Text('Complaint Filed'),
-                  ),
-                  //color: Color.fromRGBO(24, 29, 61,1),
-                  height: 50.0,
-                  width: 70.0,
                 ),
-              ));
-            },
-            child: Text(
-              'Submit',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-              ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Container(
+                  child: Image(image: AssetImage('assets/app_logo_final0.png')),
+                  height: 120.0,
+                  width: 120.0,
+                )
+              ],
             ),
-            color: Color(0xFF181D3D),
-          ),
+          )
         ),
-        SizedBox(
-          height: 20.0,
-        ),
-        Container(
-          child: Image(image: AssetImage('assets/app_logo_final0.png')),
-          height: 120.0,
-          width: 120.0,
-        )
-      ],
-    )));
+      ),
+    );
   }
 }

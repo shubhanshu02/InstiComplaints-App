@@ -34,6 +34,7 @@ class CategoryDropdown extends StatefulWidget {
 
 class _CategoryDropdownState extends State<CategoryDropdown> {
   List<DropdownMenuItem<String>> _dropdownMenuItems;
+  final _formKey = GlobalKey<FormState>();
 
   void initState() {
     super.initState();
@@ -61,7 +62,8 @@ class _CategoryDropdownState extends State<CategoryDropdown> {
       height: 75.0,
       padding: EdgeInsets.all(10.0),
       child: Center(
-        child: DropdownButton<String>(
+        child: DropdownButtonFormField<String>(
+          key: _formKey,
             hint: Container(
               padding: EdgeInsets.symmetric(horizontal: 11),
               child: Text(
@@ -72,13 +74,16 @@ class _CategoryDropdownState extends State<CategoryDropdown> {
                     fontWeight: FontWeight.bold),
               ),
             ),
+            validator: (value) => value == null ? "Please select a category" : null,
             isExpanded: true,
             elevation: 10,
             value: selectedCategory,
             items: _dropdownMenuItems,
             onChanged: (value) {
               setState(() {
-                selectedCategory = value;
+                if(_formKey.currentState.validate()){
+                  selectedCategory = value;
+                }
               });
             }),
       ),
