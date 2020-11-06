@@ -72,6 +72,7 @@ class _RegisterFormState extends State<RegisterForm> {
       'notification': [],
       'bookmarked': [],
       'category': "general",
+      'profilePic':""
     });
   }
 

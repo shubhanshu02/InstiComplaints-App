@@ -3,6 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'loading_page.dart';
+
+var user = FirebaseAuth.instance.currentUser;
 
 class Camera extends StatefulWidget {
   @override
@@ -12,6 +17,7 @@ class Camera extends StatefulWidget {
 class _CameraState extends State<Camera> {
   File imageFile;
   bool inProcess = false;
+  String _uploadedFileURL;
   getImage() async {
     setState(() {
       inProcess = true;
@@ -32,6 +38,7 @@ class _CameraState extends State<Camera> {
 
     this.setState(() {
       imageFile = cropped;
+      uploadFile();
       inProcess = false;
     });
   }
@@ -59,6 +66,21 @@ class _CameraState extends State<Camera> {
     imageFile = null;
     Navigator.of(context).pop();
   }
+
+    Future uploadFile() async {    
+       StorageReference storageReference = FirebaseStorage.instance    
+           .ref()    
+           .child('profile/${'t1yj9ddCnKYnhaWb7aJLNpotgel2'}');    
+       StorageUploadTask uploadTask = storageReference.putFile(imageFile);    
+       await uploadTask.onComplete;    
+       print('File Uploaded');    
+       storageReference.getDownloadURL().then((fileURL) {    
+         setState(() {    
+           _uploadedFileURL = fileURL;
+           FirebaseFirestore.instance.collection('users').doc(user.uid).update({'profilePic':_uploadedFileURL});    
+         });    
+       });    
+     }  
 
   Future<void> _showChoiceDialog(BuildContext context) {
     return showDialog(
@@ -132,39 +154,54 @@ class _CameraState extends State<Camera> {
 
   @override
   Widget build(BuildContext context) {
-    return new Stack(children: <Widget>[
-      Container(
-        width: 160,
-        height: 160,
-        margin: EdgeInsets.fromLTRB(110, 0, 110, 0),
-        decoration: BoxDecoration(
-            color: Colors.grey,
-            shape: BoxShape.circle,
-            image: DecorationImage(
-                image: imageFile == null
-                    ? NetworkImage(
-                        '${FirebaseAuth.instance.currentUser.photoURL}')
-                    : FileImage(imageFile),
-                fit: BoxFit.cover)),
-      ),
-      Container(
-        margin: EdgeInsets.fromLTRB(210, 110, 0, 0),
-        child: RaisedButton(
-          onPressed: () {
-            _showChoiceDialog(context);
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Icon(
-              Icons.photo_camera,
-              color: Color(0xFF181d3d),
-              size: 35,
-            ),
-          ),
-          color: Colors.white,
-          shape: CircleBorder(),
+    var query=MediaQuery.of(context);
+    return FutureBuilder(
+          future:
+          FirebaseFirestore.instance.collection('users').doc(user.uid).get(),
+      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> user) {
+        switch (user.connectionState) {
+          case ConnectionState.none:
+          case ConnectionState.active:
+          case ConnectionState.waiting:
+            return Loading();
+          case ConnectionState.done:
+            if (user.hasError) return Text('Error: ${user.error}');
+          return Stack(children: <Widget>[
+        Container(
+          width: query.size.width/2.5,
+          height: query.size.width/2.5,
+          margin: EdgeInsets.fromLTRB(110, 0, 110, 0),
+          decoration: BoxDecoration(
+              color: Colors.grey,
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                  image: user.data['profilePic'] == ""
+                          ?AssetImage('assets/default.png')
+                      : NetworkImage(user.data['profilePic']),
+                  fit: BoxFit.cover)),
         ),
-      ),
-    ]);
+        Container(
+          margin: EdgeInsets.fromLTRB(query.size.width/1.9, query.size.height/6.4, 0, 0),
+          child: RaisedButton(
+            onPressed: () {
+              _showChoiceDialog(context);
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Icon(
+                Icons.photo_camera,
+                color: Color(0xFF181d3d),
+                size: 35,
+              ),
+            ),
+            color: Colors.white,
+            shape: CircleBorder(),
+          ),
+        ),
+      ]);
+        }
+        return null;
+      }
+    );
   }
 }

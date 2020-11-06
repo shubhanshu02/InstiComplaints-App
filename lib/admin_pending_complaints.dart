@@ -47,7 +47,7 @@ class _AdPendingState extends State<AdPending>
                       children:
                           snapshot.data.docs.map((DocumentSnapshot document) {
                         if (document['category'] == 'Gymkhana' &&
-                            document['status'] != 'resolved')
+                            document['status'] == 'passed')
                           return Card(
                               elevation: 2,
                               shape: RoundedRectangleBorder(
