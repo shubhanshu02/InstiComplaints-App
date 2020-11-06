@@ -68,7 +68,7 @@ class _CameraState extends State<Camera> {
     this.setState(() {
       imageFile = File(picture.path);
     });
-    getImage();
+    await getImage();
     await uploadFile();
     _userDocument.update({'profilePic':_uploadedFileURL});
     Navigator.of(context).pop();
@@ -79,7 +79,7 @@ class _CameraState extends State<Camera> {
     this.setState(() {
       imageFile = File(picture.path);
     });
-    getImage();
+    await getImage();
     await uploadFile();
     _userDocument.update({'profilePic':_uploadedFileURL});
     Navigator.of(context).pop();
@@ -87,7 +87,7 @@ class _CameraState extends State<Camera> {
 
   _openRemove(BuildContext context) async {
     imageFile = null;
-    _userDocument.update({'profilePic':""});
+    await _userDocument.update({'profilePic':""});
     Navigator.of(context).pop();
   }
 
