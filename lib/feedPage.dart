@@ -1,4 +1,4 @@
-import 'package:InstiComplaints/search.dart';
+import 'package:InstiComplaints/loading.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +8,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'ComplaintDialog.dart';
+import 'UpdateNotification.dart';
+import 'package:InstiComplaints/search.dart';
 
 GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
@@ -72,277 +74,234 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                       valueListenable: _filter,
                       builder: (BuildContext context, Map<String, bool> value,
                           Widget child) {
-                        return Column(
-                          children: [
-                            Flexible(
-                              child: StreamBuilder<QuerySnapshot>(
-                                stream: FirebaseFirestore.instance
-                                    .collection('complaints')
-                                    .snapshots(),
-                                builder: (BuildContext context,
-                                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                                  if (snapshot.hasError) {
-                                    return Text('Something went wrong');
-                                  }
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return CircularProgressIndicator();
-                                  }
-                                  List feedcomplaints = snapshot.data.docs
-                                      .map((DocumentSnapshot document) {
-                                    if (value[document['category']] == true) {
-                                      return Card(
-                                          elevation: 2,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(11)),
+                        return StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance
+                              .collection('complaints')
+                              .snapshots(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (snapshot.hasError) {
+                              return Text('Something went wrong');
+                            }
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return CircularProgressIndicator();
+                            }
+
+                            return new ListView(
+                              children: snapshot.data.docs
+                                  .map((DocumentSnapshot document) {
+                                if (value[document['category']] == true) {
+                                  return Card(
+                                      elevation: 2,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(11)),
+                                      child: Container(
+                                        // TODO: Adjust height according to generator function
+                                        height: 210,
+                                        child: InkWell(
+                                          splashColor:
+                                              Colors.blue.withAlpha(300),
+                                          onTap: () {
+                                            showDialog(
+                        context: context,
+                        builder: (BuildContext context) => ComplaintDialog(document.id)
+                      );
+                                            //TODO: Add navigator to other card
+                                          },
                                           child: Container(
-                                            // TODO: Adjust height according to generator function
-                                            height: 210,
-                                            child: InkWell(
-                                              splashColor:
-                                                  Colors.blue.withAlpha(300),
-                                              onTap: () {
-                                                showDialog(
-                                                    context: context,
-                                                    builder: (BuildContext
-                                                            context) =>
-                                                        ComplaintDialog(
-                                                            document.id));
-                                                //TODO: Add navigator to other card
-                                              },
-                                              child: Container(
-                                                padding: EdgeInsets.all(10),
-                                                child: Column(
+                                            padding: EdgeInsets.all(10),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: <Widget>[
+                                                Row(
                                                   mainAxisAlignment:
-                                                      MainAxisAlignment.start,
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: <Widget>[
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
                                                       children: <Widget>[
-                                                        Column(
+                                                        Row(children: [
+                                                          Text(
+                                                              document["title"],
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 18))
+                                                        ]),
+                                                        Row(
+                                                          children: <Widget>[
+                                                            Text(
+                                                              'Posted by ',
+                                                              style: TextStyle(
+                                                                  fontSize: 12),
+                                                            ),
+                                                            Text(
+                                                              document['email'], // todo: add name field in complaints collection docs
+                                                              style: TextStyle(
+                                                                  fontSize: 12,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    IconButton(
+                                                        icon: Icon(Icons
+                                                            .bookmark_border),
+                                                        onPressed: () {
+                                                          //TODO: Add color change
+                                                        })
+                                                  ],
+                                                ),
+                                                SizedBox(height: 7),
+                                                Expanded(
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: <Widget>[
+                                                      Icon(
+                                                          Icons.calendar_today),
+                                                      Text(
+                                                        DateFormat.yMMMMd()
+                                                            .format(document[
+                                                                    'filing time']
+                                                                .toDate())
+                                                            .toString(),
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      Text(' in '),
+                                                      Text(
+                                                        document["category"],
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(height: 4),
+                                                Row(
+                                                  children: <Widget>[
+                                                    Flexible(
+                                                      child: Text(
+                                                        document["description"],
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                            fontSize: 15),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                                SizedBox(height: 7),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.end,
+                                                  children: <Widget>[
+                                                    SizedBox(
+                                                      width: 70,
+                                                      child: Center(
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .end,
                                                           crossAxisAlignment:
                                                               CrossAxisAlignment
-                                                                  .start,
+                                                                  .center,
                                                           children: <Widget>[
-                                                            Row(children: [
-                                                              Text(
-                                                                  document[
-                                                                      "title"],
-                                                                  style: TextStyle(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      fontSize:
-                                                                          18))
-                                                            ]),
-                                                            Row(
-                                                              children: <
-                                                                  Widget>[
-                                                                Text(
-                                                                  'Posted by ',
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          12),
-                                                                ),
-                                                                Text(
-                                                                  document[
-                                                                      'email'], // todo: add name field in complaints collection docs
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          12,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold),
-                                                                )
-                                                              ],
+                                                            Text(
+                                                                document[
+                                                                    "status"],
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: 16,
+                                                                  color: Colors
+                                                                      .red
+                                                                      .withOpacity(
+                                                                          0.6),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                )),
+                                                            SizedBox(
+                                                              height: 5,
+                                                            ),
+                                                            Text(
+                                                              'Status',
+                                                              style: TextStyle(
+                                                                fontSize: 11,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
                                                             ),
                                                           ],
                                                         ),
-                                                        IconButton(
-                                                            icon: Icon(Icons
-                                                                .bookmark_border),
-                                                            onPressed: () {
-                                                              //TODO: Add color change
-                                                            })
-                                                      ],
-                                                    ),
-                                                    SizedBox(height: 7),
-                                                    Expanded(
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        children: <Widget>[
-                                                          Icon(Icons
-                                                              .calendar_today),
-                                                          Text(
-                                                            DateFormat.yMMMMd()
-                                                                .format(document[
-                                                                        'filing time']
-                                                                    .toDate())
-                                                                .toString(),
-                                                            style: TextStyle(
-                                                                fontSize: 12,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                          Text(' in '),
-                                                          Text(
-                                                            document[
-                                                                "category"],
-                                                            style: TextStyle(
-                                                                fontSize: 12,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          )
-                                                        ],
                                                       ),
                                                     ),
-                                                    SizedBox(height: 4),
-                                                    Row(
+                                                    Column(
                                                       children: <Widget>[
-                                                        Flexible(
-                                                          child: Text(
-                                                            document[
-                                                                "description"],
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            style: TextStyle(
-                                                                fontSize: 15),
+                                                        IconButton(
+                                                          icon:
+                                                              Icon(Icons.share),
+                                                          onPressed: () {},
+                                                        ),
+                                                        Text(
+                                                          'Share',
+                                                          style: TextStyle(
+                                                            fontSize: 11,
                                                           ),
                                                         )
                                                       ],
                                                     ),
-                                                    SizedBox(height: 7),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .end,
+                                                    Column(
                                                       children: <Widget>[
-                                                        SizedBox(
-                                                          width: 70,
-                                                          child: Center(
-                                                            child: Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .end,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .center,
-                                                              children: <
-                                                                  Widget>[
-                                                                Text(
-                                                                    document[
-                                                                        "status"],
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontSize:
-                                                                          16,
-                                                                      color: Colors
-                                                                          .red
-                                                                          .withOpacity(
-                                                                              0.6),
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                    )),
-                                                                SizedBox(
-                                                                  height: 5,
-                                                                ),
-                                                                Text(
-                                                                  'Status',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontSize:
-                                                                        11,
-                                                                  ),
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                ),
-                                                              ],
-                                                            ),
+                                                        IconButton(
+                                                          icon: Icon(Icons
+                                                              .arrow_upward),
+                                                          onPressed: () {},
+                                                        ),
+                                                        Text(
+                                                          //todo : get the size of upvotes array from the backend
+                                                          ' Upvotes',
+                                                          style: TextStyle(
+                                                            fontSize: 11,
                                                           ),
-                                                        ),
-                                                        Column(
-                                                          children: <Widget>[
-                                                            IconButton(
-                                                              icon: Icon(
-                                                                  Icons.share),
-                                                              onPressed: () {},
-                                                            ),
-                                                            Text(
-                                                              'Share',
-                                                              style: TextStyle(
-                                                                fontSize: 11,
-                                                              ),
-                                                            )
-                                                          ],
-                                                        ),
-                                                        Column(
-                                                          children: <Widget>[
-                                                            IconButton(
-                                                              icon: Icon(Icons
-                                                                  .arrow_upward),
-                                                              onPressed: () {},
-                                                            ),
-                                                            Text(
-                                                              //todo : get the size of upvotes array from the backend
-                                                              ' Upvotes',
-                                                              style: TextStyle(
-                                                                fontSize: 11,
-                                                              ),
-                                                            )
-                                                          ],
                                                         )
                                                       ],
                                                     )
                                                   ],
-                                                ),
-                                              ),
+                                                )
+                                              ],
                                             ),
-                                          ));
-                                    } else
-                                      return Container(
-                                        height: 0,
-                                      );
-                                  }).toList();
-                                  feedcomplaints.add(Container(
-                                      padding: EdgeInsets.all(10),
-                                      child: Expanded(
-                                        child: Column(
-                                          children: [
-                                            Divider(
-                                              color: Colors.black,
-                                            ),
-                                            Icon(
-                                              Icons.check_circle,
-                                              size: 40,
-                                              color: Color(0xFF36497E),
-                                            ),
-                                            Text(
-                                              "You're All Caught Up",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline6,
-                                            )
-                                          ],
+                                          ),
                                         ),
-                                      )));
-                                  return new ListView(children: feedcomplaints);
-                                },
-                              ),
-                            ),
-                          ],
+                                      ));
+                                } else
+                                  return Container(
+                                    height: 0,
+                                  );
+                              }).toList(),
+                            );
+                          },
                         );
                       },
                     ))),
@@ -372,11 +331,12 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height * 0.8,
                       child: ClipPath(
-                          clipper: CurveClipper(),
-                          child: Container(
-                            //constraints: BoxConstraints.expand(),
-                            color: Color(0xFF181D3D),
-                          )),
+                        clipper: CurveClipper(),
+                        child: Container(
+                          //constraints: BoxConstraints.expand(),
+                          color: Color(0xFF181D3D),
+                        )
+                      ),
                     ),
                   ],
                 ),
@@ -421,7 +381,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                           ),
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => Search()));
+                            builder: (context) => Search()));
                           },
                         ),
                       ],
@@ -582,461 +542,481 @@ class NavDrawer extends StatefulWidget {
   _NavDrawerState createState() => _NavDrawerState();
 }
 
-class _NavDrawerState extends State<NavDrawer> with ChangeNotifier {
+class _NavDrawerState extends State<NavDrawer> {
   @override
   Widget build(BuildContext context) {
     print(categoryComaplints);
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.7,
-      child: Drawer(
-        child: Column(
-          children: [
-            DrawerHeader(
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, '/third');
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 8.0,
-                        color: Colors.black54,
-                        spreadRadius: 0.9,
-                      )
-                    ],
+    return StreamBuilder<DocumentSnapshot>(
+      stream: UpdateNotification().userssnap,
+      builder: (context,snapshot){
+        if(snapshot.hasData){
+          return Container(
+            width: MediaQuery.of(context).size.width * 0.7,
+            child: Drawer(
+              child: Column(
+                children: [
+                  DrawerHeader(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/third');
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 8.0,
+                              color: Colors.black54,
+                              spreadRadius: 0.9,
+                            )
+                          ],
+                        ),
+                        child: CircleAvatar(
+                          radius: 60.0,
+                          
+                          backgroundImage: snapshot.data.data()['profilePic']==""
+                          ? AssetImage('assets/blankProfile.png')
+                          : NetworkImage(
+                              snapshot.data.data()['profilePic']),
+                          backgroundColor: Colors.black,
+                        ),
+                      ),
+                    ),
+                    // decoration: BoxDecoration(
+                    //     image: DecorationImage(
+                    //       image: AssetImage("assets/app_logo_final0.png"),
+                    //       fit: BoxFit.fitHeight,
+                    //     )),
                   ),
-                  child: CircleAvatar(
-                    radius: 60.0,
-                    backgroundImage: NetworkImage(
-                        '${FirebaseAuth.instance.currentUser.photoURL}'),
-                    backgroundColor: Colors.black,
-                  ),
-                ),
-              ),
-              // decoration: BoxDecoration(
-              //     image: DecorationImage(
-              //       image: AssetImage("assets/app_logo_final0.png"),
-              //       fit: BoxFit.fitHeight,
-              //     )),
-            ),
-            Center(
-              child: Container(
-                color: Color(0xFF181D3D),
-                child: ListTile(
-                  title: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: Text(
-                        'Hi, ${FirebaseAuth.instance.currentUser.displayName}',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontFamily: 'JosefinSans',
-                          color: Colors.white,
+                  Center(
+                    child: Container(
+                      color: Color(0xFF181D3D),
+                      child: ListTile(
+                        title: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            child: Text(
+                              "Hi, ${snapshot.data.data()['name']}",
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontFamily: 'JosefinSans',
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ),
-            ),
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.all(2.0),
-                children: [
-                  ExpansionTile(
+                  Expanded(
+                    child: ListView(
+                      padding: EdgeInsets.all(2.0),
+                      children: [
+                        ExpansionTile(
+                          leading: Icon(
+                            Icons.filter_list,
+                            color: Color(0xFF181D3D),
+                          ),
+                          title: Text(
+                            'Category',
+                            style: TextStyle(
+                              fontSize: 15.0,
+                            ),
+                          ),
+                          children: [
+                            ListTile(
+                              leading: Switch(
+                                value: isSwitched1,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    isSwitched1 = value;
+                                    categoryComaplints["Administration"] =
+                                        isSwitched1;
+                                    _filter.notifyListeners();
+                                  });
+                                },
+                                activeTrackColor: Colors.grey[800],
+                                activeColor: Colors.white,
+                              ),
+                              title: Text('Administration'),
+                            ),
+                            ListTile(
+                              leading: Switch(
+                                value: isSwitched2,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSwitched2 = value;
+                                    categoryComaplints["Gymkhana"] = isSwitched2;
+                                    _filter.notifyListeners();
+                                  });
+                                },
+                                activeTrackColor: Colors.grey[800],
+                                activeColor: Colors.white,
+                              ),
+                              title: Text('Gymkhana'),
+                            ),
+                            ListTile(
+                              leading: Switch(
+                                value: isSwitched3,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSwitched3 = value;
+                                    categoryComaplints["General"] = isSwitched3;
+                                    _filter.notifyListeners();
+                                  });
+                                },
+                                activeTrackColor: Colors.grey[800],
+                                activeColor: Colors.white,
+                              ),
+                              title: Text('General'),
+                            ),
+                            ListTile(
+                              leading: Switch(
+                                value: isSwitched4,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSwitched4 = value;
+                                    categoryComaplints["Campus"] = isSwitched4;
+                                    _filter.notifyListeners();
+                                  });
+                                },
+                                activeTrackColor: Colors.grey[800],
+                                activeColor: Colors.white,
+                              ),
+                              title: Text('Campus'),
+                            ),
+                            ListTile(
+                              leading: Switch(
+                                value: isSwitched5,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSwitched5 = value;
+                                    categoryComaplints["Proctor"] = isSwitched5;
+                                    _filter.notifyListeners();
+                                  });
+                                },
+                                activeTrackColor: Colors.grey[800],
+                                activeColor: Colors.white,
+                              ),
+                              title: Text('Proctor'),
+                            ),
+                            ListTile(
+                              leading: Switch(
+                                value: isSwitched6,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSwitched6 = value;
+                                    categoryComaplints["C. V. Raman"] = isSwitched6;
+                                    _filter.notifyListeners();
+                                  });
+                                },
+                                activeTrackColor: Colors.grey[800],
+                                activeColor: Colors.white,
+                              ),
+                              title: Text('C. V. Raman'),
+                            ),
+                            ListTile(
+                              leading: Switch(
+                                value: isSwitched7,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSwitched7 = value;
+                                    categoryComaplints["Morvi"] = isSwitched7;
+                                    _filter.notifyListeners();
+                                  });
+                                },
+                                activeTrackColor: Colors.grey[800],
+                                activeColor: Colors.white,
+                              ),
+                              title: Text('Morvi'),
+                            ),
+                            ListTile(
+                              leading: Switch(
+                                value: isSwitched8,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSwitched8 = value;
+                                    categoryComaplints["Dhanrajgiri"] = isSwitched8;
+                                    _filter.notifyListeners();
+                                  });
+                                },
+                                activeTrackColor: Colors.grey[800],
+                                activeColor: Colors.white,
+                              ),
+                              title: Text('Dhanrajgiri'),
+                            ),
+                            ListTile(
+                              leading: Switch(
+                                value: isSwitched9,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSwitched9 = value;
+                                    categoryComaplints["Rajputana"] = isSwitched9;
+                                    _filter.notifyListeners();
+                                  });
+                                },
+                                activeTrackColor: Colors.grey[800],
+                                activeColor: Colors.white,
+                              ),
+                              title: Text('Rajputana'),
+                            ),
+                            ListTile(
+                              leading: Switch(
+                                value: isSwitched10,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSwitched10 = value;
+                                    categoryComaplints["Limbdi"] = isSwitched10;
+                                    _filter.notifyListeners();
+                                  });
+                                },
+                                activeTrackColor: Colors.grey[800],
+                                activeColor: Colors.white,
+                              ),
+                              title: Text('Limbdi'),
+                            ),
+                            ListTile(
+                              leading: Switch(
+                                value: isSwitched11,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSwitched11 = value;
+                                    categoryComaplints["Vivekanand"] = isSwitched11;
+                                    _filter.notifyListeners();
+                                  });
+                                },
+                                activeTrackColor: Colors.grey[800],
+                                activeColor: Colors.white,
+                              ),
+                              title: Text('Vivekanand'),
+                            ),
+                            ListTile(
+                              leading: Switch(
+                                value: isSwitched12,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSwitched12 = value;
+                                    categoryComaplints["Vishwakarma"] = isSwitched12;
+                                    _filter.notifyListeners();
+                                  });
+                                },
+                                activeTrackColor: Colors.grey[800],
+                                activeColor: Colors.white,
+                              ),
+                              title: Text('Vishwakarma'),
+                            ),
+                            ListTile(
+                              leading: Switch(
+                                value: isSwitched13,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSwitched13 = value;
+                                    categoryComaplints["Vishweshvaraiya"] =
+                                        isSwitched13;
+                                    _filter.notifyListeners();
+                                  });
+                                },
+                                activeTrackColor: Colors.grey[800],
+                                activeColor: Colors.white,
+                              ),
+                              title: Text('Vishweshvaraiya'),
+                            ),
+                            ListTile(
+                              leading: Switch(
+                                value: isSwitched14,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSwitched14 = value;
+                                    categoryComaplints["Aryabhatt–I"] = isSwitched14;
+                                    _filter.notifyListeners();
+                                  });
+                                },
+                                activeTrackColor: Colors.grey[800],
+                                activeColor: Colors.white,
+                              ),
+                              title: Text('Aryabhatt-I'),
+                            ),
+                            ListTile(
+                              leading: Switch(
+                                value: isSwitched15,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSwitched15 = value;
+                                    categoryComaplints["Aryabhatt-II"] = isSwitched15;
+                                    _filter.notifyListeners();
+                                  });
+                                },
+                                activeTrackColor: Colors.grey[800],
+                                activeColor: Colors.white,
+                              ),
+                              title: Text('Aryabhatt-II'),
+                            ),
+                            ListTile(
+                              leading: Switch(
+                                value: isSwitched16,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSwitched16 = value;
+                                    categoryComaplints["S. N. Bose"] = isSwitched16;
+                                    _filter.notifyListeners();
+                                  });
+                                },
+                                activeTrackColor: Colors.grey[800],
+                                activeColor: Colors.white,
+                              ),
+                              title: Text('S. N. Bose'),
+                            ),
+                            ListTile(
+                              leading: Switch(
+                                value: isSwitched17,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSwitched17 = value;
+                                    categoryComaplints["S. Ramanujan"] = isSwitched17;
+                                    _filter.notifyListeners();
+                                  });
+                                },
+                                activeTrackColor: Colors.grey[800],
+                                activeColor: Colors.white,
+                              ),
+                              title: Text('S. Ramanujan'),
+                            ),
+                            ListTile(
+                              leading: Switch(
+                                value: isSwitched18,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSwitched18 = value;
+                                    categoryComaplints[
+                                            "Gandhi Smriti Chhatravas(Old)"] =
+                                        isSwitched18;
+                                    _filter.notifyListeners();
+                                  });
+                                },
+                                activeTrackColor: Colors.grey[800],
+                                activeColor: Colors.white,
+                              ),
+                              title: Text('Gandhi Smriti Chhatravas(Old)'),
+                            ),
+                            ListTile(
+                              leading: Switch(
+                                value: isSwitched19,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSwitched19 = value;
+                                    categoryComaplints[
+                                            "Gandhi Smriti Chhatravas(Extension)"] =
+                                        isSwitched19;
+                                    _filter.notifyListeners();
+                                  });
+                                },
+                                activeTrackColor: Colors.grey[800],
+                                activeColor: Colors.white,
+                              ),
+                              title: Text('Gandhi Smriti Chhatravas(Extension)'),
+                            ),
+                            ListTile(
+                              leading: Switch(
+                                value: isSwitched20,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSwitched20 = value;
+                                    categoryComaplints["IIT (BHU) Girls Hostel"] =
+                                        isSwitched20;
+                                    _filter.notifyListeners();
+                                  });
+                                },
+                                activeTrackColor: Colors.grey[800],
+                                activeColor: Colors.white,
+                              ),
+                              title: Text('IIT (BHU) Girls Hostel'),
+                            ),
+                            ListTile(
+                              leading: Switch(
+                                value: isSwitched21,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSwitched21 = value;
+                                    categoryComaplints["S. C. Dey"] = isSwitched21;
+                                    _filter.notifyListeners();
+                                  });
+                                },
+                                activeTrackColor: Colors.grey[800],
+                                activeColor: Colors.white,
+                              ),
+                              title: Text('S. C. Dey'),
+                            ),
+                            ListTile(
+                              leading: Switch(
+                                value: isSwitched22,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSwitched22 = value;
+                                    categoryComaplints["IIT Boys (Saluja)"] =
+                                        isSwitched22;
+                                    _filter.notifyListeners();
+                                  });
+                                },
+                                activeTrackColor: Colors.grey[800],
+                                activeColor: Colors.white,
+                              ),
+                              title: Text('IIT Boys (Saluja)'),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    height: 0.5,
+                    color: Color(0xFF181D3D),
+                    thickness: 0.5,
+                    indent: 15.0,
+                    endIndent: 15.0,
+                  ),
+                  ListTile(
                     leading: Icon(
-                      Icons.filter_list,
+                      Icons.person,
                       color: Color(0xFF181D3D),
                     ),
-                    title: Text(
-                      'Category',
-                      style: TextStyle(
-                        fontSize: 15.0,
-                      ),
+                    title: Text('About'),
+                    onTap: () => {Navigator.pushNamed(context, '/about')},
+                  ),
+                  Divider(
+                    height: 0.5,
+                    color: Color(0xFF181D3D),
+                    thickness: 0.5,
+                    indent: 15.0,
+                    endIndent: 15.0,
+                  ),
+                  ListTile(
+                    leading: Icon(
+                      Icons.reply,
+                      color: Color(0xFF181D3D),
                     ),
-                    children: [
-                      ListTile(
-                        leading: Switch(
-                          value: isSwitched1,
-                          onChanged: (bool value) {
-                            setState(() {
-                              isSwitched1 = value;
-                              categoryComaplints["Administration"] =
-                                  isSwitched1;
-                              _filter.notifyListeners();
-                            });
-                          },
-                          activeTrackColor: Colors.grey[800],
-                          activeColor: Colors.white,
-                        ),
-                        title: Text('Administration'),
-                      ),
-                      ListTile(
-                        leading: Switch(
-                          value: isSwitched2,
-                          onChanged: (value) {
-                            setState(() {
-                              isSwitched2 = value;
-                              categoryComaplints["Gymkhana"] = isSwitched2;
-                              _filter.notifyListeners();
-                            });
-                          },
-                          activeTrackColor: Colors.grey[800],
-                          activeColor: Colors.white,
-                        ),
-                        title: Text('Gymkhana'),
-                      ),
-                      ListTile(
-                        leading: Switch(
-                          value: isSwitched3,
-                          onChanged: (value) {
-                            setState(() {
-                              isSwitched3 = value;
-                              categoryComaplints["General"] = isSwitched3;
-                              _filter.notifyListeners();
-                            });
-                          },
-                          activeTrackColor: Colors.grey[800],
-                          activeColor: Colors.white,
-                        ),
-                        title: Text('General'),
-                      ),
-                      ListTile(
-                        leading: Switch(
-                          value: isSwitched4,
-                          onChanged: (value) {
-                            setState(() {
-                              isSwitched4 = value;
-                              categoryComaplints["Campus"] = isSwitched4;
-                              _filter.notifyListeners();
-                            });
-                          },
-                          activeTrackColor: Colors.grey[800],
-                          activeColor: Colors.white,
-                        ),
-                        title: Text('Campus'),
-                      ),
-                      ListTile(
-                        leading: Switch(
-                          value: isSwitched5,
-                          onChanged: (value) {
-                            setState(() {
-                              isSwitched5 = value;
-                              categoryComaplints["Proctor"] = isSwitched5;
-                              _filter.notifyListeners();
-                            });
-                          },
-                          activeTrackColor: Colors.grey[800],
-                          activeColor: Colors.white,
-                        ),
-                        title: Text('Proctor'),
-                      ),
-                      ListTile(
-                        leading: Switch(
-                          value: isSwitched6,
-                          onChanged: (value) {
-                            setState(() {
-                              isSwitched6 = value;
-                              categoryComaplints["C. V. Raman"] = isSwitched6;
-                              _filter.notifyListeners();
-                            });
-                          },
-                          activeTrackColor: Colors.grey[800],
-                          activeColor: Colors.white,
-                        ),
-                        title: Text('C. V. Raman'),
-                      ),
-                      ListTile(
-                        leading: Switch(
-                          value: isSwitched7,
-                          onChanged: (value) {
-                            setState(() {
-                              isSwitched7 = value;
-                              categoryComaplints["Morvi"] = isSwitched7;
-                              _filter.notifyListeners();
-                            });
-                          },
-                          activeTrackColor: Colors.grey[800],
-                          activeColor: Colors.white,
-                        ),
-                        title: Text('Morvi'),
-                      ),
-                      ListTile(
-                        leading: Switch(
-                          value: isSwitched8,
-                          onChanged: (value) {
-                            setState(() {
-                              isSwitched8 = value;
-                              categoryComaplints["Dhanrajgiri"] = isSwitched8;
-                              _filter.notifyListeners();
-                            });
-                          },
-                          activeTrackColor: Colors.grey[800],
-                          activeColor: Colors.white,
-                        ),
-                        title: Text('Dhanrajgiri'),
-                      ),
-                      ListTile(
-                        leading: Switch(
-                          value: isSwitched9,
-                          onChanged: (value) {
-                            setState(() {
-                              isSwitched9 = value;
-                              categoryComaplints["Rajputana"] = isSwitched9;
-                              _filter.notifyListeners();
-                            });
-                          },
-                          activeTrackColor: Colors.grey[800],
-                          activeColor: Colors.white,
-                        ),
-                        title: Text('Rajputana'),
-                      ),
-                      ListTile(
-                        leading: Switch(
-                          value: isSwitched10,
-                          onChanged: (value) {
-                            setState(() {
-                              isSwitched10 = value;
-                              categoryComaplints["Limbdi"] = isSwitched10;
-                              _filter.notifyListeners();
-                            });
-                          },
-                          activeTrackColor: Colors.grey[800],
-                          activeColor: Colors.white,
-                        ),
-                        title: Text('Limbdi'),
-                      ),
-                      ListTile(
-                        leading: Switch(
-                          value: isSwitched11,
-                          onChanged: (value) {
-                            setState(() {
-                              isSwitched11 = value;
-                              categoryComaplints["Vivekanand"] = isSwitched11;
-                              _filter.notifyListeners();
-                            });
-                          },
-                          activeTrackColor: Colors.grey[800],
-                          activeColor: Colors.white,
-                        ),
-                        title: Text('Vivekanand'),
-                      ),
-                      ListTile(
-                        leading: Switch(
-                          value: isSwitched12,
-                          onChanged: (value) {
-                            setState(() {
-                              isSwitched12 = value;
-                              categoryComaplints["Vishwakarma"] = isSwitched12;
-                              _filter.notifyListeners();
-                            });
-                          },
-                          activeTrackColor: Colors.grey[800],
-                          activeColor: Colors.white,
-                        ),
-                        title: Text('Vishwakarma'),
-                      ),
-                      ListTile(
-                        leading: Switch(
-                          value: isSwitched13,
-                          onChanged: (value) {
-                            setState(() {
-                              isSwitched13 = value;
-                              categoryComaplints["Vishweshvaraiya"] =
-                                  isSwitched13;
-                              _filter.notifyListeners();
-                            });
-                          },
-                          activeTrackColor: Colors.grey[800],
-                          activeColor: Colors.white,
-                        ),
-                        title: Text('Vishweshvaraiya'),
-                      ),
-                      ListTile(
-                        leading: Switch(
-                          value: isSwitched14,
-                          onChanged: (value) {
-                            setState(() {
-                              isSwitched14 = value;
-                              categoryComaplints["Aryabhatt–I"] = isSwitched14;
-                              _filter.notifyListeners();
-                            });
-                          },
-                          activeTrackColor: Colors.grey[800],
-                          activeColor: Colors.white,
-                        ),
-                        title: Text('Aryabhatt-I'),
-                      ),
-                      ListTile(
-                        leading: Switch(
-                          value: isSwitched15,
-                          onChanged: (value) {
-                            setState(() {
-                              isSwitched15 = value;
-                              categoryComaplints["Aryabhatt-II"] = isSwitched15;
-                              _filter.notifyListeners();
-                            });
-                          },
-                          activeTrackColor: Colors.grey[800],
-                          activeColor: Colors.white,
-                        ),
-                        title: Text('Aryabhatt-II'),
-                      ),
-                      ListTile(
-                        leading: Switch(
-                          value: isSwitched16,
-                          onChanged: (value) {
-                            setState(() {
-                              isSwitched16 = value;
-                              categoryComaplints["S. N. Bose"] = isSwitched16;
-                              _filter.notifyListeners();
-                            });
-                          },
-                          activeTrackColor: Colors.grey[800],
-                          activeColor: Colors.white,
-                        ),
-                        title: Text('S. N. Bose'),
-                      ),
-                      ListTile(
-                        leading: Switch(
-                          value: isSwitched17,
-                          onChanged: (value) {
-                            setState(() {
-                              isSwitched17 = value;
-                              categoryComaplints["S. Ramanujan"] = isSwitched17;
-                              _filter.notifyListeners();
-                            });
-                          },
-                          activeTrackColor: Colors.grey[800],
-                          activeColor: Colors.white,
-                        ),
-                        title: Text('S. Ramanujan'),
-                      ),
-                      ListTile(
-                        leading: Switch(
-                          value: isSwitched18,
-                          onChanged: (value) {
-                            setState(() {
-                              isSwitched18 = value;
-                              categoryComaplints[
-                                      "Gandhi Smriti Chhatravas(Old)"] =
-                                  isSwitched18;
-                              _filter.notifyListeners();
-                            });
-                          },
-                          activeTrackColor: Colors.grey[800],
-                          activeColor: Colors.white,
-                        ),
-                        title: Text('Gandhi Smriti Chhatravas(Old)'),
-                      ),
-                      ListTile(
-                        leading: Switch(
-                          value: isSwitched19,
-                          onChanged: (value) {
-                            setState(() {
-                              isSwitched19 = value;
-                              categoryComaplints[
-                                      "Gandhi Smriti Chhatravas(Extension)"] =
-                                  isSwitched19;
-                              _filter.notifyListeners();
-                            });
-                          },
-                          activeTrackColor: Colors.grey[800],
-                          activeColor: Colors.white,
-                        ),
-                        title: Text('Gandhi Smriti Chhatravas(Extension)'),
-                      ),
-                      ListTile(
-                        leading: Switch(
-                          value: isSwitched20,
-                          onChanged: (value) {
-                            setState(() {
-                              isSwitched20 = value;
-                              categoryComaplints["IIT (BHU) Girls Hostel"] =
-                                  isSwitched20;
-                              _filter.notifyListeners();
-                            });
-                          },
-                          activeTrackColor: Colors.grey[800],
-                          activeColor: Colors.white,
-                        ),
-                        title: Text('IIT (BHU) Girls Hostel'),
-                      ),
-                      ListTile(
-                        leading: Switch(
-                          value: isSwitched21,
-                          onChanged: (value) {
-                            setState(() {
-                              isSwitched21 = value;
-                              categoryComaplints["S. C. Dey"] = isSwitched21;
-                              _filter.notifyListeners();
-                            });
-                          },
-                          activeTrackColor: Colors.grey[800],
-                          activeColor: Colors.white,
-                        ),
-                        title: Text('S. C. Dey'),
-                      ),
-                      ListTile(
-                        leading: Switch(
-                          value: isSwitched22,
-                          onChanged: (value) {
-                            setState(() {
-                              isSwitched22 = value;
-                              categoryComaplints["IIT Boys (Saluja)"] =
-                                  isSwitched22;
-                              _filter.notifyListeners();
-                            });
-                          },
-                          activeTrackColor: Colors.grey[800],
-                          activeColor: Colors.white,
-                        ),
-                        title: Text('IIT Boys (Saluja)'),
-                      ),
-                    ],
+                    title: Text('Log Out'),
+                    onTap: () async {
+                      await FirebaseAuth.instance.signOut();
+                      await GoogleSignIn().signOut();
+                      Navigator.pushReplacementNamed(context, '/');
+                    },
+                  ),
+                  Divider(
+                    height: 0.75,
+                    color: Color(0xFF181D3D),
+                    thickness: 0.75,
+                    indent: 15.0,
+                    endIndent: 15.0,
                   ),
                 ],
               ),
             ),
-            Divider(
-              height: 0.5,
-              color: Color(0xFF181D3D),
-              thickness: 0.5,
-              indent: 15.0,
-              endIndent: 15.0,
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.person,
-                color: Color(0xFF181D3D),
-              ),
-              title: Text('About'),
-              onTap: () => {Navigator.pushNamed(context, '/about')},
-            ),
-            Divider(
-              height: 0.5,
-              color: Color(0xFF181D3D),
-              thickness: 0.5,
-              indent: 15.0,
-              endIndent: 15.0,
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.reply,
-                color: Color(0xFF181D3D),
-              ),
-              title: Text('Log Out'),
-              onTap: () async {
-                await FirebaseAuth.instance.signOut();
-                await GoogleSignIn().signOut();
-                Navigator.pushReplacementNamed(context, '/');
-              },
-            ),
-          ],
-        ),
-      ),
+          );
+        }
+        else{
+          return Loading();
+        }
+      },
     );
   }
 }
@@ -1080,196 +1060,199 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
       itemBuilder: (context, index) {
         print(complaintIds[index]);
         return FutureBuilder(
-          future: FirebaseFirestore.instance
-              .collection('complaints')
-              .doc(complaintIds[index])
-              .get(),
-          builder:
-              (BuildContext context, AsyncSnapshot<DocumentSnapshot> user) {
-            switch (user.connectionState) {
-              case ConnectionState.none:
-                return Text('Press button to start.');
-              case ConnectionState.active:
-              case ConnectionState.waiting:
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              case ConnectionState.done:
-                if (user.hasError) return Text('Error: ${user.error}');
-                if (user.data['status'] == 'resolved')
-                  return Container(width: 0.0, height: 0.0);
-                if (user.hasData) {
-                  return Card(
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(11)),
-                      child: Container(
-                        // TODO: Adjust height according to generator function
-                        height: 210,
-                        child: InkWell(
-                          splashColor: Colors.blue.withAlpha(300),
-                          onTap: () {
-                            //TODO: Add navigator to other card
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(10),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+            future: FirebaseFirestore.instance
+                .collection('complaints')
+                .doc(complaintIds[index])
+                .get(),
+            builder:
+                (BuildContext context, AsyncSnapshot<DocumentSnapshot> user) {
+              switch (user.connectionState) {
+                case ConnectionState.none:
+                  return Text('Press button to start.');
+                case ConnectionState.active:
+                case ConnectionState.waiting:
+                  return Text('Awaiting result...');
+                case ConnectionState.done:
+                  if (user.hasError) return Text('Error: ${user.error}');
+                  if (user.data['status'] == 'resolved')
+                    return Container(width: 0.0, height: 0.0);
+              if (user.hasData) {
+                return Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(11)),
+                    child: Container(
+                      // TODO: Adjust height according to generator function
+                      height: 210,
+                      child: InkWell(
+                        splashColor: Colors.blue.withAlpha(300),
+                        onTap: () {
+                          //TODO: Add navigator to other card
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) => ComplaintDialog(complaintIds[index])
+                          );
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Row(children: [
+                                        Text(user.data["title"],
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18))
+                                      ]),
+                                      Row(
+                                        children: <Widget>[
+                                          Text(
+                                            'Posted by ',
+                                            style: TextStyle(fontSize: 12),
+                                          ),
+                                          Text(
+                                            user.data['email'], // todo: add name field in complaints collection docs
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold),
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  IconButton(
+                                      icon: Icon(Icons.bookmark_border),
+                                      onPressed: () {
+                                        //TODO: Add color change
+                                      })
+                                ],
+                              ),
+                              SizedBox(height: 7),
+                              Expanded(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: <Widget>[
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Row(children: [
-                                          Text(user.data["title"],
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18))
-                                        ]),
-                                        Row(
-                                          children: <Widget>[
-                                            Text(
-                                              'Posted by ',
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                            Text(
-                                              user.data[
-                                                  'email'], // todo: add name field in complaints collection docs
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.bold),
-                                            )
-                                          ],
-                                        ),
-                                      ],
+                                    Icon(Icons.calendar_today),
+                                    Text(
+                                      DateFormat.yMd()
+                                          .format(
+                                              user.data['filing time'].toDate())
+                                          .toString(),
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                    IconButton(
-                                        icon: Icon(Icons.bookmark_border),
-                                        onPressed: () {
-                                          //TODO: Add color change
-                                        })
+                                    Text(' in '),
+                                    Text(
+                                      user.data["category"] ?? "",
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold),
+                                    )
                                   ],
                                 ),
-                                SizedBox(height: 7),
-                                Expanded(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      Icon(Icons.calendar_today),
-                                      Text(
-                                        DateFormat.yMd()
-                                            .format(user.data['filing time']
-                                                .toDate())
-                                            .toString(),
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(height: 4),
+                              Row(
+                                children: <Widget>[
+                                  Flexible(
+                                    child: Text(
+                                      user.data["description"],
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(height: 7),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: <Widget>[
+                                  SizedBox(
+                                    width: 70,
+                                    child: Center(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: <Widget>[
+                                          Text(user.data["status"],
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color:
+                                                    Colors.red.withOpacity(0.6),
+                                                fontWeight: FontWeight.bold,
+                                              )),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(
+                                            'Status',
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ],
                                       ),
-                                      Text(' in '),
+                                    ),
+                                  ),
+                                  Column(
+                                    children: <Widget>[
+                                      IconButton(
+                                        icon: Icon(Icons.share),
+                                        onPressed: () {},
+                                      ),
                                       Text(
-                                        user.data["category"] ?? "",
+                                        'Share',
                                         style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold),
+                                          fontSize: 11,
+                                        ),
                                       )
                                     ],
                                   ),
-                                ),
-                                SizedBox(height: 4),
-                                Row(
-                                  children: <Widget>[
-                                    Flexible(
-                                      child: Text(
-                                        user.data["description"],
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(fontSize: 15),
+                                  Column(
+                                    children: <Widget>[
+                                      IconButton(
+                                        icon: Icon(Icons.arrow_upward),
+                                        onPressed: () {},
                                       ),
-                                    )
-                                  ],
-                                ),
-                                SizedBox(height: 7),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: <Widget>[
-                                    SizedBox(
-                                      width: 70,
-                                      child: Center(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: <Widget>[
-                                            Text(user.data["status"],
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: Colors.red
-                                                      .withOpacity(0.6),
-                                                  fontWeight: FontWeight.bold,
-                                                )),
-                                            SizedBox(
-                                              height: 5,
-                                            ),
-                                            Text(
-                                              'Status',
-                                              style: TextStyle(
-                                                fontSize: 11,
-                                              ),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ],
+                                      Text(
+                                        //todo : get the size of upvotes array from the backend
+                                        ' Upvotes',
+                                        style: TextStyle(
+                                          fontSize: 11,
                                         ),
-                                      ),
-                                    ),
-                                    Column(
-                                      children: <Widget>[
-                                        IconButton(
-                                          icon: Icon(Icons.share),
-                                          onPressed: () {},
-                                        ),
-                                        Text(
-                                          'Share',
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    Column(
-                                      children: <Widget>[
-                                        IconButton(
-                                          icon: Icon(Icons.arrow_upward),
-                                          onPressed: () {},
-                                        ),
-                                        Text(
-                                          //todo : get the size of upvotes array from the backend
-                                          ' Upvotes',
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                          ),
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              )
+                            ],
                           ),
                         ),
-                      ));
-                } else {
-                  return Center(child: CircularProgressIndicator());
-                }
+                      ),
+                    ));
+              }
+              else{
+              return CircularProgressIndicator();
             }
+            }
+            
             return null; // unreachable
-          },
-        );
+            },
+            );
       },
     );
   }

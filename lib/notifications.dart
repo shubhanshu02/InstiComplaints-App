@@ -197,7 +197,7 @@ class _NotificationsState extends State<Notifications> {
                 ),
               ),
               SizedBox(
-                height: 11.0,
+                height: 35.0,
               ),
               Tile(),
               SizedBox(

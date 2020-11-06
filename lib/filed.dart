@@ -1,5 +1,4 @@
 //import 'dart:html';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
@@ -8,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'ComplaintDialog.dart';
 
 GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
@@ -204,6 +204,11 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                         splashColor: Colors.blue.withAlpha(300),
                         onTap: () {
                           //TODO: Add navigator to other card
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) => ComplaintDialog(complaintIds[index])
+                          );
+
                         },
                         child: Container(
                           padding: EdgeInsets.all(10),

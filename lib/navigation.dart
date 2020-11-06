@@ -55,7 +55,7 @@ class _User1State extends State<User1> {
                     : children1[currentIndex],
                 bottomNavigationBar: (user.data['type'] == 'admin')
                     ? CurvedNavigationBar(
-                        backgroundColor: Color(0xFFFAFAFA),
+                        backgroundColor: Colors.white,
                         color: Color(0xFF181d3d),
                         buttonBackgroundColor: Color(0xFFF49F1C),
                         height: 60,
@@ -84,7 +84,7 @@ class _User1State extends State<User1> {
                         index: currentIndex,
                       )
                     : CurvedNavigationBar(
-                        backgroundColor: Color(0xFFFAFAFA),
+                        backgroundColor: Colors.white,
                         color: Color(0xFF181d3d),
                         buttonBackgroundColor: Color(0xFFF49F1C),
                         height: 60,
