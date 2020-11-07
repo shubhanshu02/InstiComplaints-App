@@ -9,7 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'modifyModerators.dart';
 import 'ad_profile.dart';
-import 'loading_page.dart';
+import 'loading.dart';
 import 'moderator_requests.dart';
 
 var user = FirebaseAuth.instance.currentUser;
@@ -61,10 +61,12 @@ class _User1State extends State<User1> {
             return Scaffold(
                 body: (user.data['type'] == 'admin')
                     ? children2[currentIndex]
-                    : (user.data['type'] == 'student')?children1[currentIndex]:children3[currentIndex],
+                    : (user.data['type'] == 'student')
+                        ? children1[currentIndex]
+                        : children3[currentIndex],
                 bottomNavigationBar: (user.data['type'] == 'admin')
                     ? CurvedNavigationBar(
-                        backgroundColor: Color(0xFFFAFAFA),
+                        backgroundColor: Colors.white,
                         color: Color(0xFF181d3d),
                         buttonBackgroundColor: Color(0xFFF49F1C),
                         height: 60,
@@ -92,78 +94,80 @@ class _User1State extends State<User1> {
                         onTap: onTapped,
                         index: currentIndex,
                       )
-                    : (user.data['type'] == 'student')?CurvedNavigationBar(
-                        backgroundColor: Color(0xFFFAFAFA),
-                        color: Color(0xFF181d3d),
-                        buttonBackgroundColor: Color(0xFFF49F1C),
-                        height: 60,
-                        animationDuration: Duration(
-                          milliseconds: 200,
-                        ),
-                        animationCurve: Curves.bounceInOut,
-                        items: <Widget>[
-                          Icon(
-                            Icons.home,
-                            size: 30,
-                            color: Colors.white,
-                          ),
-                          Icon(
-                            Icons.notifications,
-                            size: 30,
-                            color: Colors.white,
-                          ),
-                          Icon(
-                            Icons.person,
-                            size: 30,
-                            color: Colors.white,
-                          ),
-                          Icon(
-                            Icons.add,
-                            size: 30,
-                            color: Colors.white,
-                          ),
-                        ],
-                        onTap: onTapped,
-                        index: currentIndex,
-                      ):CurvedNavigationBar(
-                        backgroundColor: Color(0xFFFAFAFA),
-                        color: Color(0xFF181d3d),
-                        buttonBackgroundColor: Color(0xFFF49F1C),
-                        height: 60,
-                        animationDuration: Duration(
-                          milliseconds: 200,
-                        ),
-                        animationCurve: Curves.bounceInOut,
-                        items: <Widget>[
-                          Icon(
-                            Icons.home,
-                            size: 30,
-                            color: Colors.white,
-                          ),
-                          Icon(
-                            Icons.notifications,
-                            size: 30,
-                            color: Colors.white,
-                          ),
-                          Icon(
-                            Icons.person,
-                            size: 30,
-                            color: Colors.white,
-                          ),
-                          Icon(
-                            Icons.add,
-                            size: 30,
-                            color: Colors.white,
-                          ),
-                          Icon(
-                            Icons.assignment,
-                            size: 30,
-                            color: Colors.white,
-                          ),
-                        ],
-                        onTap: onTapped,
-                        index: currentIndex,
-                      ));
+                    : (user.data['type'] == 'student')
+                        ? CurvedNavigationBar(
+                            backgroundColor: Colors.white,
+                            color: Color(0xFF181d3d),
+                            buttonBackgroundColor: Color(0xFFF49F1C),
+                            height: 60,
+                            animationDuration: Duration(
+                              milliseconds: 200,
+                            ),
+                            animationCurve: Curves.bounceInOut,
+                            items: <Widget>[
+                              Icon(
+                                Icons.home,
+                                size: 30,
+                                color: Colors.white,
+                              ),
+                              Icon(
+                                Icons.notifications,
+                                size: 30,
+                                color: Colors.white,
+                              ),
+                              Icon(
+                                Icons.person,
+                                size: 30,
+                                color: Colors.white,
+                              ),
+                              Icon(
+                                Icons.add,
+                                size: 30,
+                                color: Colors.white,
+                              ),
+                            ],
+                            onTap: onTapped,
+                            index: currentIndex,
+                          )
+                        : CurvedNavigationBar(
+                            backgroundColor: Colors.white,
+                            color: Color(0xFF181d3d),
+                            buttonBackgroundColor: Color(0xFFF49F1C),
+                            height: 60,
+                            animationDuration: Duration(
+                              milliseconds: 200,
+                            ),
+                            animationCurve: Curves.bounceInOut,
+                            items: <Widget>[
+                              Icon(
+                                Icons.home,
+                                size: 30,
+                                color: Colors.white,
+                              ),
+                              Icon(
+                                Icons.notifications,
+                                size: 30,
+                                color: Colors.white,
+                              ),
+                              Icon(
+                                Icons.person,
+                                size: 30,
+                                color: Colors.white,
+                              ),
+                              Icon(
+                                Icons.add,
+                                size: 30,
+                                color: Colors.white,
+                              ),
+                              Icon(
+                                Icons.assignment,
+                                size: 30,
+                                color: Colors.white,
+                              ),
+                            ],
+                            onTap: onTapped,
+                            index: currentIndex,
+                          ));
         }
         return null; // unreachable
       },
