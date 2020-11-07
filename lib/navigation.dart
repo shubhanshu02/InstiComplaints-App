@@ -1,5 +1,4 @@
 import 'package:InstiComplaints/Compose.dart';
-import 'package:InstiComplaints/moderator_requests.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'st_profile.dart';
