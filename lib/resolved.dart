@@ -9,6 +9,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'ComplaintDialog.dart';
+import 'loading.dart';
 
 var user = FirebaseAuth.instance.currentUser;
 
@@ -192,10 +193,9 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
               (BuildContext context, AsyncSnapshot<DocumentSnapshot> user) {
             switch (user.connectionState) {
               case ConnectionState.none:
-                return Text('Press button to start.');
               case ConnectionState.active:
               case ConnectionState.waiting:
-                return Text('Awaiting result...');
+                return Loading();
               case ConnectionState.done:
                 if (user.hasError)
                   return Container(
@@ -214,15 +214,13 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                         onTap: () {
                           showDialog(
                               context: context,
-                              builder: (BuildContext
-                              context) =>
-                                  ComplaintDialog(
-                                      user.data.id));
+                              builder: (BuildContext context) =>
+                                  ComplaintDialog(user.data.id));
                           //TODO: Add navigator to other card
                           showDialog(
-                            context: context,
-                            builder: (BuildContext context) => ComplaintDialog(complaintIds[index])
-                          );
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  ComplaintDialog(complaintIds[index]));
                         },
                         child: Container(
                           padding: EdgeInsets.all(10),
@@ -250,7 +248,8 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                                             style: TextStyle(fontSize: 12),
                                           ),
                                           Text(
-                                            user.data['email'], // todo: add name field in complaints collection docs
+                                            user.data[
+                                                'email'], // todo: add name field in complaints collection docs
                                             style: TextStyle(
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.bold),

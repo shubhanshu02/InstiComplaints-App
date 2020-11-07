@@ -15,26 +15,27 @@ class Camera extends StatefulWidget {
 }
 
 class _CameraState extends State<Camera> {
-
   String _uploadedFileURL;
-  final DocumentReference _userDocument = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser.uid);
+  final DocumentReference _userDocument = FirebaseFirestore.instance
+      .collection('users')
+      .doc(FirebaseAuth.instance.currentUser.uid);
 
-  Future uploadFile() async {    
-    StorageReference storageReference = FirebaseStorage.instance    
-        .ref()    
-        .child('complaintImages/${path.basename(imageFile.path)}}');    
-    StorageUploadTask uploadTask = storageReference.putFile(imageFile);    
-    await uploadTask.onComplete;    
-    print('File Uploaded');    
-    await storageReference.getDownloadURL().then((fileURL) {   
-      //print(fileURL); 
-      setState(() {    
+  Future uploadFile() async {
+    StorageReference storageReference = FirebaseStorage.instance
+        .ref()
+        .child('complaintImages/${path.basename(imageFile.path)}}');
+    StorageUploadTask uploadTask = storageReference.putFile(imageFile);
+    await uploadTask.onComplete;
+    print('File Uploaded');
+    await storageReference.getDownloadURL().then((fileURL) {
+      //print(fileURL);
+      setState(() {
         //print(fileURL);
         _uploadedFileURL = fileURL;
-        //print(_uploadedFileURL);    
-      });    
-    });    
-  }  
+        //print(_uploadedFileURL);
+      });
+    });
+  }
 
   File imageFile;
   bool inProcess = false;
@@ -58,6 +59,7 @@ class _CameraState extends State<Camera> {
 
     this.setState(() {
       imageFile = cropped;
+      uploadFile();
       inProcess = false;
     });
   }
@@ -70,7 +72,7 @@ class _CameraState extends State<Camera> {
     });
     await getImage();
     await uploadFile();
-    _userDocument.update({'profilePic':_uploadedFileURL});
+    _userDocument.update({'profilePic': _uploadedFileURL});
     Navigator.of(context).pop();
   }
 
@@ -81,19 +83,20 @@ class _CameraState extends State<Camera> {
     });
     await getImage();
     await uploadFile();
-    _userDocument.update({'profilePic':_uploadedFileURL});
+    _userDocument.update({'profilePic': _uploadedFileURL});
     Navigator.of(context).pop();
   }
 
   _openRemove(BuildContext context) async {
     imageFile = null;
-    await _userDocument.update({'profilePic':""});
+    await _userDocument.update({'profilePic': ""});
     Navigator.of(context).pop();
   }
 
   Future<void> _showChoiceDialog(BuildContext context) {
-
-    final DocumentReference _userDocument = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser.uid);
+    final DocumentReference _userDocument = FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser.uid);
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -165,49 +168,48 @@ class _CameraState extends State<Camera> {
 
   @override
   Widget build(BuildContext context) {
+    var query = MediaQuery.of(context);
     return StreamBuilder<DocumentSnapshot>(
-      stream: UpdateNotification().userssnap,
-      builder: (context, snapshot) {
-        if(snapshot.hasData){
-          return new Stack(children: <Widget>[
-            Container(
-              width: 160,
-              height: 160,
-              margin: EdgeInsets.fromLTRB(110, 0, 110, 0),
-              decoration: BoxDecoration(
-                  color: Colors.grey,
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                      image: snapshot.data.data()['profilePic']==""
-                          ? AssetImage('assets/blankProfile.png')
-                          : NetworkImage(
-                              snapshot.data.data()['profilePic']),
-                      fit: BoxFit.cover)),
-            ),
-            Container(
-              margin: EdgeInsets.fromLTRB(210, 110, 0, 0),
-              child: RaisedButton(
-                onPressed: () {
-                  _showChoiceDialog(context);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Icon(
-                    Icons.photo_camera,
-                    color: Color(0xFF181d3d),
-                    size: 35,
-                  ),
-                ),
-                color: Colors.white,
-                shape: CircleBorder(),
+        stream: UpdateNotification().userssnap,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return new Stack(children: <Widget>[
+              Container(
+                width: query.size.width / 2.5,
+                height: query.size.width / 2.5,
+                margin: EdgeInsets.fromLTRB(110, 0, 110, 0),
+                decoration: BoxDecoration(
+                    color: Colors.grey,
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                        image: snapshot.data.data()['profilePic'] == ""
+                            ? AssetImage('assets/blankProfile.png')
+                            : NetworkImage(snapshot.data.data()['profilePic']),
+                        fit: BoxFit.cover)),
               ),
-            ),
-          ]);
-        }
-        else{
-          return Loading();
-        }
-      }
-    );
+              Container(
+                margin: EdgeInsets.fromLTRB(
+                    query.size.width / 1.9, query.size.height / 6.4, 0, 0),
+                child: RaisedButton(
+                  onPressed: () {
+                    _showChoiceDialog(context);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Icon(
+                      Icons.photo_camera,
+                      color: Color(0xFF181d3d),
+                      size: 35,
+                    ),
+                  ),
+                  color: Colors.white,
+                  shape: CircleBorder(),
+                ),
+              ),
+            ]);
+          } else {
+            return Loading();
+          }
+        });
   }
 }
