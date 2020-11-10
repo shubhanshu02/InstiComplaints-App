@@ -79,12 +79,11 @@ class _RequestedState extends State<Requested>
                                             onTap: () {
                                               //TODO: Add navigator to other card
                                               showDialog(
-                                                context: context,
-                                                builder: (BuildContext
-                                                context) =>
-                                                  ModeratorDialog(
-                                                      document.id)
-                                                  );
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          ModeratorDialog(
+                                                              document.id));
                                             },
                                             child: Container(
                                               padding: EdgeInsets.all(10),

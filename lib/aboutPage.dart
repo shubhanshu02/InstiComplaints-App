@@ -1,39 +1,22 @@
 import 'package:flutter/material.dart';
 
-List< List<String> > aboutPage =[
-  [
-    'Siddhant Jain',
-    "Siddhant's Words",
-    'assets/person.jpg'
-  ],
-  [
-    "Shubhanshu Saxena",
-    "Shubhanshu's Words",
-    'assets/person.jpg'
-  ],
+List<List<String>> aboutPage = [
+  ['Siddhant Jain', "Siddhant's Words", 'assets/person.jpg'],
+  ["Shubhanshu Saxena", "Shubhanshu's Words", 'assets/person.jpg'],
   [
     'Kenny Patel',
     "Kenny's Words",
     'assets/person.jpg',
   ],
-  [
-    'Diya Agrawal',
-    "Diya's Words",
-    'assets/person.jpg'
-  ]
+  ['Diya Agrawal', "Diya's Words", 'assets/person.jpg']
 ];
 
-
-
 class AboutPage extends StatefulWidget {
-
   @override
   _AboutPageState createState() => _AboutPageState();
 }
 
 class _AboutPageState extends State<AboutPage> {
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,64 +53,69 @@ class _AboutPageState extends State<AboutPage> {
             height: 10,
           ),
           Center(
-            child: SizedBox(
-              height: 130.0,
-              child: PageView(
-                scrollDirection: Axis.horizontal,
-                controller: PageController(viewportFraction: 1),
-                //pageSnapping: ,
-                children: aboutPage
-                  .map<Widget>((lst) => Container(
-                    height: 130,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
-                        color: Color(0xff174F74)),
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(80),
-                            child: Image.asset(
-                              lst[2],
-                              width: 100.0,
-                              height: 100.0,
-                              fit: BoxFit.fill,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 60,
-                          width: MediaQuery.of(context).size.width - 200,
-                          child: ListView(
-                            children: [
-                              Text(
-                                lst[1],
-                                //'We believe technology should be used in favour of mankind wherever possible. As students, we are the future builders and we are responsible for our own competency with the world.',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText1
-                                    .copyWith(color: Colors.white, fontSize: 9),
+              child: SizedBox(
+                  height: 130.0,
+                  child: PageView(
+                    scrollDirection: Axis.horizontal,
+                    controller: PageController(viewportFraction: 1),
+                    //pageSnapping: ,
+                    children: aboutPage
+                        .map<Widget>((lst) => Container(
+                              height: 130,
+                              decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(30)),
+                                  color: Color(0xff174F74)),
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(80),
+                                      child: Image.asset(
+                                        lst[2],
+                                        width: 100.0,
+                                        height: 100.0,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    height: 60,
+                                    width:
+                                        MediaQuery.of(context).size.width - 200,
+                                    child: ListView(
+                                      children: [
+                                        Text(
+                                          lst[1],
+                                          //'We believe technology should be used in favour of mankind wherever possible. As students, we are the future builders and we are responsible for our own competency with the world.',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1
+                                              .copyWith(
+                                                  color: Colors.white,
+                                                  fontSize: 9),
+                                        ),
+                                        Text(
+                                          '- ' + lst[0],
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1
+                                              .copyWith(
+                                                  color: Colors.white,
+                                                  fontSize: 9),
+                                          textAlign: TextAlign.right,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(width: 10)
+                                ],
                               ),
-                              Text(
-                                '- '+lst[0],
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText1
-                                    .copyWith(color: Colors.white, fontSize: 9),
-                                textAlign: TextAlign.right,
-                              )
-                            ],
-                          ),
-                        ),
-                        SizedBox(width: 10)
-                      ],
-                    ),
-                  )
-                ).toList(),
-              )
-            )
-          ),  
+                            ))
+                        .toList(),
+                  ))),
           SizedBox(
             height: 5,
           ),
@@ -135,7 +123,7 @@ class _AboutPageState extends State<AboutPage> {
             child: Text(
               'Slide to know about other devlopers ->',
             ),
-          ),        
+          ),
           SizedBox(
             height: 20,
           ),

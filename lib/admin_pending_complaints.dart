@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'AdminDialog.dart';
+
 var user = FirebaseAuth.instance.currentUser;
 
 GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
@@ -72,11 +73,9 @@ class _AdPendingState extends State<AdPending>
                                         onTap: () {
                                           //TODO: Add navigator to other card
                                           showDialog(
-                                            context: context,
-                                            builder: (BuildContext
-                                            context) =>
-                                                AdminDialog(
-                                                    document.id));
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  AdminDialog(document.id));
                                         },
                                         child: Container(
                                           padding: EdgeInsets.all(10),

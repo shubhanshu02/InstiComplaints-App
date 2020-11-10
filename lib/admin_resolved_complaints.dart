@@ -74,12 +74,9 @@ class _AdResolvedState extends State<AdResolved>
                                         onTap: () {
                                           //TODO: Add navigator to other card
                                           showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) =>
-                                              ComplaintDialog(
-                                                  document.id
-                                              )
-                                            );
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  ComplaintDialog(document.id));
                                         },
                                         child: Container(
                                           padding: EdgeInsets.all(10),

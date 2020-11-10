@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'Compose.dart';
 
-
 List<String> categories = [
   "Administration",
   "Gymkhana",

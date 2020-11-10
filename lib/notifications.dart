@@ -35,8 +35,6 @@ List notifications = List.generate(
               "assets/cm${random.nextInt(5)}.jpg", //images of different categories
         });
 
-
-
 class Tile extends StatefulWidget {
   @override
   _TileState createState() => _TileState();
@@ -45,79 +43,85 @@ class Tile extends StatefulWidget {
 class _TileState extends State<Tile> {
   @override
   Widget build(BuildContext context) {
-
     return StreamBuilder<DocumentSnapshot>(
-      stream: UpdateNotification().userssnap,
-      builder: (context, snapshot){
-        if(snapshot.hasData){
-          return new Expanded(
-            child: ListView.separated(
-              padding: EdgeInsets.all(8.0),
-              separatorBuilder: (BuildContext context, int index) {
-                return Align(
-                  alignment: Alignment.centerRight,
-                  child: Container(
-                    height: 0.4,
-                    width: MediaQuery.of(context).size.width / 1.3,
-                    child: Divider(),
-                  ),
-                );
-              },
-              itemCount: snapshot.data.data()['notification'].length,
-              itemBuilder: (BuildContext context, int index) {
-                //Map<String,String> notification = snapshot.data.data()['notification'][snapshot.data.data()['notification'].length-index-1];
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      //backgroundImage: AssetImage(notif['dp']),
-                      backgroundColor: Colors.blue,
-                      radius: 25,
+        stream: UpdateNotification().userssnap,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return new Expanded(
+              child: ListView.separated(
+                padding: EdgeInsets.all(8.0),
+                separatorBuilder: (BuildContext context, int index) {
+                  return Align(
+                    alignment: Alignment.centerRight,
+                    child: Container(
+                      height: 0.4,
+                      width: MediaQuery.of(context).size.width / 1.3,
+                      child: Divider(),
                     ),
-                    contentPadding: EdgeInsets.all(1.2),
-                    title: Text(
-                      "Status Updated",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
+                  );
+                },
+                itemCount: snapshot.data.data()['notification'].length,
+                itemBuilder: (BuildContext context, int index) {
+                  //Map<String,String> notification = snapshot.data.data()['notification'][snapshot.data.data()['notification'].length-index-1];
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        //backgroundImage: AssetImage(notif['dp']),
+                        backgroundColor: Colors.blue,
+                        radius: 25,
                       ),
-                    ),
-                    /*subtitle: Text(
+                      contentPadding: EdgeInsets.all(1.2),
+                      title: Text(
+                        "Status Updated",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      /*subtitle: Text(
                       title.then((value) => value).toString()
                       ,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),*/
-                    trailing: Text(
-                      DateFormat('kk:mm:a').format(DateTime.parse(snapshot.data.data()['notification'][snapshot.data.data()['notification'].length-index-1]['time'])) +
-                          '\n' +
-                          DateFormat('dd-MM-yyyy').format(DateTime.parse(snapshot.data.data()['notification'][snapshot.data.data()['notification'].length-index-1]['time'])),
-
-                      style: TextStyle(
-                        fontWeight: FontWeight.w300,
-                        fontSize: 11,
+                      trailing: Text(
+                        DateFormat('kk:mm:a').format(DateTime.parse(
+                                snapshot.data.data()['notification'][
+                                    snapshot.data.data()['notification'].length -
+                                        index -
+                                        1]['time'])) +
+                            '\n' +
+                            DateFormat('dd-MM-yyyy').format(DateTime.parse(
+                                snapshot.data.data()['notification']
+                                        [snapshot.data.data()['notification'].length - index - 1]
+                                    ['time'])),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w300,
+                          fontSize: 11,
+                        ),
                       ),
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) => ComplaintDialog(
+                                snapshot.data.data()['notification'][snapshot
+                                        .data
+                                        .data()['notification']
+                                        .length -
+                                    index -
+                                    1]['complaintID']));
+                      },
                     ),
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) => ComplaintDialog(snapshot.data.data()['notification'][snapshot.data.data()['notification'].length-index-1]['complaintID'])
-                      );
-                    },
-                  ),
-                );
-              },
-            ),
-          );
-        }
-        else{
-          return Loading();
-        }
-      }
-    );
+                  );
+                },
+              ),
+            );
+          } else {
+            return Loading();
+          }
+        });
   }
 }
-
-
 
 class Notifications extends StatefulWidget {
   @override
@@ -135,7 +139,6 @@ class _NotificationsState extends State<Notifications> {
   // TODO: Deciding the location of compose button(as a floating button or in the bottom bar)
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: Stack(
         alignment: Alignment(0.0, 2.0),

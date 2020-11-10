@@ -3,14 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class UpdateNotification {
+  final CollectionReference users =
+      FirebaseFirestore.instance.collection('users');
+  final CollectionReference complaints =
+      FirebaseFirestore.instance.collection('complaints');
 
-  final CollectionReference users = FirebaseFirestore.instance.collection('users');
-  final CollectionReference complaints = FirebaseFirestore.instance.collection('complaints');
-
-
-
-
-  Stream<DocumentSnapshot> get userssnap{
+  Stream<DocumentSnapshot> get userssnap {
     return users.doc(FirebaseAuth.instance.currentUser.uid).snapshots();
   }
 
@@ -29,15 +27,15 @@ class UpdateNotification {
   }*/
 }
 
-class ComplaintShow{
-  final CollectionReference complaints = FirebaseFirestore.instance.collection('complaints');
+class ComplaintShow {
+  final CollectionReference complaints =
+      FirebaseFirestore.instance.collection('complaints');
 
   String complaintID;
 
   ComplaintShow(this.complaintID);
 
-  Stream<DocumentSnapshot> get complaintsnap{
+  Stream<DocumentSnapshot> get complaintsnap {
     return complaints.doc(complaintID).snapshots();
   }
 }
-

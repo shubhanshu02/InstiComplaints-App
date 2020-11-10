@@ -188,7 +188,7 @@ class _CardCategoryState extends State<CardCategory> {
                             ],
                           ),
                           IconButton(
-                              onPressed: ()async {
+                              onPressed: () async {
                                 await editList2(context, user.data['hostel']);
                               },
                               icon: Icon(Icons.edit, color: Colors.red)),
@@ -253,11 +253,11 @@ class _EditHostelState extends State<EditHostel> {
             child: Text('Cancel'),
           ),
           MaterialButton(
-            onPressed: ()async {
-                await FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(user.uid)
-                    .update({'hostel': hostelname});
+            onPressed: () async {
+              await FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(user.uid)
+                  .update({'hostel': hostelname});
 
               Navigator.of(context).pop();
             },
