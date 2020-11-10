@@ -2,16 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'dart:math';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:provider/provider.dart';
 import 'UpdateNotification.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'loading.dart';
 import 'ComplaintDialog.dart';
-
-// TODO: Generating list of notifications for the complaints taken from the backend
 
 Random random = Random();
 // complaints to be taken from backend

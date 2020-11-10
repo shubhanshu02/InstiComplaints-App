@@ -1,4 +1,3 @@
-import 'package:InstiComplaints/UpdateNotification.dart';
 import 'package:InstiComplaints/loading.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'camera.dart';
 import 'card.dart';
 import 'dart:math';
-
-import 'resolved.dart';
 
 var user = FirebaseAuth.instance.currentUser;
 

@@ -1,7 +1,5 @@
-import 'package:InstiComplaints/ComplaintDialog.dart';
 import 'package:InstiComplaints/register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:flutter/material.dart';
 import 'st_profile.dart';
 import 'ad_profile.dart';

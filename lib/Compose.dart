@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:InstiComplaints/ComplaintFiling.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'DropDown.dart';
@@ -8,9 +7,6 @@ import 'package:path/path.dart' as path;
 import 'dart:math';
 import 'Complaint_Class.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'AdminDialog.dart';
-import 'ModeratorDialog.dart';
-import 'ComplaintDialog.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 MailContent complaint;

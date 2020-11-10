@@ -1,5 +1,3 @@
-import 'dart:io';
-
 class MailContent {
   String title;
   String category;

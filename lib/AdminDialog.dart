@@ -2,8 +2,6 @@ import 'package:InstiComplaints/ComplaintFiling.dart';
 import 'package:InstiComplaints/loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'Compose.dart';
 import 'package:intl/intl.dart';
 import 'UpdateNotification.dart';
 import 'Complaint_Class.dart';

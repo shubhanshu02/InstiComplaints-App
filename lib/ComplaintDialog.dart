@@ -1,11 +1,9 @@
 import 'package:InstiComplaints/UpdateNotification.dart';
 import 'package:InstiComplaints/loading.dart';
 import 'package:flutter/material.dart';
-import 'Compose.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'Complaint_Class.dart';
 
 class ComplaintDialog extends StatefulWidget {
   final String _complaintID;
