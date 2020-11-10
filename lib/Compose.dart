@@ -14,6 +14,8 @@ import 'ComplaintDialog.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 MailContent complaint;
+String selectedCategory;
+final formKey1 = GlobalKey<FormState>();
 
 class BackgroundMaker extends StatelessWidget {
   @override
@@ -150,8 +152,30 @@ class Compose extends StatefulWidget {
 
 class _ComposeState extends State<Compose> {
 
+
+  void initState() {
+    super.initState();
+    _dropdownMenuItems = buildDropDownMenuItems(categories);
+    //selectedItem = _dropdownMenuItems[0].value;
+  }
+
+  List<DropdownMenuItem<String>> buildDropDownMenuItems(List listItems) {
+    List<DropdownMenuItem<String>> items = List();
+    for (String listItem in listItems) {
+      items.add(
+        DropdownMenuItem(
+          child: Text(listItem),
+          value: listItem,
+        ),
+      );
+    }
+    return items;
+  }
+
+  List<DropdownMenuItem<String>> _dropdownMenuItems;
   File _image;
   String _uploadedFileURL;
+  
 
   List<String> imagesInComplaint = [];
 
@@ -190,7 +214,7 @@ class _ComposeState extends State<Compose> {
 
   String title='';
   String description='';
-  final _formKey1 = GlobalKey<FormState>();
+  
 
   @override
   Widget build(BuildContext context) {
@@ -203,7 +227,7 @@ class _ComposeState extends State<Compose> {
 
             ),*/
           body: Form(
-            key: _formKey1,
+            key: formKey1,
             child: ListView(
               children: <Widget>[
                 BackgroundMaker(),
@@ -214,7 +238,37 @@ class _ComposeState extends State<Compose> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      CategoryDropdown(),
+                      //CategoryDropdown(),
+                      Container(
+                        //width: 0.65*MediaQuery.of(context).size.width,
+                        height: 75.0,
+                        padding: EdgeInsets.all(10.0),
+                        child: Center(
+                          child: DropdownButtonFormField<String>(
+                            //key: formKey1,
+                            hint: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 11),
+                              child: Text(
+                                'Category',
+                                style: TextStyle(
+                                    color: Color.fromRGBO(24, 51, 98, 1),
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            validator: (value) => value == null ? "Please select a category" : null,
+                            isExpanded: true,
+                            elevation: 10,
+                            value: selectedCategory,
+                            items: _dropdownMenuItems,
+                            onChanged: (value) {
+                              setState(() {
+                                  selectedCategory = value;
+                              });
+                            }
+                          ),
+                        ),
+                      ),
                       SizedBox(
                         height: 10.0,
                       ),
@@ -355,8 +409,8 @@ class _ComposeState extends State<Compose> {
                 Center(
                   child: RaisedButton(
                     onPressed: () async {
-                      if(_formKey1.currentState.validate()){
-                        print(_formKey1.currentState.validate().toString());
+                      if(formKey1.currentState.validate()){
+                        print(formKey1.currentState.validate().toString());
                         complaint = MailContent(
                           title: title,
                           category: selectedCategory,
@@ -374,6 +428,7 @@ class _ComposeState extends State<Compose> {
                         //TODO: Add mail to database.
                         title ='';
                         description='';
+                        selectedCategory=null;
                         
 
                         await ComplaintFiling().fileComplaint(complaint.title,complaint.category,complaint.description,complaint.images,complaint.filingTime,complaint.status,complaint.upvotes,complaint.uid,complaint.email);

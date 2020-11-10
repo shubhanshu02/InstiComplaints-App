@@ -50,22 +50,19 @@ class _AdminDialogState extends State<AdminDialog> {
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  Row(
-                    children: <Widget>[
-                      Text(
-                        'posted by ',
-                        style: TextStyle(fontSize: 12.0),
-                      ),
-                      Text(
-                        snapshot.data.data()['email'],
-                        style: TextStyle(
-                            decoration: TextDecoration.underline,
-                            color: Color.fromRGBO(53, 99, 184, 1),
-                            fontStyle: FontStyle.italic,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12.0),
-                      ),
-                    ],
+                  SizedBox(height: 6.0,),
+                  Text(
+                    'posted by ',
+                    style: TextStyle(fontSize: 12.0),
+                  ),
+                  Text(
+                    snapshot.data.data()['email'],
+                    style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        color: Color.fromRGBO(53, 99, 184, 1),
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12.0),
                   ),
                   SizedBox(
                     height: 10.0,
@@ -93,35 +90,25 @@ class _AdminDialogState extends State<AdminDialog> {
                   SizedBox(
                     height: 10.0,
                   ),
-                  Container(
-                    height: (4.2 * MediaQuery.of(context).size.height) / 10,
-                    //margin: EdgeInsets.all(8.0),
-                    child: ListView(
-                      padding: EdgeInsets.all(8.0),
-                      children: <Widget>[
-                        Text(snapshot.data.data()['description']),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        Center(
-                            child: SizedBox(
-                          height: (3.9 * MediaQuery.of(context).size.height) /
-                              10, // card height
-                          child: PageView(
-                              scrollDirection: Axis.horizontal,
-                              controller: PageController(viewportFraction: 1),
-                              children: snapshot.data.data()['list of Images']
-                                    .map<Widget>((imag) => Card(
-                                          elevation: 6.0,
-                                          child: Image.network(
-                                            imag,
-                                          ),
-                                          margin: EdgeInsets.all(10.0),
-                                        ))
-                                    .toList()),
-                        )),
-                      ],
-                    ),
+                  Text(snapshot.data.data()['description']),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  SizedBox(
+                    height: snapshot.data.data()['list of Images'].length!=0?(3.8 * MediaQuery.of(context).size.height) /10:0, // card height
+                    child: PageView(
+                    scrollDirection: Axis.horizontal,
+                    controller: PageController(viewportFraction: 1),
+                    //pageSnapping: ,
+                    children: snapshot.data.data()['list of Images']
+                        .map<Widget>((imag) => Card(
+                              elevation: 6.0,
+                              child: Image.network(
+                                imag,
+                              ),
+                              margin: EdgeInsets.all(10.0),
+                            ))
+                        .toList()),
                   ),
                   SizedBox(
                     height: 20.0,

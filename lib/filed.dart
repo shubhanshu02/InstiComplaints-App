@@ -212,10 +212,6 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                                   ComplaintDialog(
                                       user.data.id));
                           //TODO: Add navigator to other card
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => ComplaintDialog(complaintIds[index])
-                          );
 
                         },
                         child: Container(

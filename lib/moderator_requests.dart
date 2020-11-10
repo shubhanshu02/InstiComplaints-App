@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'loading.dart';
+import 'ModeratorDialog.dart';
 
 var user = FirebaseAuth.instance.currentUser;
 
@@ -77,6 +78,13 @@ class _RequestedState extends State<Requested>
                                                 Colors.blue.withAlpha(300),
                                             onTap: () {
                                               //TODO: Add navigator to other card
+                                              showDialog(
+                                                context: context,
+                                                builder: (BuildContext
+                                                context) =>
+                                                  ModeratorDialog(
+                                                      document.id)
+                                                  );
                                             },
                                             child: Container(
                                               padding: EdgeInsets.all(10),
