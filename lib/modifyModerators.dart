@@ -97,7 +97,6 @@ class _ModifyModeratorsState extends State<ModifyModerators> {
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 30),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             SizedBox(
               height: 15,
@@ -251,15 +250,20 @@ class _ModifyModeratorsState extends State<ModifyModerators> {
                 return Center(child: CircularProgressIndicator());
               },
             ),
-            RaisedButton(
-              child: Text('Add'),
-              color: Color(0xFFF49F1C),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              onPressed: () {
-                _showDialog();
-              },
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                RaisedButton(
+                  child: Text('Add'),
+                  color: Color(0xFFF49F1C),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  onPressed: () {
+                    _showDialog();
+                  },
+                ),
+              ],
             )
           ],
         ),
