@@ -1,5 +1,5 @@
 //import 'dart:html';
-
+import 'ComplaintDialog.dart';
 import 'package:InstiComplaints/loading.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -73,6 +73,13 @@ class _AdResolvedState extends State<AdResolved>
                                         splashColor: Colors.blue.withAlpha(300),
                                         onTap: () {
                                           //TODO: Add navigator to other card
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) =>
+                                              ComplaintDialog(
+                                                  document.id
+                                              )
+                                            );
                                         },
                                         child: Container(
                                           padding: EdgeInsets.all(10),
