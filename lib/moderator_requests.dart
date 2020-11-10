@@ -75,7 +75,6 @@ class _RequestedState extends State<Requested>
                                             splashColor:
                                                 Colors.blue.withAlpha(300),
                                             onTap: () {
-                                              //TODO: Add navigator to other card
                                               showDialog(
                                                   context: context,
                                                   builder:
@@ -119,7 +118,8 @@ class _RequestedState extends State<Requested>
                                                                         12),
                                                               ),
                                                               Text(
-                                                                'Name', // todo: add name field in complaints collection docs
+                                                                document[
+                                                                    'email'],
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         12,
@@ -261,8 +261,9 @@ class _RequestedState extends State<Requested>
                                                             onPressed: () {},
                                                           ),
                                                           Text(
-                                                            //todo : get the size of upvotes array from the backend
-                                                            ' Upvotes',
+                                                            document['upvotes']
+                                                                .length
+                                                                .toString(),
                                                             style: TextStyle(
                                                               fontSize: 11,
                                                             ),

@@ -205,7 +205,6 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                               context: context,
                               builder: (BuildContext context) =>
                                   ComplaintDialog(user.data.id));
-                          //TODO: Add navigator to other card
                         },
                         child: Container(
                           padding: EdgeInsets.all(10),
@@ -344,7 +343,6 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                                         onPressed: () {},
                                       ),
                                       Text(
-                                        //todo : get the size of upvotes array from the backend
                                         user.data['upvotes'].length.toString(),
                                         style: TextStyle(
                                           fontSize: 13,
