@@ -1,8 +1,4 @@
-import 'package:flutter/material.dart';
-
-String selectedCategory;
-
-List<String> _categories = [
+List<String> categories = [
   "Administration",
   "Gymkhana",
   "General",
@@ -26,7 +22,7 @@ List<String> _categories = [
   "S. C. Dey",
   "IIT Boys (Saluja)",
 ];
-
+/*
 class CategoryDropdown extends StatefulWidget {
   @override
   _CategoryDropdownState createState() => _CategoryDropdownState();
@@ -34,7 +30,6 @@ class CategoryDropdown extends StatefulWidget {
 
 class _CategoryDropdownState extends State<CategoryDropdown> {
   List<DropdownMenuItem<String>> _dropdownMenuItems;
-  final _formKey = GlobalKey<FormState>();
 
   void initState() {
     super.initState();
@@ -63,30 +58,29 @@ class _CategoryDropdownState extends State<CategoryDropdown> {
       padding: EdgeInsets.all(10.0),
       child: Center(
         child: DropdownButtonFormField<String>(
-          key: _formKey,
-            hint: Container(
-              padding: EdgeInsets.symmetric(horizontal: 11),
-              child: Text(
-                'Category',
-                style: TextStyle(
-                    color: Color.fromRGBO(24, 51, 98, 1),
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold),
-              ),
+          key: formKey2,
+          hint: Container(
+            padding: EdgeInsets.symmetric(horizontal: 11),
+            child: Text(
+              'Category',
+              style: TextStyle(
+                  color: Color.fromRGBO(24, 51, 98, 1),
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold),
             ),
-            validator: (value) => value == null ? "Please select a category" : null,
-            isExpanded: true,
-            elevation: 10,
-            value: selectedCategory,
-            items: _dropdownMenuItems,
-            onChanged: (value) {
-              setState(() {
-                if(_formKey.currentState.validate()){
-                  selectedCategory = value;
-                }
-              });
-            }),
+          ),
+          validator: (value) => value == null ? "Please select a category" : null,
+          isExpanded: true,
+          elevation: 10,
+          value: selectedCategory,
+          items: _dropdownMenuItems,
+          onChanged: (value) {
+            setState(() {
+                selectedCategory = value;
+            });
+          }
+        ),
       ),
     );
   }
-}
+}*/

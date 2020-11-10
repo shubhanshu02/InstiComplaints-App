@@ -62,7 +62,18 @@ class _SearchState extends State<Search> {
                             padding: EdgeInsets.all(10),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
+                                Flexible(
+                                  child: Text(
+                                    doc.data()["title"],
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -71,12 +82,6 @@ class _SearchState extends State<Search> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: <Widget>[
-                                        Row(children: [
-                                          Text(doc.data()["title"],
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18))
-                                        ]),
                                         Row(
                                           children: <Widget>[
                                             Text(

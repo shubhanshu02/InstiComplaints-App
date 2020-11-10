@@ -1,10 +1,7 @@
-//import 'dart:html';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
-//import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'ComplaintDialog.dart';
@@ -177,7 +174,6 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
     return ListView.builder(
       itemCount: complaintIds.length,
       itemBuilder: (context, index) {
-
         return FutureBuilder(
           future: FirebaseFirestore.instance
               .collection('complaints')
@@ -207,16 +203,8 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                         onTap: () {
                           showDialog(
                               context: context,
-                              builder: (BuildContext
-                              context) =>
-                                  ComplaintDialog(
-                                      user.data.id));
-                          //TODO: Add navigator to other card
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => ComplaintDialog(complaintIds[index])
-                          );
-
+                              builder: (BuildContext context) =>
+                                  ComplaintDialog(user.data.id));
                         },
                         child: Container(
                           padding: EdgeInsets.all(10),
@@ -244,7 +232,8 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                                             style: TextStyle(fontSize: 12),
                                           ),
                                           Text(
-                                            user.data['email'], // todo: add name field in complaints collection docs
+                                            user.data[
+                                                'email'], // todo: add name field in complaints collection docs
                                             style: TextStyle(
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.bold),
@@ -354,7 +343,6 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                                         onPressed: () {},
                                       ),
                                       Text(
-                                        //todo : get the size of upvotes array from the backend
                                         user.data['upvotes'].length.toString(),
                                         style: TextStyle(
                                           fontSize: 13,

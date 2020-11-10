@@ -1,6 +1,3 @@
-import 'package:flutter/material.dart';
-import 'st_profile.dart';
-
 class UserModel {
   String photoURL = '';
   String uid;

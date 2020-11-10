@@ -1,11 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'loading.dart';
+import 'ModeratorDialog.dart';
 
 var user = FirebaseAuth.instance.currentUser;
 
@@ -76,7 +75,12 @@ class _RequestedState extends State<Requested>
                                             splashColor:
                                                 Colors.blue.withAlpha(300),
                                             onTap: () {
-                                              //TODO: Add navigator to other card
+                                              showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          ModeratorDialog(
+                                                              document.id));
                                             },
                                             child: Container(
                                               padding: EdgeInsets.all(10),
@@ -114,7 +118,8 @@ class _RequestedState extends State<Requested>
                                                                         12),
                                                               ),
                                                               Text(
-                                                                'Name', // todo: add name field in complaints collection docs
+                                                                document[
+                                                                    'email'],
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         12,
@@ -256,8 +261,9 @@ class _RequestedState extends State<Requested>
                                                             onPressed: () {},
                                                           ),
                                                           Text(
-                                                            //todo : get the size of upvotes array from the backend
-                                                            ' Upvotes',
+                                                            document['upvotes']
+                                                                .length
+                                                                .toString(),
                                                             style: TextStyle(
                                                               fontSize: 11,
                                                             ),

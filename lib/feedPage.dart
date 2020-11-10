@@ -80,7 +80,8 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                             Flexible(
                               child: StreamBuilder<QuerySnapshot>(
                                 stream: FirebaseFirestore.instance
-                                    .collection('complaints').orderBy('filing time', descending: true)
+                                    .collection('complaints')
+                                    .orderBy('filing time', descending: true)
                                     .snapshots(),
                                 builder: (BuildContext context,
                                     AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -112,14 +113,29 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                                             context) =>
                                                         ComplaintDialog(
                                                             document.id));
-                                                //TODO: Add navigator to other card
                                               },
                                               child: Container(
                                                 padding: EdgeInsets.all(10),
                                                 child: Column(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: <Widget>[
+                                                    Flexible(
+                                                      child: Text(
+                                                        document["title"],
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: TextStyle(
+                                                            fontSize: 20,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                    ),
                                                     Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
@@ -130,17 +146,6 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                                               CrossAxisAlignment
                                                                   .start,
                                                           children: <Widget>[
-                                                            Row(children: [
-                                                              Text(
-                                                                  document[
-                                                                      "title"],
-                                                                  style: TextStyle(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      fontSize:
-                                                                          18))
-                                                            ]),
                                                             Row(
                                                               children: <
                                                                   Widget>[
@@ -152,7 +157,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                                                 ),
                                                                 Text(
                                                                   document[
-                                                                      'email'], // todo: add name field in complaints collection docs
+                                                                      'email'],
                                                                   style: TextStyle(
                                                                       fontSize:
                                                                           12,
@@ -232,7 +237,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                                               .end,
                                                       children: <Widget>[
                                                         SizedBox(
-                                                          width: 70,
+                                                          width: 80,
                                                           child: Center(
                                                             child: Column(
                                                               mainAxisAlignment:
@@ -250,10 +255,14 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                                                         TextStyle(
                                                                       fontSize:
                                                                           16,
-                                                                      color: Colors
-                                                                          .red
-                                                                          .withOpacity(
-                                                                              0.6),
+                                                                      color: document["status"] ==
+                                                                              'Pending'
+                                                                          ? Colors
+                                                                              .red
+                                                                              .withOpacity(0.6)
+                                                                          : document["status"] == 'Passed'
+                                                                              ? Colors.blue
+                                                                              : Colors.green,
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .bold,
@@ -299,8 +308,10 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                                               onPressed: () {},
                                                             ),
                                                             Text(
-                                                              //todo : get the size of upvotes array from the backend
-                                                              document['upvotes'].length.toString(),
+                                                              document[
+                                                                      'upvotes']
+                                                                  .length
+                                                                  .toString(),
                                                               style: TextStyle(
                                                                 fontSize: 13,
                                                               ),
@@ -353,7 +364,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                   padding: const EdgeInsets.only(
                       right: 20, left: 20, top: 150, bottom: 0),
                   child: Container(
-                      // add contents of the bookmark page
+                    // add contents of the bookmark page
                     child: ComplaintList(),
                   ),
                 ),
@@ -589,8 +600,8 @@ class _NavDrawerState extends State<NavDrawer> {
     print(categoryComaplints);
     return StreamBuilder<DocumentSnapshot>(
       stream: UpdateNotification().userssnap,
-      builder: (context,snapshot){
-        if(snapshot.hasData){
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
           return Container(
             width: MediaQuery.of(context).size.width * 0.7,
             child: Drawer(
@@ -614,11 +625,11 @@ class _NavDrawerState extends State<NavDrawer> {
                         ),
                         child: CircleAvatar(
                           radius: 60.0,
-                          
-                          backgroundImage: snapshot.data.data()['profilePic']==""
-                          ? AssetImage('assets/blankProfile.png')
-                          : NetworkImage(
-                              snapshot.data.data()['profilePic']),
+                          backgroundImage:
+                              snapshot.data.data()['profilePic'] == ""
+                                  ? AssetImage('assets/blankProfile.png')
+                                  : NetworkImage(
+                                      snapshot.data.data()['profilePic']),
                           backgroundColor: Colors.black,
                         ),
                       ),
@@ -687,7 +698,8 @@ class _NavDrawerState extends State<NavDrawer> {
                                 onChanged: (value) {
                                   setState(() {
                                     isSwitched2 = value;
-                                    categoryComaplints["Gymkhana"] = isSwitched2;
+                                    categoryComaplints["Gymkhana"] =
+                                        isSwitched2;
                                     _filter.notifyListeners();
                                   });
                                 },
@@ -747,7 +759,8 @@ class _NavDrawerState extends State<NavDrawer> {
                                 onChanged: (value) {
                                   setState(() {
                                     isSwitched6 = value;
-                                    categoryComaplints["C. V. Raman"] = isSwitched6;
+                                    categoryComaplints["C. V. Raman"] =
+                                        isSwitched6;
                                     _filter.notifyListeners();
                                   });
                                 },
@@ -777,7 +790,8 @@ class _NavDrawerState extends State<NavDrawer> {
                                 onChanged: (value) {
                                   setState(() {
                                     isSwitched8 = value;
-                                    categoryComaplints["Dhanrajgiri"] = isSwitched8;
+                                    categoryComaplints["Dhanrajgiri"] =
+                                        isSwitched8;
                                     _filter.notifyListeners();
                                   });
                                 },
@@ -792,7 +806,8 @@ class _NavDrawerState extends State<NavDrawer> {
                                 onChanged: (value) {
                                   setState(() {
                                     isSwitched9 = value;
-                                    categoryComaplints["Rajputana"] = isSwitched9;
+                                    categoryComaplints["Rajputana"] =
+                                        isSwitched9;
                                     _filter.notifyListeners();
                                   });
                                 },
@@ -822,7 +837,8 @@ class _NavDrawerState extends State<NavDrawer> {
                                 onChanged: (value) {
                                   setState(() {
                                     isSwitched11 = value;
-                                    categoryComaplints["Vivekanand"] = isSwitched11;
+                                    categoryComaplints["Vivekanand"] =
+                                        isSwitched11;
                                     _filter.notifyListeners();
                                   });
                                 },
@@ -837,7 +853,8 @@ class _NavDrawerState extends State<NavDrawer> {
                                 onChanged: (value) {
                                   setState(() {
                                     isSwitched12 = value;
-                                    categoryComaplints["Vishwakarma"] = isSwitched12;
+                                    categoryComaplints["Vishwakarma"] =
+                                        isSwitched12;
                                     _filter.notifyListeners();
                                   });
                                 },
@@ -868,7 +885,8 @@ class _NavDrawerState extends State<NavDrawer> {
                                 onChanged: (value) {
                                   setState(() {
                                     isSwitched14 = value;
-                                    categoryComaplints["Aryabhatt–I"] = isSwitched14;
+                                    categoryComaplints["Aryabhatt–I"] =
+                                        isSwitched14;
                                     _filter.notifyListeners();
                                   });
                                 },
@@ -883,7 +901,8 @@ class _NavDrawerState extends State<NavDrawer> {
                                 onChanged: (value) {
                                   setState(() {
                                     isSwitched15 = value;
-                                    categoryComaplints["Aryabhatt-II"] = isSwitched15;
+                                    categoryComaplints["Aryabhatt-II"] =
+                                        isSwitched15;
                                     _filter.notifyListeners();
                                   });
                                 },
@@ -898,7 +917,8 @@ class _NavDrawerState extends State<NavDrawer> {
                                 onChanged: (value) {
                                   setState(() {
                                     isSwitched16 = value;
-                                    categoryComaplints["S. N. Bose"] = isSwitched16;
+                                    categoryComaplints["S. N. Bose"] =
+                                        isSwitched16;
                                     _filter.notifyListeners();
                                   });
                                 },
@@ -913,7 +933,8 @@ class _NavDrawerState extends State<NavDrawer> {
                                 onChanged: (value) {
                                   setState(() {
                                     isSwitched17 = value;
-                                    categoryComaplints["S. Ramanujan"] = isSwitched17;
+                                    categoryComaplints["S. Ramanujan"] =
+                                        isSwitched17;
                                     _filter.notifyListeners();
                                   });
                                 },
@@ -954,7 +975,8 @@ class _NavDrawerState extends State<NavDrawer> {
                                 activeTrackColor: Colors.grey[800],
                                 activeColor: Colors.white,
                               ),
-                              title: Text('Gandhi Smriti Chhatravas(Extension)'),
+                              title:
+                                  Text('Gandhi Smriti Chhatravas(Extension)'),
                             ),
                             ListTile(
                               leading: Switch(
@@ -962,7 +984,8 @@ class _NavDrawerState extends State<NavDrawer> {
                                 onChanged: (value) {
                                   setState(() {
                                     isSwitched20 = value;
-                                    categoryComaplints["IIT (BHU) Girls Hostel"] =
+                                    categoryComaplints[
+                                            "IIT (BHU) Girls Hostel"] =
                                         isSwitched20;
                                     _filter.notifyListeners();
                                   });
@@ -978,7 +1001,8 @@ class _NavDrawerState extends State<NavDrawer> {
                                 onChanged: (value) {
                                   setState(() {
                                     isSwitched21 = value;
-                                    categoryComaplints["S. C. Dey"] = isSwitched21;
+                                    categoryComaplints["S. C. Dey"] =
+                                        isSwitched21;
                                     _filter.notifyListeners();
                                   });
                                 },
@@ -1046,15 +1070,13 @@ class _NavDrawerState extends State<NavDrawer> {
               ),
             ),
           );
-        }
-        else{
+        } else {
           return Loading();
         }
       },
     );
   }
 }
-
 
 //////////////////////////////////////////////////////////////////////////////
 // code for bookmarks page
@@ -1090,7 +1112,6 @@ List<String> getComplaints(DocumentSnapshot snapshot) {
 //   String email;
 // }
 
-
 Stream<List<String>> get getComplaintId {
   return FirebaseFirestore.instance
       .collection('users')
@@ -1122,7 +1143,7 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
       itemBuilder: (context, index) {
         Future<QuerySnapshot> ref = FirebaseFirestore.instance
             .collection('complaints')
-        // .orderBy('filing time', descending: true)
+            // .orderBy('filing time', descending: true)
             .where(FieldPath.documentId, isEqualTo: complaintIds[index])
             .get();
 
@@ -1143,7 +1164,6 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
           future: ref.then((value) => value.docs[0]),
           builder:
               (BuildContext context, AsyncSnapshot<DocumentSnapshot> user) {
-
             switch (user.connectionState) {
               case ConnectionState.none:
                 return Text('Press button to start.');
@@ -1168,11 +1188,8 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                         onTap: () {
                           showDialog(
                               context: context,
-                              builder: (BuildContext
-                              context) =>
-                                  ComplaintDialog(
-                                      user.data.id));
-                          //TODO: Add navigator to other card
+                              builder: (BuildContext context) =>
+                                  ComplaintDialog(user.data.id));
                         },
                         child: Container(
                           padding: EdgeInsets.all(10),
@@ -1181,11 +1198,11 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                             children: <Widget>[
                               Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Column(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Row(children: [
                                         Text(user.data["title"],
@@ -1200,7 +1217,7 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                                             style: TextStyle(fontSize: 12),
                                           ),
                                           Text(
-                                            user.data['email'], // todo: add name field in complaints collection docs
+                                            user.data['email'],
                                             style: TextStyle(
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.bold),
@@ -1225,7 +1242,7 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                                     Text(
                                       DateFormat.yMMMMd()
                                           .format(
-                                          user.data['filing time'].toDate())
+                                              user.data['filing time'].toDate())
                                           .toString(),
                                       style: TextStyle(
                                           fontSize: 12,
@@ -1256,7 +1273,7 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                               SizedBox(height: 7),
                               Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceEvenly,
+                                    MainAxisAlignment.spaceEvenly,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: <Widget>[
                                   SizedBox(
@@ -1264,15 +1281,21 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                                     child: Center(
                                       child: Column(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.end,
+                                            MainAxisAlignment.end,
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                            CrossAxisAlignment.center,
                                         children: <Widget>[
                                           Text(user.data["status"],
                                               style: TextStyle(
                                                 fontSize: 16,
-                                                color:
-                                                Colors.red.withOpacity(0.6),
+                                                color: user.data["status"] ==
+                                                        'Pending'
+                                                    ? Colors.red
+                                                        .withOpacity(0.6)
+                                                    : user.data["status"] ==
+                                                            'Passed'
+                                                        ? Colors.blue
+                                                        : Colors.green,
                                                 fontWeight: FontWeight.bold,
                                               )),
                                           SizedBox(
@@ -1310,7 +1333,6 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                                         onPressed: () {},
                                       ),
                                       Text(
-                                        //todo : get the size of upvotes array from the backend
                                         user.data['upvotes'].length.toString(),
                                         style: TextStyle(
                                           fontSize: 13,

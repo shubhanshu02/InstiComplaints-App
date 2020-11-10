@@ -1,12 +1,9 @@
-//import 'dart:html';
-
+import 'ComplaintDialog.dart';
 import 'package:InstiComplaints/loading.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
-//import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 
 var user = FirebaseAuth.instance.currentUser;
@@ -72,7 +69,10 @@ class _AdResolvedState extends State<AdResolved>
                                       child: InkWell(
                                         splashColor: Colors.blue.withAlpha(300),
                                         onTap: () {
-                                          //TODO: Add navigator to other card
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  ComplaintDialog(document.id));
                                         },
                                         child: Container(
                                           padding: EdgeInsets.all(10),
@@ -106,7 +106,7 @@ class _AdResolvedState extends State<AdResolved>
                                                                 fontSize: 12),
                                                           ),
                                                           Text(
-                                                            'Name', // todo: add name field in complaints collection docs
+                                                            document['title'],
                                                             style: TextStyle(
                                                                 fontSize: 12,
                                                                 fontWeight:
@@ -237,8 +237,9 @@ class _AdResolvedState extends State<AdResolved>
                                                         onPressed: () {},
                                                       ),
                                                       Text(
-                                                        //todo : get the size of upvotes array from the backend
-                                                        ' Upvotes',
+                                                        document['upvotes']
+                                                            .length
+                                                            .toString(),
                                                         style: TextStyle(
                                                           fontSize: 11,
                                                         ),

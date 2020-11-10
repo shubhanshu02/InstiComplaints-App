@@ -158,13 +158,15 @@ class _MyLoginPageState extends State<MyLoginPage> {
                     shape: loginChange
                         ? RoundedRectangleBorder(
                             side: BorderSide(color: Colors.white, width: 3.0),
-                            borderRadius:
-                                BorderRadius.only(topLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0)))
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20.0),
+                                bottomRight: Radius.circular(20.0)))
                         : RoundedRectangleBorder(
                             side: BorderSide(
                                 color: Colors.transparent, width: 3.0),
-                            borderRadius:
-                                BorderRadius.only(topLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0))),
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20.0),
+                                bottomRight: Radius.circular(20.0))),
                     color: loginChange ? Colors.transparent : Color(0xFFF49F1C),
                     onPressed: () {
                       loginStateChange();
@@ -193,11 +195,14 @@ class _MyLoginPageState extends State<MyLoginPage> {
                   shape: registerChange
                       ? RoundedRectangleBorder(
                           side: BorderSide(color: Colors.white, width: 3.0),
-                          borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0)))
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(20.0),
+                              bottomRight: Radius.circular(20.0)))
                       : RoundedRectangleBorder(
                           side: BorderSide(color: Colors.transparent),
-                          borderRadius:
-                              BorderRadius.only(topLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0))),
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(20.0),
+                              bottomRight: Radius.circular(20.0))),
                   color:
                       registerChange ? Colors.transparent : Color(0xFFF49F1C),
                   onPressed: () {
