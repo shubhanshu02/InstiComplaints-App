@@ -6,31 +6,36 @@ import 'dart:math';
 class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Container(
-            child: ListView(children: [
-      Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height / 4,
-        child: ClipPath(
-            clipper: CurveClipper(),
-            child: Container(
-              constraints: BoxConstraints.expand(),
-              color: Color(0xFF181D3D),
-              child: Column(children: [
-                SizedBox(height: MediaQuery.of(context).size.height / 16),
-                Text(
-                  'Sign Up',
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline5
-                      .apply(color: Colors.white),
-                )
-              ]),
-            )),
+    return Container(
+      color: Color(0xFF181D3D),
+      child: SafeArea(
+        child: Scaffold(
+            body: Container(
+                child: ListView(children: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height / 4,
+            child: ClipPath(
+                clipper: CurveClipper(),
+                child: Container(
+                  constraints: BoxConstraints.expand(),
+                  color: Color(0xFF181D3D),
+                  child: Column(children: [
+                    SizedBox(height: MediaQuery.of(context).size.height / 16),
+                    Text(
+                      'Sign Up',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline5
+                          .apply(color: Colors.white),
+                    )
+                  ]),
+                )),
+          ),
+          RegisterForm()
+        ]))),
       ),
-      RegisterForm()
-    ])));
+    );
   }
 }
 
