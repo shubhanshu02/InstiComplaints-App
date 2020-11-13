@@ -1,4 +1,4 @@
-import 'dart:async';
+import 'package:InstiComplaints/feedCard.dart';
 import 'loading.dart';
 import 'UpdateNotification.dart';
 import 'package:InstiComplaints/search.dart';
@@ -8,20 +8,37 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'ComplaintDialog.dart';
 
 GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
-final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-    new GlobalKey<RefreshIndicatorState>();
-
 ValueNotifier<Map<String, bool>> _filter =
     ValueNotifier<Map<String, bool>>(categoryComaplints);
+// Sidebar Switches
+bool isSwitched1 = true;
+bool isSwitched2 = true;
+bool isSwitched3 = true;
+bool isSwitched4 = true;
+bool isSwitched5 = true;
+bool isSwitched6 = true;
+bool isSwitched7 = true;
+bool isSwitched8 = true;
+bool isSwitched9 = true;
+bool isSwitched10 = true;
+bool isSwitched11 = true;
+bool isSwitched12 = true;
+bool isSwitched13 = true;
+bool isSwitched14 = true;
+bool isSwitched15 = true;
+bool isSwitched16 = true;
+bool isSwitched17 = true;
+bool isSwitched18 = true;
+bool isSwitched19 = true;
+bool isSwitched20 = true;
+bool isSwitched21 = true;
+bool isSwitched22 = true;
 
 class Feed extends StatefulWidget {
   const Feed({Key key}) : super(key: key);
-
   @override
   _FeedState createState() => _FeedState();
 }
@@ -50,10 +67,6 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   void dispose() {
     _tabController.dispose();
     super.dispose();
-  }
-
-  Future<Null> _refresh() {
-    return () {}();
   }
 
   @override
@@ -95,236 +108,17 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                   List feedcomplaints = snapshot.data.docs
                                       .map((DocumentSnapshot document) {
                                     if (value[document['category']] == true) {
-                                      return Card(
-                                          elevation: 2,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(11)),
-                                          child: Container(
-                                            // TODO: Adjust height according to generator function
-                                            height: 210,
-                                            child: InkWell(
-                                              splashColor:
-                                                  Colors.blue.withAlpha(300),
-                                              onTap: () {
-                                                showDialog(
-                                                    context: context,
-                                                    builder: (BuildContext
-                                                            context) =>
-                                                        ComplaintDialog(
-                                                            document.id));
-                                              },
-                                              child: Container(
-                                                padding: EdgeInsets.all(10),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Flexible(
-                                                      child: Text(
-                                                        document["title"],
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                        style: TextStyle(
-                                                            fontSize: 20,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: <Widget>[
-                                                        Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: <Widget>[
-                                                            Row(
-                                                              children: <
-                                                                  Widget>[
-                                                                Text(
-                                                                  'Posted by ',
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          12),
-                                                                ),
-                                                                Text(
-                                                                  document[
-                                                                      'email'],
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          12,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold),
-                                                                )
-                                                              ],
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        IconButton(
-                                                            icon: Icon(Icons
-                                                                .bookmark_border),
-                                                            onPressed: () {
-                                                              //TODO: Add color change
-                                                            })
-                                                      ],
-                                                    ),
-                                                    SizedBox(height: 7),
-                                                    Expanded(
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        children: <Widget>[
-                                                          Icon(Icons
-                                                              .calendar_today),
-                                                          Text(
-                                                            DateFormat.yMMMMd()
-                                                                .format(document[
-                                                                        'filing time']
-                                                                    .toDate())
-                                                                .toString(),
-                                                            style: TextStyle(
-                                                                fontSize: 12,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                          Text(' in '),
-                                                          Text(
-                                                            document[
-                                                                "category"],
-                                                            style: TextStyle(
-                                                                fontSize: 12,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    SizedBox(height: 4),
-                                                    Row(
-                                                      children: <Widget>[
-                                                        Flexible(
-                                                          child: Text(
-                                                            document[
-                                                                "description"],
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            style: TextStyle(
-                                                                fontSize: 15),
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                    SizedBox(height: 7),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .end,
-                                                      children: <Widget>[
-                                                        SizedBox(
-                                                          width: 80,
-                                                          child: Center(
-                                                            child: Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .end,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .center,
-                                                              children: <
-                                                                  Widget>[
-                                                                Text(
-                                                                    document[
-                                                                        "status"],
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontSize:
-                                                                          16,
-                                                                      color: document["status"] ==
-                                                                              'Pending'
-                                                                          ? Colors
-                                                                              .red
-                                                                              .withOpacity(0.6)
-                                                                          : document["status"] == 'Passed'
-                                                                              ? Colors.blue
-                                                                              : Colors.green,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                    )),
-                                                                SizedBox(
-                                                                  height: 5,
-                                                                ),
-                                                                Text(
-                                                                  'Status',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontSize:
-                                                                        11,
-                                                                  ),
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        Column(
-                                                          children: <Widget>[
-                                                            IconButton(
-                                                              icon: Icon(
-                                                                  Icons.share),
-                                                              onPressed: () {},
-                                                            ),
-                                                            Text(
-                                                              'Share',
-                                                              style: TextStyle(
-                                                                fontSize: 11,
-                                                              ),
-                                                            )
-                                                          ],
-                                                        ),
-                                                        Column(
-                                                          children: <Widget>[
-                                                            IconButton(
-                                                              icon: Icon(Icons
-                                                                  .arrow_upward),
-                                                              onPressed: () {},
-                                                            ),
-                                                            Text(
-                                                              document[
-                                                                      'upvotes']
-                                                                  .length
-                                                                  .toString(),
-                                                              style: TextStyle(
-                                                                fontSize: 13,
-                                                              ),
-                                                            )
-                                                          ],
-                                                        )
-                                                      ],
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ));
+                                      return ComplaintOverviewCard(
+                                        title: document['title'],
+                                        onTap: ComplaintDialog(document.id),
+                                        email: document['email'],
+                                        filingTime: document['filing time'],
+                                        category: document['category'],
+                                        description: document['description'],
+                                        status: document['status'],
+                                        upvotes: document['upvotes'],
+                                        id: document.id,
+                                      );
                                     } else
                                       return Container(
                                         height: 0,
@@ -332,25 +126,23 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                   }).toList();
                                   feedcomplaints.add(Container(
                                       padding: EdgeInsets.all(10),
-                                      child: Expanded(
-                                        child: Column(
-                                          children: [
-                                            Divider(
-                                              color: Colors.black,
-                                            ),
-                                            Icon(
-                                              Icons.check_circle,
-                                              size: 40,
-                                              color: Color(0xFF36497E),
-                                            ),
-                                            Text(
-                                              "You're All Caught Up",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline6,
-                                            )
-                                          ],
-                                        ),
+                                      child: Column(
+                                        children: [
+                                          Divider(
+                                            color: Colors.black,
+                                          ),
+                                          Icon(
+                                            Icons.check_circle,
+                                            size: 40,
+                                            color: Color(0xFF36497E),
+                                          ),
+                                          Text(
+                                            "You're All Caught Up",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline6,
+                                          )
+                                        ],
                                       )));
                                   return new ListView(children: feedcomplaints);
                                 },
@@ -365,7 +157,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                       right: 20, left: 20, top: 150, bottom: 0),
                   child: Container(
                     // add contents of the bookmark page
-                    child: ComplaintList(),
+                    child: Bookmarks(),
                   ),
                 ),
               ],
@@ -386,7 +178,6 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                       child: ClipPath(
                           clipper: CurveClipper(),
                           child: Container(
-                            //constraints: BoxConstraints.expand(),
                             color: Color(0xFF181D3D),
                           )),
                     ),
@@ -512,8 +303,6 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   }
 }
 
-//////////////////////////////////////////////////////////////////////////////
-
 // code for the upper design of appbar
 
 class CurveClipper extends CustomClipper<Path> {
@@ -537,8 +326,6 @@ class CurveClipper extends CustomClipper<Path> {
   @override
   bool shouldReclip(oldCliper) => false;
 }
-
-////////////////////////////////////////////////////////////////////////////////
 
 Map<String, bool> categoryComaplints = {
   "Administration": isSwitched1,
@@ -564,30 +351,6 @@ Map<String, bool> categoryComaplints = {
   "S. C. Dey": isSwitched21,
   "IIT Boys (Saluja)": isSwitched22,
 };
-
-// code for the sidebar
-bool isSwitched1 = true;
-bool isSwitched2 = true;
-bool isSwitched3 = true;
-bool isSwitched4 = true;
-bool isSwitched5 = true;
-bool isSwitched6 = true;
-bool isSwitched7 = true;
-bool isSwitched8 = true;
-bool isSwitched9 = true;
-bool isSwitched10 = true;
-bool isSwitched11 = true;
-bool isSwitched12 = true;
-bool isSwitched13 = true;
-bool isSwitched14 = true;
-bool isSwitched15 = true;
-bool isSwitched16 = true;
-bool isSwitched17 = true;
-bool isSwitched18 = true;
-bool isSwitched19 = true;
-bool isSwitched20 = true;
-bool isSwitched21 = true;
-bool isSwitched22 = true;
 
 class NavDrawer extends StatefulWidget {
   @override
@@ -634,11 +397,6 @@ class _NavDrawerState extends State<NavDrawer> {
                         ),
                       ),
                     ),
-                    // decoration: BoxDecoration(
-                    //     image: DecorationImage(
-                    //       image: AssetImage("assets/app_logo_final0.png"),
-                    //       fit: BoxFit.fitHeight,
-                    //     )),
                   ),
                   Center(
                     child: Container(
@@ -1078,306 +836,69 @@ class _NavDrawerState extends State<NavDrawer> {
   }
 }
 
-//////////////////////////////////////////////////////////////////////////////
-// code for bookmarks page
-
-var user = FirebaseAuth.instance.currentUser;
-
-class ComplaintList extends StatefulWidget {
-  @override
-  _ComplaintListState createState() => _ComplaintListState();
-}
-
-class _ComplaintListState extends State<ComplaintList> {
+class Bookmarks extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<List<String>>.value(
-      value: getComplaintId,
-      child: ComplaintTile1(),
-    );
-  }
-}
+    return StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser.uid)
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> user) {
+          if (user.connectionState == ConnectionState.waiting)
+            return Center(child: CircularProgressIndicator());
 
-List<String> getComplaints(DocumentSnapshot snapshot) {
-  print(snapshot.data());
-  return List.from(snapshot['bookmarked']);
-}
-// class Comp {
-//   String title;
-//   String category;
-//   String description;
-//   Timestamp filingTime;
-//   String status;
-//   // List<String> upvotes = [];
-//   String email;
-// }
+          final List<String> bookmarks =
+              List<String>.from(user.data.data()['bookmarked']);
+          print(bookmarks.runtimeType);
+          print('\n\n\n${user.data.data()['bookmarked']}\n');
+          return StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('complaints')
+                  .snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshots) {
+                if (snapshots.connectionState == ConnectionState.waiting)
+                  return Center(child: CircularProgressIndicator());
 
-Stream<List<String>> get getComplaintId {
-  return FirebaseFirestore.instance
-      .collection('users')
-      .doc(user.uid)
-      .get()
-      .then((snapshot) {
-    try {
-      return getComplaints(snapshot);
-    } catch (e) {
-      print(e);
-      return null;
-    }
-  }).asStream();
-}
-
-class ComplaintTile1 extends StatefulWidget {
-  @override
-  _ComplaintTile1State createState() => _ComplaintTile1State();
-}
-
-class _ComplaintTile1State extends State<ComplaintTile1> {
-  //var arr = new List<Comp>();
-  @override
-  Widget build(BuildContext context) {
-    final complaintIds = Provider.of<List<String>>(context) ?? [];
-
-    return ListView.builder(
-      itemBuilder: (context, index) {
-
-        if(index == complaintIds.length){
-          return Container(
-              padding: EdgeInsets.all(10),
-              child: Expanded(
-                child: Column(
-                  children: [
-                    Divider(
-                      color: Colors.black,
-                    ),
-                    Icon(
-                      Icons.check_circle,
-                      size: 40,
-                      color: Color(0xFF36497E),
-                    ),
-                    Text(
-                      "You're All Caught Up",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline6,
-                    )
-                  ],
-                ),
-              ));
-        }
-
-        Future<QuerySnapshot> ref = FirebaseFirestore.instance
-            .collection('complaints')
-            // .orderBy('filing time', descending: true)
-            .where(FieldPath.documentId, isEqualTo: complaintIds[index])
-            .get();
-
-        // ref.then((value) => value.docs.forEach((element) {
-        //   var ss = element.data();
-        //   Comp c = new Comp();
-        //   c.title = ss['title'];
-        //   c.category = ss['category'];
-        //   c.description = ss['description'];
-        //   c.filingTime = ss['filing time'];
-        //   c.status = ss['status'];
-        //   c.email = ss['email'];
-        //   arr.add(c);
-        //   arr.sort((x,y) => y.filingTime.compareTo(x.filingTime));
-        // }));
-
-        return FutureBuilder(
-          future: ref.then((value) => value.docs[0]),
-          builder:
-              (BuildContext context, AsyncSnapshot<DocumentSnapshot> user) {
-            switch (user.connectionState) {
-              case ConnectionState.none:
-                return Text('Press button to start.');
-              case ConnectionState.active:
-              case ConnectionState.waiting:
-                return Text('Awaiting result...');
-              case ConnectionState.done:
-                if (user.hasError)
-                  return Container(
-                    width: 0.0,
-                    height: 0.0,
-                  );
-                return Card(
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(11)),
-                    child: Container(
-                      // TODO: Adjust height according to generator function
-                      height: 210,
-                      child: InkWell(
-                        splashColor: Colors.blue.withAlpha(300),
-                        onTap: () {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) =>
-                                  ComplaintDialog(user.data.id));
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(10),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Row(children: [
-                                        Text(user.data["title"],
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 18))
-                                      ]),
-                                      Row(
-                                        children: <Widget>[
-                                          Text(
-                                            'Posted by ',
-                                            style: TextStyle(fontSize: 12),
-                                          ),
-                                          Text(
-                                            user.data['email'],
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold),
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  IconButton(
-                                      icon: Icon(Icons.bookmark_border),
-                                      onPressed: () {
-                                        //TODO: Add color change
-                                      })
-                                ],
-                              ),
-                              SizedBox(height: 7),
-                              Expanded(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    Icon(Icons.calendar_today),
-                                    Text(
-                                      DateFormat.yMMMMd()
-                                          .format(
-                                              user.data['filing time'].toDate())
-                                          .toString(),
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(' in '),
-                                    Text(
-                                      user.data["category"],
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: 4),
-                              Row(
-                                children: <Widget>[
-                                  Flexible(
-                                    child: Text(
-                                      user.data["description"],
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              SizedBox(height: 7),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  SizedBox(
-                                    width: 70,
-                                    child: Center(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text(user.data["status"],
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color: user.data["status"] ==
-                                                        'Pending'
-                                                    ? Colors.red
-                                                        .withOpacity(0.6)
-                                                    : user.data["status"] ==
-                                                            'Passed'
-                                                        ? Colors.blue
-                                                        : Colors.green,
-                                                fontWeight: FontWeight.bold,
-                                              )),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text(
-                                            'Status',
-                                            style: TextStyle(
-                                              fontSize: 11,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Column(
-                                    children: <Widget>[
-                                      IconButton(
-                                        icon: Icon(Icons.share),
-                                        onPressed: () {},
-                                      ),
-                                      Text(
-                                        'Share',
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  Column(
-                                    children: <Widget>[
-                                      IconButton(
-                                        icon: Icon(Icons.arrow_upward),
-                                        onPressed: () {},
-                                      ),
-                                      Text(
-                                        user.data['upvotes'].length.toString(),
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                        ),
-                                      )
-                                    ],
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
+                List<Widget> currentBookmarks = [];
+                snapshots.data.docs.forEach((doc) {
+                  if (bookmarks.contains(doc.id)) {
+                    currentBookmarks.add(ComplaintOverviewCard(
+                      title: doc.data()["title"],
+                      onTap: ComplaintDialog(doc.id),
+                      email: doc.data()['email'],
+                      filingTime: doc.data()['filing time'],
+                      category: doc.data()["category"],
+                      description: doc.data()["description"],
+                      status: doc.data()["status"],
+                      upvotes: doc.data()['upvotes'],
+                      id: doc.id,
                     ));
-            }
-            return null; // unreachable
-          },
-        );
-      },
-      itemCount: complaintIds.length+1,
-    );
+                  }
+                });
+                currentBookmarks.add(Container(
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      children: [
+                        Divider(
+                          color: Colors.black,
+                        ),
+                        Icon(
+                          Icons.check_circle,
+                          size: 40,
+                          color: Color(0xFF36497E),
+                        ),
+                        Text(
+                          "You're All Caught Up",
+                          style: Theme.of(context).textTheme.headline6,
+                        )
+                      ],
+                    )));
+                return ListView(
+                  children: currentBookmarks,
+                );
+              });
+        });
   }
 }
