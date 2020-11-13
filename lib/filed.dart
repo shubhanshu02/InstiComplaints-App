@@ -172,8 +172,31 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
   Widget build(BuildContext context) {
     final complaintIds = Provider.of<List<String>>(context) ?? [];
     return ListView.builder(
-      itemCount: complaintIds.length,
       itemBuilder: (context, index) {
+        if(index == complaintIds.length){
+          return Container(
+              padding: EdgeInsets.all(10),
+              child: Expanded(
+                child: Column(
+                  children: [
+                    Divider(
+                      color: Colors.black,
+                    ),
+                    Icon(
+                      Icons.check_circle,
+                      size: 40,
+                      color: Color(0xFF36497E),
+                    ),
+                    Text(
+                      "You're All Caught Up",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline6,
+                    )
+                  ],
+                ),
+              ));
+        }
         return FutureBuilder(
           future: FirebaseFirestore.instance
               .collection('complaints')
@@ -189,7 +212,7 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                 return Text('Awaiting result...');
               case ConnectionState.done:
                 if (user.hasError) return Text('Error: ${user.error}');
-                if (user.data['status'] == 'resolved')
+                if (user.data['status'] == 'Solved')
                   return Container(width: 0.0, height: 0.0);
                 return Card(
                     elevation: 2,
@@ -362,6 +385,7 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
           },
         );
       },
+      itemCount: complaintIds.length + 1,
     );
   }
 }

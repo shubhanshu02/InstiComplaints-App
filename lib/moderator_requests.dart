@@ -23,6 +23,7 @@ class _RequestedState extends State<Requested>
     with SingleTickerProviderStateMixin {
   CollectionReference complaints =
       FirebaseFirestore.instance.collection('complaints');
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -56,13 +57,11 @@ class _RequestedState extends State<Requested>
                                   ConnectionState.waiting) {
                                 return CircularProgressIndicator();
                               }
-
-                              return new ListView(
-                                children: snapshot.data.docs
+                              List req_Complaints = snapshot.data.docs
                                     .map((DocumentSnapshot document) {
                                   if (document['category'] ==
                                           user.data['category'] &&
-                                      document['status'] == 'pending')
+                                      document['status'] == 'Pending')
                                     return Card(
                                         elevation: 2,
                                         shape: RoundedRectangleBorder(
@@ -278,8 +277,30 @@ class _RequestedState extends State<Requested>
                                           ),
                                         ));
                                   return Container(width: 0.0, height: 0.0);
-                                }).toList(),
-                              );
+                                }).toList();
+                              req_Complaints.add(Container(
+                                  padding: EdgeInsets.all(10),
+                                  child: Expanded(
+                                    child: Column(
+                                      children: [
+                                        Divider(
+                                          color: Colors.black,
+                                        ),
+                                        Icon(
+                                          Icons.check_circle,
+                                          size: 40,
+                                          color: Color(0xFF36497E),
+                                        ),
+                                        Text(
+                                          "You're All Caught Up",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6,
+                                        )
+                                      ],
+                                    ),
+                                  )));
+                              return new ListView(children: req_Complaints);
                             },
                           ))),
                     ),

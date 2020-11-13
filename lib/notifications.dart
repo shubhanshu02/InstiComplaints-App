@@ -55,8 +55,33 @@ class _TileState extends State<Tile> {
                     ),
                   );
                 },
-                itemCount: snapshot.data.data()['notification'].length,
+                itemCount: snapshot.data.data()['notification'].length +1 ,
                 itemBuilder: (BuildContext context, int index) {
+
+                  if(index == snapshot.data.data()['notification'].length){
+                    return Container(
+                        padding: EdgeInsets.all(10),
+                        child: Expanded(
+                          child: Column(
+                            children: [
+                              Divider(
+                                color: Colors.black,
+                              ),
+                              Icon(
+                                Icons.check_circle,
+                                size: 40,
+                                color: Color(0xFF36497E),
+                              ),
+                              Text(
+                                "You're All Caught Up",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6,
+                              )
+                            ],
+                          ),
+                        ));
+                  }
                   //Map<String,String> notification = snapshot.data.data()['notification'][snapshot.data.data()['notification'].length-index-1];
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
