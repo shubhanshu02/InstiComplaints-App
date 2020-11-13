@@ -1,6 +1,7 @@
 import 'package:InstiComplaints/register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'st_profile.dart';
 import 'ad_profile.dart';
 import 'filed.dart';
@@ -16,6 +17,8 @@ import 'admin_resolved_complaints.dart';
 class InstiComplaints extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     return MaterialApp(title: 'InstiComplaints', routes: {
       '/ad_pending': (context) => AdPending(),
       '/ad_resolved': (context) => AdResolved(),

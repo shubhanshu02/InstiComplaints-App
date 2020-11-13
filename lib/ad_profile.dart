@@ -570,7 +570,7 @@ class _AdProfileState extends State<AdProfile> {
                                       radius: 25.0,
                                     ),
                                     SizedBox(
-                                      width: 35.0,
+                                      width: 20.0,
                                     ),
                                     Text(
                                       'InstiComplaints',

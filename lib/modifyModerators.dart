@@ -82,7 +82,9 @@ class _ModifyModeratorsState extends State<ModifyModerators> {
   @override
   Widget build(BuildContext context) {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
-    return Scaffold(
+    return Container(
+      color: Color(0xFF181D3D),
+/*      Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF181D3D),
         title: Text(
@@ -93,181 +95,236 @@ class _ModifyModeratorsState extends State<ModifyModerators> {
               .copyWith(color: Colors.white),
         ),
         leading: Icon(Icons.arrow_back_ios),
-      ),
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 30),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 15,
-            ),
-            Container(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Moderators',
-                  style: Theme.of(context).textTheme.headline5,
-                )),
-            Divider(
-              color: Colors.black,
-            ),
-            FutureBuilder<DocumentSnapshot>(
-              future: users.doc(FirebaseAuth.instance.currentUser.uid).get(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<DocumentSnapshot> snapshot) {
-                if (snapshot.hasError) {
-                  return Text("Something went wrong");
-                }
+      ),*/
+      child: SafeArea(
+          child: Scaffold(
+              body: Stack(
+        children: [
+          Container(
+            padding: EdgeInsets.only(
+                top: MediaQuery.of(context).size.height * 0.20,
+                right: 30,
+                left: 30),
+            child: Column(
+              children: [
+                FutureBuilder<DocumentSnapshot>(
+                  future:
+                      users.doc(FirebaseAuth.instance.currentUser.uid).get(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<DocumentSnapshot> snapshot) {
+                    if (snapshot.hasError) {
+                      return Text("Something went wrong");
+                    }
 
-                if (snapshot.connectionState == ConnectionState.done) {
-                  if (snapshot.data.data()['type'] != 'admin') {
-                    return Container(
-                      padding: EdgeInsets.all(10),
-                      child: Text(
-                        'You are no longer an Admin',
-                        overflow: TextOverflow.visible,
-                      ),
-                    );
-                  }
-                  category = snapshot.data.data()['category'];
-                  return StreamBuilder(
-                    stream: users
-                        .where('category', isEqualTo: category)
-                        .where('type', isEqualTo: 'moderator')
-                        .snapshots(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<QuerySnapshot> query) {
-                      if (query.hasError) {
-                        return Text("Something went wrong");
-                      }
-                      if (query.connectionState == ConnectionState.waiting)
-                        return Center(child: CircularProgressIndicator());
-
-                      List<Widget> listofModerators = [];
-                      query.data.docs.forEach((doc) {
-                        listofModerators.add(Container(
-                          margin: EdgeInsets.symmetric(vertical: 8),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Colors.black.withOpacity(0.5)),
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      if (snapshot.data.data()['type'] != 'admin') {
+                        return Container(
+                          padding: EdgeInsets.all(10),
+                          child: Text(
+                            'You are no longer an Admin',
+                            overflow: TextOverflow.visible,
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      padding:
-                                          EdgeInsets.only(left: 15, top: 6),
-                                      child: Text(
-                                        doc['name'],
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1,
-                                        overflow: TextOverflow.clip,
-                                        textAlign: TextAlign.left,
-                                      ),
-                                    ),
-                                    Container(
-                                        padding: EdgeInsets.only(
-                                            left: 15, bottom: 6),
-                                        child: Text(
-                                          doc['email'],
-                                          style: TextStyle(fontSize: 12),
-                                        ))
-                                  ],
-                                ),
+                        );
+                      }
+                      category = snapshot.data.data()['category'];
+                      return StreamBuilder(
+                        stream: users
+                            .where('category', isEqualTo: category)
+                            .where('type', isEqualTo: 'moderator')
+                            .snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> query) {
+                          if (query.hasError) {
+                            return Text("Something went wrong");
+                          }
+                          if (query.connectionState == ConnectionState.waiting)
+                            return Center(child: CircularProgressIndicator());
+
+                          List<Widget> listofModerators = [];
+                          query.data.docs.forEach((doc) {
+                            listofModerators.add(Container(
+                              margin: EdgeInsets.symmetric(vertical: 8),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: Colors.black.withOpacity(0.5)),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
                               ),
-                              FlatButton(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(30.0)),
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: new Text("Confirmation!"),
-                                        content: Text(
-                                          "Do you really want to remove ${doc['name']} from Moderator of ${category.toString().toUpperCase()} category?",
-                                        ),
-                                        actions: <Widget>[
-                                          new FlatButton(
-                                              child: new Text("Yes"),
-                                              onPressed: () async {
-                                                await users
-                                                    .doc(doc['uid'])
-                                                    .update(
-                                                        {'type': 'student'});
-                                              }),
-                                          new FlatButton(
-                                            child: new Text("No"),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          padding:
+                                              EdgeInsets.only(left: 15, top: 6),
+                                          child: Text(
+                                            doc['name'],
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1,
+                                            overflow: TextOverflow.clip,
+                                            textAlign: TextAlign.left,
                                           ),
-                                        ],
+                                        ),
+                                        Container(
+                                            padding: EdgeInsets.only(
+                                                left: 15, bottom: 6),
+                                            child: Text(
+                                              doc['email'],
+                                              style: TextStyle(fontSize: 12),
+                                            ))
+                                      ],
+                                    ),
+                                  ),
+                                  FlatButton(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            new BorderRadius.circular(30.0)),
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: new Text("Confirmation!"),
+                                            content: Text(
+                                              "Do you really want to remove ${doc['name']} from Moderator of ${category.toString().toUpperCase()} category?",
+                                            ),
+                                            actions: <Widget>[
+                                              new FlatButton(
+                                                  child: new Text("Yes"),
+                                                  onPressed: () async {
+                                                    await users
+                                                        .doc(doc['uid'])
+                                                        .update({
+                                                      'type': 'student'
+                                                    });
+                                                  }),
+                                              new FlatButton(
+                                                child: new Text("No"),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
                                       );
                                     },
-                                  );
-                                },
-                                child: Icon(
-                                  Icons.remove_circle_outline,
-                                  size: 21,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ));
-                      });
-                      return SingleChildScrollView(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: (listofModerators.length != 0)
-                              ? listofModerators
-                              : [
-                                  Container(
-                                      child: Icon(
-                                    Icons.sentiment_very_dissatisfied,
-                                    size: 60,
-                                  )),
-                                  Container(
-                                    padding: EdgeInsets.all(10),
-                                    child: Text(
-                                      'No Moderator Found for Your Category',
-                                      overflow: TextOverflow.visible,
+                                    child: Icon(
+                                      Icons.remove_circle_outline,
+                                      size: 21,
+                                      color: Colors.red,
                                     ),
-                                  )
+                                  ),
                                 ],
-                        ),
+                              ),
+                            ));
+                          });
+                          return SingleChildScrollView(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: (listofModerators.length != 0)
+                                  ? listofModerators
+                                  : [
+                                      Container(
+                                          child: Icon(
+                                        Icons.sentiment_very_dissatisfied,
+                                        size: 60,
+                                      )),
+                                      Container(
+                                        padding: EdgeInsets.all(10),
+                                        child: Text(
+                                          'No Moderator Found for Your Category',
+                                          overflow: TextOverflow.visible,
+                                        ),
+                                      )
+                                    ],
+                            ),
+                          );
+                        },
                       );
-                    },
-                  );
-                }
-                return Center(child: CircularProgressIndicator());
-              },
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                RaisedButton(
-                  child: Text('Add'),
-                  color: Color(0xFFF49F1C),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  onPressed: () {
-                    _showDialog();
+                    }
+                    return Center(child: CircularProgressIndicator());
                   },
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    RaisedButton(
+                      child: Text('Add'),
+                      color: Color(0xFFF49F1C),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      onPressed: () {
+                        _showDialog();
+                      },
+                    ),
+                  ],
+                )
               ],
-            )
-          ],
-        ),
-      ),
+            ),
+          ),
+          Container(
+            height: MediaQuery.of(context).size.height * 0.035,
+            color: Color(0xFF181D3D),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height * 0.8,
+            child: ClipPath(
+                clipper: CurveClipper(),
+                child: Container(
+                  //constraints: BoxConstraints.expand(),
+                  color: Color(0xFF181D3D),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 5.0,
+                          ),
+                          CircleAvatar(
+                            backgroundImage:
+                                AssetImage('assets/app_logo_final_jpg_ws.jpg'),
+                            radius: 25.0,
+                          ),
+                          SizedBox(
+                            width: 20.0,
+                          ),
+                          Text(
+                            'InstiComplaints',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline5
+                                .copyWith(
+                                    color: Colors.white,
+                                    fontFamily: 'Amaranth'),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: MediaQuery.of(context).size.height / 25),
+                      Container(
+                          child: Text(
+                        'Manage Moderators',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline5
+                            .copyWith(color: Colors.white),
+                      )),
+                    ],
+                  ),
+                )),
+          ),
+        ],
+      ))),
     );
   }
 }
@@ -324,4 +381,31 @@ dynamic errorDialog(context, String message) {
       );
     },
   );
+}
+
+class CurveClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path()
+      // set the "current point"
+      ..lineTo(0, size.width / 8)
+      ..addArc(
+          Rect.fromLTWH(0, size.width / 512 - size.width / 8, size.width / 2,
+              size.width / 2),
+          3.14,
+          -3.14 / 2)
+      ..lineTo(4 * size.width / 4, size.width / 2 - size.width / 8)
+      ..addArc(
+          Rect.fromLTWH(2 * size.width / 4, size.width / 2 - size.width / 8,
+              size.width / 2, size.width / 2),
+          3.14 + 1.57,
+          1.57)
+      ..lineTo(size.width, 0)
+      ..lineTo(0, 0)
+      ..lineTo(0, size.width / 8);
+    return path;
+  }
+
+  @override
+  bool shouldReclip(oldCliper) => false;
 }
