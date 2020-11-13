@@ -404,7 +404,7 @@ class _AdProfileState extends State<AdProfile> {
                                                               'complaints')
                                                           .where('status',
                                                               isEqualTo:
-                                                                  'resolved')
+                                                                  'Solved')
                                                           .where('category',
                                                               isEqualTo: user
                                                                       .data[

@@ -1066,13 +1066,6 @@ class _NavDrawerState extends State<NavDrawer> {
                       Navigator.pushReplacementNamed(context, '/');
                     },
                   ),
-                  Divider(
-                    height: 0.75,
-                    color: Color(0xFF181D3D),
-                    thickness: 0.75,
-                    indent: 15.0,
-                    endIndent: 15.0,
-                  ),
                 ],
               ),
             ),
@@ -1146,8 +1139,33 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
     final complaintIds = Provider.of<List<String>>(context) ?? [];
 
     return ListView.builder(
-      itemCount: complaintIds.length,
       itemBuilder: (context, index) {
+
+        if(index == complaintIds.length){
+          return Container(
+              padding: EdgeInsets.all(10),
+              child: Expanded(
+                child: Column(
+                  children: [
+                    Divider(
+                      color: Colors.black,
+                    ),
+                    Icon(
+                      Icons.check_circle,
+                      size: 40,
+                      color: Color(0xFF36497E),
+                    ),
+                    Text(
+                      "You're All Caught Up",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline6,
+                    )
+                  ],
+                ),
+              ));
+        }
+
         Future<QuerySnapshot> ref = FirebaseFirestore.instance
             .collection('complaints')
             // .orderBy('filing time', descending: true)
@@ -1359,6 +1377,7 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
           },
         );
       },
+      itemCount: complaintIds.length+1,
     );
   }
 }
