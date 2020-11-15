@@ -51,15 +51,15 @@ class _AdPendingState extends State<AdPending>
                             .collection('users')
                             .doc(user.uid)
                             .snapshots(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) return Loading();
+                        builder: (context, user) {
+                          if (user.connectionState == ConnectionState.waiting)
+                            return Loading();
                           return new ListView(
                             children: snapshot.data.docs
                                 .map((DocumentSnapshot document) {
                               if (document['category'] ==
-                                      snapshot.data['category'] &&
-                                  document['status'] == 'passed')
+                                      user.data['category'] &&
+                                  document['status'] == 'Passed')
                                 return Card(
                                     elevation: 2,
                                     shape: RoundedRectangleBorder(

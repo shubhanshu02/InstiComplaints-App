@@ -332,7 +332,7 @@ class _AdProfileState extends State<AdProfile> {
                                                               'complaints')
                                                           .where('status',
                                                               isEqualTo:
-                                                                  'passed')
+                                                                  'Passed')
                                                           .where('category',
                                                               isEqualTo: user
                                                                       .data[
@@ -347,7 +347,14 @@ class _AdProfileState extends State<AdProfile> {
                                                                 .connectionState ==
                                                             ConnectionState
                                                                 .waiting) {
-                                                          return Loading();
+                                                          return Text('',
+                                                              style: TextStyle(
+                                                                fontSize: 25.0,
+                                                                color: Colors
+                                                                    .grey[800],
+                                                                fontFamily:
+                                                                    'Roboto',
+                                                              ));
                                                         }
                                                         return Text(
                                                             passed.data.docs
@@ -419,7 +426,14 @@ class _AdProfileState extends State<AdProfile> {
                                                                 .connectionState ==
                                                             ConnectionState
                                                                 .waiting) {
-                                                          return Loading();
+                                                          return Text('',
+                                                              style: TextStyle(
+                                                                fontSize: 25.0,
+                                                                color: Colors
+                                                                    .grey[800],
+                                                                fontFamily:
+                                                                    'Roboto',
+                                                              ));
                                                         }
                                                         print(resolved.data);
                                                         return Text(
