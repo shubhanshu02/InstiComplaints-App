@@ -98,6 +98,7 @@ class _CardCategoryState extends State<CardCategory> {
   @override
   Widget build(BuildContext context) {
     var query = MediaQuery.of(context);
+
     return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('users')
@@ -112,6 +113,7 @@ class _CardCategoryState extends State<CardCategory> {
               return Loading();
             case ConnectionState.done:
               if (user.hasError) return Text('Error: ${user.error}');
+              var hostel = user.data['hostel'];
               return Column(
                 children: [
                   Card(
@@ -188,8 +190,9 @@ class _CardCategoryState extends State<CardCategory> {
                             ],
                           ),
                           IconButton(
-                              onPressed: () async {
-                                await editList2(context, user.data['hostel']);
+                              onPressed: () {
+                                editList2(context, user.data['hostel'])
+                                    .then((value) => setState(() {}));
                               },
                               icon: Icon(Icons.edit, color: Colors.red)),
                         ],
