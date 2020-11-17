@@ -196,7 +196,7 @@ class _ComplaintDialogState extends State<ComplaintDialog> {
                                                   .size
                                                   .height) /
                                           10,
-                                      width: (0.7 *
+                                      width: (1.05 *
                                                   MediaQuery.of(context)
                                                       .size
                                                       .width -
@@ -253,7 +253,7 @@ class _ComplaintDialogState extends State<ComplaintDialog> {
                                       color: Color.fromRGBO(58, 128, 203, 1),
                                       width: 1.0,
                                     ),
-                                    InkWell(
+                                    /*InkWell(
                                       onTap: () {},
                                       child: Container(
                                           width: (0.7 *
@@ -284,7 +284,7 @@ class _ComplaintDialogState extends State<ComplaintDialog> {
                                     VerticalDivider(
                                       color: Color.fromRGBO(58, 128, 203, 1),
                                       width: 1.0,
-                                    ),
+                                    ),*/
                                     InkWell(
                                       onTap: () {
                                         setState(() {
@@ -301,7 +301,7 @@ class _ComplaintDialogState extends State<ComplaintDialog> {
                                         });
                                       },
                                       child: Container(
-                                        width: (0.7 *
+                                        width: (1.05 *
                                                     MediaQuery.of(context)
                                                         .size
                                                         .width -
@@ -330,7 +330,7 @@ class _ComplaintDialogState extends State<ComplaintDialog> {
                                                               .height) /
                                                       20)),
                                         ),
-                                        child: Column(
+                                        child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: <Widget>[
@@ -378,6 +378,7 @@ class _ComplaintDialogState extends State<ComplaintDialog> {
                                                           .height) /
                                                   10,
                                             ),
+                                            SizedBox(width: 4.0,),
                                             Text(
                                               snapshot.data
                                                   .data()['upvotes']
@@ -387,7 +388,7 @@ class _ComplaintDialogState extends State<ComplaintDialog> {
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.white,
-                                                  fontSize: 10.0),
+                                                  fontSize: 15.0),
                                             ),
                                           ],
                                         ),
