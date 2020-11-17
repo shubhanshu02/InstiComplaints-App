@@ -76,7 +76,8 @@ class _RegisterFormState extends State<RegisterForm> {
       'notification': [],
       'bookmarked': [],
       'category': "general",
-      'profilePic': ""
+      'profilePic': "",
+      'list of my filed Complaints': []
     });
   }
 
