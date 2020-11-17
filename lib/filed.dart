@@ -1,11 +1,11 @@
-import 'package:InstiComplaints/loading.dart';
+import 'package:InstiComplaints/feedCard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'ComplaintDialog.dart';
+import 'loading.dart';
 
 GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
@@ -174,28 +174,21 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
     final complaintIds = Provider.of<List<String>>(context) ?? [];
     return ListView.builder(
       itemBuilder: (context, index) {
-        if(index == complaintIds.length){
+        if (index == complaintIds.length) {
           return Container(
               padding: EdgeInsets.all(10),
-              child: Expanded(
-                child: Column(
-                  children: [
-                    Divider(
-                      color: Colors.black,
-                    ),
-                    Icon(
-                      Icons.check_circle,
-                      size: 40,
-                      color: Color(0xFF36497E),
-                    ),
-                    Text(
-                      "You're All Caught Up",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline6,
-                    )
-                  ],
-                ),
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.check_circle,
+                    size: 40,
+                    color: Color(0xFF36497E),
+                  ),
+                  Text(
+                    "You're All Caught Up",
+                    style: Theme.of(context).textTheme.headline6,
+                  )
+                ],
               ));
         }
         return FutureBuilder(
@@ -213,174 +206,17 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                 return Loading();
               case ConnectionState.done:
                 if (user.hasError) return Text('Error: ${user.error}');
-                if (user.data['status'] == 'Solved')
-                  return Container(width: 0.0, height: 0.0);
-                return Card(
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(11)),
-                    child: Container(
-                      // TODO: Adjust height according to generator function
-                      height: 210,
-                      child: InkWell(
-                        splashColor: Colors.blue.withAlpha(300),
-                        onTap: () {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) =>
-                                  ComplaintDialog(user.data.id));
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(10),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Row(children: [
-                                        Text(user.data["title"],
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 18))
-                                      ]),
-                                      Row(
-                                        children: <Widget>[
-                                          Text(
-                                            'Posted by ',
-                                            style: TextStyle(fontSize: 12),
-                                          ),
-                                          Text(
-                                            user.data[
-                                                'email'], // todo: add name field in complaints collection docs
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold),
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  IconButton(
-                                      icon: Icon(Icons.bookmark_border),
-                                      onPressed: () {
-                                        //TODO: Add color change
-                                      })
-                                ],
-                              ),
-                              SizedBox(height: 7),
-                              Expanded(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    Icon(Icons.calendar_today),
-                                    Text(
-                                      DateFormat.yMMMMd()
-                                          .format(
-                                              user.data['filing time'].toDate())
-                                          .toString(),
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(' in '),
-                                    Text(
-                                      user.data["category"] ?? "",
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: 4),
-                              Row(
-                                children: <Widget>[
-                                  Flexible(
-                                    child: Text(
-                                      user.data["description"],
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              SizedBox(height: 7),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  SizedBox(
-                                    width: 70,
-                                    child: Center(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text(user.data["status"],
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color:
-                                                    Colors.red.withOpacity(0.6),
-                                                fontWeight: FontWeight.bold,
-                                              )),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text(
-                                            'Status',
-                                            style: TextStyle(
-                                              fontSize: 11,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Column(
-                                    children: <Widget>[
-                                      IconButton(
-                                        icon: Icon(Icons.share),
-                                        onPressed: () {},
-                                      ),
-                                      Text(
-                                        'Share',
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  Column(
-                                    children: <Widget>[
-                                      IconButton(
-                                        icon: Icon(Icons.arrow_upward),
-                                        onPressed: () {},
-                                      ),
-                                      Text(
-                                        user.data['upvotes'].length.toString(),
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                        ),
-                                      )
-                                    ],
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ));
+                return ComplaintOverviewCard(
+                  title: user.data["title"],
+                  onTap: ComplaintDialog(user.data.id),
+                  email: user.data['email'],
+                  filingTime: user.data['filing time'],
+                  category: user.data["category"],
+                  description: user.data["description"],
+                  status: user.data["status"],
+                  upvotes: user.data['upvotes'],
+                  id: user.data.id,
+                );
             }
             return null; // unreachable
           },

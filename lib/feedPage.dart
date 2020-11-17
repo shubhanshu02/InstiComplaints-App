@@ -128,9 +128,6 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                       padding: EdgeInsets.all(10),
                                       child: Column(
                                         children: [
-                                          Divider(
-                                            color: Colors.black,
-                                          ),
                                           Icon(
                                             Icons.check_circle,
                                             size: 40,
@@ -881,9 +878,6 @@ class Bookmarks extends StatelessWidget {
                     padding: EdgeInsets.all(10),
                     child: Column(
                       children: [
-                        Divider(
-                          color: Colors.black,
-                        ),
                         Icon(
                           Icons.check_circle,
                           size: 40,

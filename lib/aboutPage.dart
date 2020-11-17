@@ -1,14 +1,26 @@
 import 'package:flutter/material.dart';
 
 List<List<String>> aboutPage = [
-  ['Siddhant Jain', "Siddhant's Words", 'assets/person.jpg'],
-  ["Shubhanshu Saxena", "Shubhanshu's Words", 'assets/person.jpg'],
+  [
+    'Siddhant Jain',
+    "Words don't matter unless your work says what you do",
+    'assets/jainsid2305.png'
+  ],
+  [
+    "Shubhanshu Saxena",
+    "Communicating your problems is the key to improvement",
+    'assets/shubhanshu02.jfif'
+  ],
   [
     'Kenny Patel',
-    "Kenny's Words",
-    'assets/person.jpg',
+    "We have been working on this application with all our determination",
+    'assets/kenny-08.jfif',
   ],
-  ['Diya Agrawal', "Diya's Words", 'assets/person.jpg']
+  [
+    'Diya Agrawal',
+    "We produce a many bugs daily in our code, so does our infrastructure. The need is to improve both simultaneously.",
+    'assets/diya31ag.png'
+  ]
 ];
 
 class AboutPage extends StatefulWidget {
@@ -121,7 +133,7 @@ class _AboutPageState extends State<AboutPage> {
           ),
           Center(
             child: Text(
-              'Slide to know about other devlopers ->',
+              'Slide to know about other developers ->',
             ),
           ),
           SizedBox(

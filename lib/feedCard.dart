@@ -63,12 +63,16 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                   children: <Widget>[
                     Text(
                       'Posted by ',
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(fontSize: 12),
                     ),
-                    Text(
-                      widget.email,
-                      style:
-                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    Expanded(
+                      child: Text(
+                        widget.email,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.bold),
+                      ),
                     ),
                     /*IconButton(
                         icon: Icon(Icons
@@ -79,9 +83,9 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                   ],
                 ),
                 SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
+                Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.end,
+                  children: [
                     Icon(Icons.calendar_today),
                     SizedBox(
                       width: 5,
@@ -90,14 +94,20 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                       DateFormat.yMMMMd()
                           .format(widget.filingTime.toDate())
                           .toString(),
+                      overflow: TextOverflow.ellipsis,
                       style:
-                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                     ),
-                    Text(' in '),
+                    Text(
+                      ' in ',
+                      style: TextStyle(fontSize: 13),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     Text(
                       widget.category,
+                      overflow: TextOverflow.ellipsis,
                       style:
-                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                     )
                   ],
                 ),
@@ -118,39 +128,37 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
-                    SizedBox(
-                      width: 80,
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Text(widget.status,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: widget.status == 'Rejected'
-                                      ? Colors.red
-                                      : widget.status == 'Solved'
-                                          ? Colors.green
-                                          : widget.status == 'In Progress'
-                                              ? Colors.blue
-                                              : widget.status == 'Passed'
-                                                  ? Colors.cyan
-                                                  : Colors.deepOrange,
-                                  fontWeight: FontWeight.bold,
-                                )),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Text(
-                              'Status',
+                    Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Text(widget.status,
                               style: TextStyle(
-                                fontSize: 13,
-                              ),
-                              textAlign: TextAlign.center,
+                                fontSize: 16,
+                                color: widget.status == 'Rejected'
+                                    ? Colors.red
+                                    : widget.status == 'Solved'
+                                        ? Colors.green
+                                        : widget.status == 'In Progress'
+                                            ? Colors.blue
+                                            : widget.status == 'Passed'
+                                                ? Colors.cyan
+                                                : Colors.deepOrange,
+                                fontWeight: FontWeight.bold,
+                              )),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            'Status',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 13,
                             ),
-                          ],
-                        ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
                       ),
                     ),
                     Column(
@@ -168,7 +176,6 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
 
                             if (complaint.data()['upvotes'].contains(
                                 FirebaseAuth.instance.currentUser.uid)) {
-                                  
                               await complaintDoc.update({
                                 'upvotes': FieldValue.arrayRemove(
                                     [FirebaseAuth.instance.currentUser.uid])

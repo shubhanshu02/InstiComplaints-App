@@ -1,17 +1,14 @@
+import 'package:InstiComplaints/feedCard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:intl/intl.dart';
 import 'AdminDialog.dart';
 
 var user = FirebaseAuth.instance.currentUser;
 
 GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
-final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-    new GlobalKey<RefreshIndicatorState>();
 
 class AdPending extends StatefulWidget {
   const AdPending({Key key}) : super(key: key);
@@ -54,210 +51,43 @@ class _AdPendingState extends State<AdPending>
                         builder: (context, user) {
                           if (user.connectionState == ConnectionState.waiting)
                             return Loading();
-                          return new ListView(
-                            children: snapshot.data.docs
-                                .map((DocumentSnapshot document) {
-                              if (document['category'] ==
-                                      user.data['category'] &&
-                                  document['status'] == 'Passed')
-                                return Card(
-                                    elevation: 2,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(11)),
-                                    child: Container(
-                                      // TODO: Adjust height according to generator function
-                                      height: 210,
-                                      child: InkWell(
-                                        splashColor: Colors.blue.withAlpha(300),
-                                        onTap: () {
-                                          showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) =>
-                                                  AdminDialog(document.id));
-                                        },
-                                        child: Container(
-                                          padding: EdgeInsets.all(10),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: <Widget>[
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: <Widget>[
-                                                  Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: <Widget>[
-                                                      Row(children: [
-                                                        Text(document["title"],
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                fontSize: 18))
-                                                      ]),
-                                                      Row(
-                                                        children: <Widget>[
-                                                          Text(
-                                                            'Posted by ',
-                                                            style: TextStyle(
-                                                                fontSize: 12),
-                                                          ),
-                                                          Text(
-                                                            document["email"],
-                                                            style: TextStyle(
-                                                                fontSize: 12,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  IconButton(
-                                                      icon: Icon(Icons
-                                                          .bookmark_border),
-                                                      onPressed: () {
-                                                        //TODO: Add color change
-                                                      })
-                                                ],
-                                              ),
-                                              SizedBox(height: 7),
-                                              Expanded(
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Icon(Icons.calendar_today),
-                                                    Text(
-                                                      DateFormat.yMd()
-                                                          .format(document[
-                                                                  'filing time']
-                                                              .toDate())
-                                                          .toString(),
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                    Text(' in '),
-                                                    Text(
-                                                      document["category"],
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(height: 4),
-                                              Row(
-                                                children: <Widget>[
-                                                  Flexible(
-                                                    child: Text(
-                                                      document["description"],
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: TextStyle(
-                                                          fontSize: 15),
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                              SizedBox(height: 7),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.end,
-                                                children: <Widget>[
-                                                  SizedBox(
-                                                    width: 70,
-                                                    child: Center(
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .end,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        children: <Widget>[
-                                                          Text(
-                                                              document[
-                                                                  "status"],
-                                                              style: TextStyle(
-                                                                fontSize: 16,
-                                                                color: Colors
-                                                                    .red
-                                                                    .withOpacity(
-                                                                        0.6),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              )),
-                                                          SizedBox(
-                                                            height: 5,
-                                                          ),
-                                                          Text(
-                                                            'Status',
-                                                            style: TextStyle(
-                                                              fontSize: 11,
-                                                            ),
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Column(
-                                                    children: <Widget>[
-                                                      IconButton(
-                                                        icon: Icon(Icons.share),
-                                                        onPressed: () {},
-                                                      ),
-                                                      Text(
-                                                        'Share',
-                                                        style: TextStyle(
-                                                          fontSize: 11,
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  Column(
-                                                    children: <Widget>[
-                                                      IconButton(
-                                                        icon: Icon(
-                                                            Icons.arrow_upward),
-                                                        onPressed: () {},
-                                                      ),
-                                                      Text(
-                                                        document['upvotes']
-                                                            .length
-                                                            .toString(),
-                                                        style: TextStyle(
-                                                          fontSize: 11,
-                                                        ),
-                                                      )
-                                                    ],
-                                                  )
-                                                ],
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ));
-                              return Container(width: 0.0, height: 0.0);
-                            }).toList(),
-                          );
+                          List<Widget> list = snapshot.data.docs
+                              .map((DocumentSnapshot document) {
+                            if ((document['category'] ==
+                                    user.data['category']) &&
+                                (document['status'] == 'Passed' ||
+                                    document['status'] == 'In Progress'))
+                              return ComplaintOverviewCard(
+                                title: document['title'],
+                                onTap: AdminDialog(document.id),
+                                email: document['email'],
+                                filingTime: document['filing time'],
+                                category: document['category'],
+                                description: document['description'],
+                                status: document['status'],
+                                upvotes: document['upvotes'],
+                                id: document.id,
+                              );
+                            return Container(width: 0.0, height: 0.0);
+                          }).toList();
+                          list.add(Container(
+                              padding: EdgeInsets.all(10),
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    Icons.check_circle,
+                                    size: 40,
+                                    color: Color(0xFF36497E),
+                                  ),
+                                  Text(
+                                    "You're All Caught Up",
+                                    style:
+                                        Theme.of(context).textTheme.headline6,
+                                  )
+                                ],
+                              )));
+
+                          return ListView(children: list);
                         });
                   },
                 ))),

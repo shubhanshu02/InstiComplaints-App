@@ -1,17 +1,12 @@
+import 'package:InstiComplaints/feedCard.dart';
 import 'ComplaintDialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import 'loading.dart';
 
 var user = FirebaseAuth.instance.currentUser;
-
 GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
-final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-    new GlobalKey<RefreshIndicatorState>();
 
 class Resolved extends StatefulWidget {
   const Resolved({Key key}) : super(key: key);
@@ -33,7 +28,7 @@ class _ResolvedState extends State<Resolved>
                 padding: const EdgeInsets.only(
                     right: 20, left: 20, top: 150, bottom: 0),
                 child: Container(
-                  child: ComplaintList(),
+                  child: ResolvedList(),
                 )),
           ),
           Container(
@@ -101,8 +96,6 @@ class _ResolvedState extends State<Resolved>
   }
 }
 
-//////////////////////////////////////////////////////////////////////////////
-
 // code for the upper design of appbar
 
 class CurveClipper extends CustomClipper<Path> {
@@ -127,272 +120,65 @@ class CurveClipper extends CustomClipper<Path> {
   bool shouldReclip(oldCliper) => false;
 }
 
-class ComplaintList extends StatefulWidget {
-  @override
-  _ComplaintListState createState() => _ComplaintListState();
-}
-
-class _ComplaintListState extends State<ComplaintList> {
+class ResolvedList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<List<String>>.value(
-      value: getComplaintId,
-      child: ComplaintTile1(),
-    );
-  }
-}
+    return StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser.uid)
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> user) {
+          if (user.connectionState == ConnectionState.waiting)
+            return Center(child: CircularProgressIndicator());
 
-List<String> getComplaints(DocumentSnapshot snapshot) {
-  print(snapshot.data());
-  return List.from(snapshot['list of my filed Complaints']);
-}
+          final List<String> resolved = List<String>.from(
+              user.data.data()['list of my filed Complaints']);
+          return StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('complaints')
+                  .snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshots) {
+                if (snapshots.connectionState == ConnectionState.waiting)
+                  return Center(child: CircularProgressIndicator());
 
-Stream<List<String>> get getComplaintId {
-  return FirebaseFirestore.instance
-      .collection('users')
-      .doc(user.uid)
-      .get()
-      .then((snapshot) {
-    try {
-      return getComplaints(snapshot);
-    } catch (e) {
-      print(e);
-      return null;
-    }
-  }).asStream();
-}
-
-class ComplaintTile1 extends StatefulWidget {
-  @override
-  _ComplaintTile1State createState() => _ComplaintTile1State();
-}
-
-class _ComplaintTile1State extends State<ComplaintTile1> {
-  @override
-  Widget build(BuildContext context) {
-    final complaintIds = Provider.of<List<String>>(context) ?? [];
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        if(index == complaintIds.length){
-          return Container(
-              padding: EdgeInsets.all(10),
-              child: Expanded(
-                child: Column(
-                  children: [
-                    Divider(
-                      color: Colors.black,
-                    ),
-                    Icon(
-                      Icons.check_circle,
-                      size: 40,
-                      color: Color(0xFF36497E),
-                    ),
-                    Text(
-                      "You're All Caught Up",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline6,
-                    )
-                  ],
-                ),
-              ));
-        }
-        print(index);
-        Future<QuerySnapshot> ref = FirebaseFirestore.instance
-            .collection('complaints')
-            .where('status', isEqualTo: 'Solved')
-            .where(FieldPath.documentId, isEqualTo: complaintIds[index])
-            .limit(1)
-            .get();
-        var ref1 = ref.then((data) {
-          return data.docs[0];
-        });
-        return FutureBuilder(
-          future: ref1,
-          builder:
-              (BuildContext context, AsyncSnapshot<DocumentSnapshot> user) {
-            switch (user.connectionState) {
-              case ConnectionState.none:
-              case ConnectionState.active:
-              case ConnectionState.waiting:
-                return Loading();
-              case ConnectionState.done:
-                if (user.hasError)
-                  return Container(
-                    width: 0.0,
-                    height: 0.0,
-                  );
-                return Card(
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(11)),
-                    child: Container(
-                      // TODO: Adjust height according to generator function
-                      height: 210,
-                      child: InkWell(
-                        splashColor: Colors.blue.withAlpha(300),
-                        onTap: () {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) =>
-                                  ComplaintDialog(user.data.id));
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(10),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Row(children: [
-                                        Text(user.data["title"],
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 18))
-                                      ]),
-                                      Row(
-                                        children: <Widget>[
-                                          Text(
-                                            'Posted by ',
-                                            style: TextStyle(fontSize: 12),
-                                          ),
-                                          Text(
-                                            user.data['email'],
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold),
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  IconButton(
-                                      icon: Icon(Icons.bookmark_border),
-                                      onPressed: () {
-                                        //TODO: Add color change
-                                      })
-                                ],
-                              ),
-                              SizedBox(height: 7),
-                              Expanded(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    Icon(Icons.calendar_today),
-                                    Text(
-                                      DateFormat.yMMMMd()
-                                          .format(
-                                              user.data['filing time'].toDate())
-                                          .toString(),
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(' in '),
-                                    Text(
-                                      user.data["category"],
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: 4),
-                              Row(
-                                children: <Widget>[
-                                  Flexible(
-                                    child: Text(
-                                      user.data["description"],
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              SizedBox(height: 7),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  SizedBox(
-                                    width: 70,
-                                    child: Center(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text(user.data["status"],
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color:
-                                                    Colors.red.withOpacity(0.6),
-                                                fontWeight: FontWeight.bold,
-                                              )),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text(
-                                            'Status',
-                                            style: TextStyle(
-                                              fontSize: 11,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Column(
-                                    children: <Widget>[
-                                      IconButton(
-                                        icon: Icon(Icons.share),
-                                        onPressed: () {},
-                                      ),
-                                      Text(
-                                        'Share',
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  Column(
-                                    children: <Widget>[
-                                      IconButton(
-                                        icon: Icon(Icons.arrow_upward),
-                                        onPressed: () {},
-                                      ),
-                                      Text(
-                                        user.data['upvotes'].length.toString(),
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                        ),
-                                      )
-                                    ],
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
+                List<Widget> currentresolved = [];
+                snapshots.data.docs.forEach((doc) {
+                  if (resolved.contains(doc.id) &&
+                      doc.data()['status'] == 'Solved') {
+                    currentresolved.add(ComplaintOverviewCard(
+                      title: doc.data()["title"],
+                      onTap: ComplaintDialog(doc.id),
+                      email: doc.data()['email'],
+                      filingTime: doc.data()['filing time'],
+                      category: doc.data()["category"],
+                      description: doc.data()["description"],
+                      status: doc.data()["status"],
+                      upvotes: doc.data()['upvotes'],
+                      id: doc.id,
                     ));
-            }
-            return null; // unreachable
-          },
-        );
-      },
-      itemCount: complaintIds.length + 1,
-    );
+                  }
+                });
+                currentresolved.add(Container(
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.check_circle,
+                          size: 40,
+                          color: Color(0xFF36497E),
+                        ),
+                        Text(
+                          "You're All Caught Up",
+                          style: Theme.of(context).textTheme.headline6,
+                        )
+                      ],
+                    )));
+                return ListView(
+                  children: currentresolved,
+                );
+              });
+        });
   }
 }
