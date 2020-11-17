@@ -222,9 +222,7 @@ class _ProfileState extends State<Profile> {
                                       child: SizedBox(
                                         child: Column(
                                           children: [
-                                            Text(
-                                                (ls.length - res_list.length)
-                                                    .toString(),
+                                            Text((ls.length).toString(),
                                                 style: TextStyle(
                                                   fontSize: 25.0,
                                                   color: Colors.grey[800],

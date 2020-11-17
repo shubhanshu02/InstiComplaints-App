@@ -19,7 +19,7 @@ class InstiComplaints extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-    return MaterialApp(title: 'InstiComplaints',  routes: {
+    return MaterialApp(title: 'InstiComplaints', routes: {
       '/ad_pending': (context) => AdPending(),
       '/ad_resolved': (context) => AdResolved(),
       '/filed': (context) => Filed(),
