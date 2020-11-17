@@ -206,17 +206,19 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                 return Loading();
               case ConnectionState.done:
                 if (user.hasError) return Text('Error: ${user.error}');
-                return ComplaintOverviewCard(
-                  title: user.data["title"],
-                  onTap: ComplaintDialog(user.data.id),
-                  email: user.data['email'],
-                  filingTime: user.data['filing time'],
-                  category: user.data["category"],
-                  description: user.data["description"],
-                  status: user.data["status"],
-                  upvotes: user.data['upvotes'],
-                  id: user.data.id,
-                );
+                if (user.data["status"] != 'Solved')
+                  return ComplaintOverviewCard(
+                    title: user.data["title"],
+                    onTap: ComplaintDialog(user.data.id),
+                    email: user.data['email'],
+                    filingTime: user.data['filing time'],
+                    category: user.data["category"],
+                    description: user.data["description"],
+                    status: user.data["status"],
+                    upvotes: user.data['upvotes'],
+                    id: user.data.id,
+                  );
+                return Container();
             }
             return null; // unreachable
           },

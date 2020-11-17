@@ -32,7 +32,7 @@ class ComplaintOverviewCard extends StatefulWidget {
 }
 
 class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
-  var upvoteArray;
+  List upvoteArray;
 
   @override
   Widget build(BuildContext context) {
@@ -164,7 +164,7 @@ class _ComplaintOverviewCardState extends State<ComplaintOverviewCard> {
                     Column(
                       children: <Widget>[
                         IconButton(
-                          icon: Icon(Icons.arrow_upward),
+                          icon: Icon(Icons.arrow_upward,color: (upvoteArray.contains(FirebaseAuth.instance.currentUser.uid))?Colors.blue[400]:Colors.black,),
                           onPressed: () async {
                             final complaint = await FirebaseFirestore.instance
                                 .collection('complaints')
