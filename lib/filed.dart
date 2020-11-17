@@ -1,3 +1,4 @@
+import 'package:InstiComplaints/loading.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
@@ -209,7 +210,7 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                 return Text('Press button to start.');
               case ConnectionState.active:
               case ConnectionState.waiting:
-                return Text('Awaiting result...');
+                return Loading();
               case ConnectionState.done:
                 if (user.hasError) return Text('Error: ${user.error}');
                 if (user.data['status'] == 'Solved')
