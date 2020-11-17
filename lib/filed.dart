@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'ComplaintDialog.dart';
+import 'loading.dart';
 
 GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
@@ -202,7 +203,7 @@ class _ComplaintTile1State extends State<ComplaintTile1> {
                 return Text('Press button to start.');
               case ConnectionState.active:
               case ConnectionState.waiting:
-                return Text('Awaiting result...');
+                return Loading();
               case ConnectionState.done:
                 if (user.hasError) return Text('Error: ${user.error}');
                 return ComplaintOverviewCard(
