@@ -331,8 +331,10 @@ class _AdProfileState extends State<AdProfile> {
                                                           .collection(
                                                               'complaints')
                                                           .where('status',
-                                                              isEqualTo:
-                                                                  'Passed')
+                                                              whereIn: [
+                                                                'Passed',
+                                                                'In Progress'
+                                                              ])
                                                           .where('category',
                                                               isEqualTo: user
                                                                       .data[

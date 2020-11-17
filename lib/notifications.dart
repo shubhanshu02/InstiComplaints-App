@@ -20,6 +20,14 @@ List complaints = [
   "Lost my Cycle",
   "Messy club common halls",
 ];
+Map<String, String> departments = {
+  'Administration': 'administration.jpg',
+  'Gymkhana': 'gymkhana.jpg',
+  'General': 'general.jpg',
+  'image': 'hostel.jpg',
+  'Campus': 'parliament.jpg',
+  'Proctor': 'proctor.jpg'
+};
 
 List notifications = List.generate(
     20,
@@ -55,18 +63,14 @@ class _TileState extends State<Tile> {
                     ),
                   );
                 },
-                itemCount: snapshot.data.data()['notification'].length +1 ,
+                itemCount: snapshot.data.data()['notification'].length + 1,
                 itemBuilder: (BuildContext context, int index) {
-
-                  if(index == snapshot.data.data()['notification'].length){
+                  if (index == snapshot.data.data()['notification'].length) {
                     return Container(
                         padding: EdgeInsets.all(10),
                         child: Expanded(
                           child: Column(
                             children: [
-                              Divider(
-                                color: Colors.black,
-                              ),
                               Icon(
                                 Icons.check_circle,
                                 size: 40,
@@ -74,9 +78,7 @@ class _TileState extends State<Tile> {
                               ),
                               Text(
                                 "You're All Caught Up",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline6,
+                                style: Theme.of(context).textTheme.headline6,
                               )
                             ],
                           ),
@@ -87,6 +89,8 @@ class _TileState extends State<Tile> {
                     padding: const EdgeInsets.all(8.0),
                     child: ListTile(
                       leading: CircleAvatar(
+                        backgroundImage:
+                            AssetImage('assets/admin/${departments['image']}'),
                         //backgroundImage: AssetImage(notif['dp']),
                         backgroundColor: Colors.blue,
                         radius: 25,
