@@ -22,4 +22,4 @@ In this fast-moving world with intensive coursework, students find very less tim
 - Siddhant Jain [@jainsid2305](https://github.com/jainsid2305)
 - Diya Agrawal [@diya31ag](https://github.com/diya31ag)
 
-> The project is currently **in progress**. Details may be updated as the project progresses.
+> The project has been **submitted**. Presentation link can be accessed above in this document. This project is open to contributions. Please feel free to file issues and make PRs with corrections.
